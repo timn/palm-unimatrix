@@ -1,6 +1,6 @@
 <?php
 
-/* $Id: index.php,v 1.9 2003/09/05 13:33:30 tim Exp $ */
+/* $Id: index.php,v 1.10 2003/10/15 21:37:49 tim Exp $ */
 
 $title="niemueller.de - palm software - UniMatrix";
 $meta_desc="A software to manage your daily university business.";
@@ -114,6 +114,8 @@ problem (please note OS and hardware you use).
 <li>"Zoom" - Have only 6 hours on one screen instead of 12 for example</li>
 <li>Enter grades (probably not)</li>
 <li>Enter feature that shows time to end of current lessens and to start of next lesson</li>
+<li>Show remaining time for current event, this seems to be wanted by many people
+that are bored in their lessons :-)</li>
 
 
 <h5>Thanks</h5>
