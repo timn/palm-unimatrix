@@ -1,6 +1,6 @@
 <?php
 
-/* $Id: index.php,v 1.13 2003/11/20 23:05:38 tim Exp $ */
+/* $Id: index.php,v 1.14 2003/11/20 23:10:45 tim Exp $ */
 
 $title="niemueller.de - palm software - UniMatrix";
 $meta_desc="A software to manage your daily university business.";
@@ -96,17 +96,24 @@ There are some questions people are asking again and again. Read the common answ
 
 
 <h5>News</h5>
+<b>2003/11/21</b><br/>
+Release of UniMatrix 1.0rc1. This version fixes several <i>critical</i> bugs that could
+cause data loss and confusion. Also the "crash after reset" bug has been fixed. Several
+minor code improvements. More "intelligent" dialog for adding events. It tries to
+"guess" the color now if there is already an event for the selected course. You should
+upgrade immediately! If this version does not throw any more bugs I will make this 1.0
+and will work on some new features for 1.1 :-)<br/>
 <b>2003/06/18</b><br/>
 Release of UniMatrix 0.9. Some major new features. This is the "feature freeze" release
 for UniMatrix 1.0 so please test it and gremling around to get it stable for
 1.0. New features include alarm for exams (only PalmOS >= 4) and notes for events
 and exams and new caching to get drawing faster (also some flicker removement still
 needs to be done), ability to show first letters of course name on main page in
-event boxes.
+event boxes.<br/>
 <b>2002/11/28</b><br/>
 Release of UniMatrix 0.8. Getting pretty close to the 1.0 release. Lots of new features and several bug
 fixes. Integrated with other new software like <a href="../unimensa/">UniMensa</a> and <a href="../unichat/">UniChat</a>.
-Download and try it out.
+Download and try it out.<br/>
 <b>2002/10/16</b><br/>
 Release of UniMatrix 0.7. Several users have tested this version and it seems to work pretty well. But
 just to be sure make a backup before installing this version (as you should do with every new software...).
