@@ -1,4 +1,4 @@
-/* $Id: alarm.c,v 1.6 2003/05/21 18:24:05 tim Exp $
+/* $Id: alarm.c,v 1.7 2003/06/18 15:05:35 tim Exp $
  *
  * Support for exam alarms
  * Created: 2003/04/19
@@ -72,7 +72,6 @@ static UInt32 AlarmFindNext(DmOpenRef cats, UniMatrixPrefs *prefs, UInt32 startA
   UInt16 index=0;
   UInt32 foundTimeBegin=0xFFFFFFFF, foundTimeEnd=0;
   UInt32 nowAndAdv = startAt + AlarmAdvanceSeconds(prefs);
-  Char temp[50];
   DateTimeType tempDate;
 
   while ((m = DmQueryNextInCategory(cats, &index, prefs->curCat)) != NULL) {
@@ -1169,4 +1168,3 @@ Boolean AlarmFormHandleEvent(EventPtr event) {
 
   return handled;
 }
-
