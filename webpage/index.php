@@ -1,6 +1,6 @@
 <?php
 
-/* $Id: index.php,v 1.12 2003/11/20 22:57:59 tim Exp $ */
+/* $Id: index.php,v 1.13 2003/11/20 23:05:38 tim Exp $ */
 
 $title="niemueller.de - palm software - UniMatrix";
 $meta_desc="A software to manage your daily university business.";
@@ -8,7 +8,7 @@ $meta_keyw="Palm, PalmOS, university, planer, business, beaming, semester, verwa
 include("$DOCUMENT_ROOT/header.inc.php");
 include("$DOCUMENT_ROOT/left.inc.php");
 
-$version="0.9";
+$version="1.0rc1";
 $basename="UniMatrix";
 $languages=array( "de" => "German/Deutsch",
                   "en" => "English",
@@ -26,6 +26,8 @@ $languages=array( "de" => "German/Deutsch",
                   "cz_cp1250" => "Czech (cp1250)",
                   "it" => "Italian",
                   "ca" => "Catalan",
+                  "kr" => "Korean",
+                  "il" => "Hebrew (Israel)",
                 );
 
 $preversion=0;
@@ -76,6 +78,8 @@ UniMatrix is available in multiple languages. Supported languages are right now 
  <li>Dutch (Thanx to Colin Helvensteijn)</li>
  <li>Polish (Thanx to Tomasz Zielinski)</li>
  <li>Catalan (Thanx to Andreu Bassols from Spain)</li>
+ <li>Korean (Thanx to Unknown from Korea (do not know which part))</li>
+ <li>Hebrew (Thanx to Gil Zlotnik)</li>
 </ul>
 If you want to help and translate UniMatrix to another language please
 <a href="mailto:tim@niemueller.de?Subject=Translate UniMatrix">contact</a> me and I will
