@@ -1,4 +1,4 @@
-/* $Id: alarm.rcp.in,v 1.2 2003/04/25 23:23:25 tim Exp $
+/* $Id: alarm.rcp.in,v 1.3 2003/04/27 12:16:06 tim Exp $
  *
  * alarm stuff
  */
@@ -11,7 +11,9 @@ string id ALARM_STRING_today "alarm_today"
 string id ALARM_exam "alarm_exam"
 string id ALARM_date_template "alarm_date_template"
 
-form id FORM_alarm_sets at (2 40 156 118)
+integer id ALARM_sound_trigger_width value 75
+
+form id FORM_alarm_sets at (2 30 156 128)
 modal
 begin
   title "alarm_title"
@@ -32,6 +34,11 @@ begin
   list "alarm_rep_1" "alarm_rep_5" "alarm_rep_10" "alarm_rep_30" id ALARM_repeat at (prevright+2 prevtop+1 75 auto) visibleitems 4 nonusable
   popuplist id ALARM_repeat_trigger ALARM_repeat
   popuptrigger "alarm_rep_5" id ALARM_repeat_trigger at (prevleft prevtop 75 auto) font 0 usable leftanchor
+
+  label "alarm_sound" autoid at (4 prevbottom+4)
+  list "" id ALARM_sound at (prevright+2 prevtop+1 75 auto) visibleitems 4 nonusable
+  popuplist id ALARM_sound_trigger ALARM_sound
+  popuptrigger "" id ALARM_sound_trigger at (prevleft prevtop 75 auto) font 0 usable leftanchor
 
   button "" id ALARM_cancel at (105 prevbottom+12 11 11) noframe graphical bitmapid BITMAP_cancel selectedbitmapid BITMAP_cancel_clicked
   button "" id ALARM_ok at (prevright+3 prevtop 11 11) noframe graphical bitmapid BITMAP_ok selectedbitmapid BITMAP_ok_clicked

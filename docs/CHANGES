@@ -5,6 +5,11 @@
 
 === v0.9
 
+* Sun Apr 27 2003 Tim Niemueller <tim@niemueller.de>
+- Added resource entries for coming mute features, no code yet
+- Added support for choosing and playing sounds. This takes about 350 freakin'
+  lines of code...
+
 * Fri Apr 25 2003 Tim Niemueller <tim@niemueller.de>
 - Wrote AlarmFindNext
 - Sort now sorts exams better, makes AlarmFindNext easier :-)
@@ -270,4 +275,4 @@
 
 
 
-$Id: CHANGES,v 1.8 2003/04/25 23:23:25 tim Exp $
+$Id: CHANGES,v 1.9 2003/04/27 12:16:06 tim Exp $

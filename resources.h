@@ -1,4 +1,4 @@
-/* $Id: resources.h,v 1.4 2003/04/25 23:24:38 tim Exp $
+/* $Id: resources.h,v 1.5 2003/04/27 12:16:14 tim Exp $
  *
  * ID's for use in ressource definitions
  *
@@ -88,6 +88,8 @@
 #define CHECKBOX_sets_showtype 1124
 #define CHECKBOX_sets_showtime 1125
 #define CHECKBOX_sets_showshort 1126
+#define CHECKBOX_sets_muteevents 1127
+#define CHECKBOX_sets_muteexams 1128
 
 #define FORM_coursetypes 1130
 #define LIST_coursetypes 1131
@@ -161,6 +163,9 @@
 #define ALARM_repeat_trigger 1209
 #define ALARM_exam 1210
 #define ALARM_date_template 1211
+#define ALARM_sound 1212
+#define ALARM_sound_trigger 1213
+#define ALARM_sound_trigger_width 1214
 #define ALARM_ok 1218
 #define ALARM_cancel 1219
 

@@ -1,4 +1,4 @@
-/* $Id: tnglue.c,v 1.3 2003/04/25 23:24:38 tim Exp $
+/* $Id: tnglue.c,v 1.4 2003/04/27 12:16:14 tim Exp $
  *
  * tnglue. See tnglue.h for more info
  * Created: 2002-07-11
@@ -123,3 +123,13 @@ UInt32 TNPalmOSVersion(void) {
 
   return romVersion;
 }
+
+// Function description template
+/*****************************************************************************
+* FUNCTION:     
+*
+* DESCRIPTION:  
+*
+* PARAMETERS:   
+* RETURNS:      
+*****************************************************************************/

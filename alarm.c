@@ -1,4 +1,4 @@
-/* $Id: alarm.c,v 1.2 2003/04/25 23:24:38 tim Exp $
+/* $Id: alarm.c,v 1.3 2003/04/27 12:16:14 tim Exp $
  *
  * Support for exam alarms
  * Created: 2003/04/19
@@ -15,11 +15,25 @@
 #define alarmDetailDescHTextOffset		37
 #define alarmDetailDescYTextOffset		4
 
-UInt8 gAlarmSet=0;
+// Max len of sound trigger label placeholder
+#define soundTriggerLabelLen          32
+
+
 extern UInt16 gMenuCurrentForm;
 extern UniMatrixPrefs gPrefs;
 
-UInt32 AlarmAdvanceSeconds(UniMatrixPrefs *prefs) {
+
+// Placeholder for sound trigger label
+static Char * gAlarmSoundTriggerLabel;
+
+// handle to the list containing names and DB info of MIDI tracks.
+// Each entry is of type SndMidiListItemType.
+static MemHandle	gMidiListH;
+// number of entries in the MIDI list
+static UInt16	gMidiCount;
+
+
+static UInt32 AlarmAdvanceSeconds(UniMatrixPrefs *prefs) {
   UInt32 factor = 60;
 
   switch (prefs->alarmInfo.advanceUnit) {
@@ -32,7 +46,7 @@ UInt32 AlarmAdvanceSeconds(UniMatrixPrefs *prefs) {
   return (prefs->alarmInfo.advance * factor);
 }
 
-UInt32 AlarmFindNext(DmOpenRef cats, UniMatrixPrefs *prefs, UInt32 startAt) {
+static UInt32 AlarmFindNext(DmOpenRef cats, UniMatrixPrefs *prefs, UInt32 startAt) {
   MemHandle m;
   UInt16 index=0;
   UInt32 firstTime=0xFFFFFFFF;
@@ -66,7 +80,7 @@ return firstTime;
 }
 
 
-void AlarmPostTriggered(DmOpenRef cats, UniMatrixPrefs *prefs, UInt32 alarmTime) {
+static void AlarmPostTriggered(DmOpenRef cats, UniMatrixPrefs *prefs, UInt32 alarmTime) {
   UInt16 index=0, cardNo=0;
   UInt32 examAlarm=0;
   DateTimeType dateTime;
@@ -90,28 +104,21 @@ void AlarmPostTriggered(DmOpenRef cats, UniMatrixPrefs *prefs, UInt32 alarmTime)
       dateTime.hour = ex->begin.hours;
       dateTime.minute = ex->begin.minutes;
       dateTime.second = 0;
-
       examAlarm = TimDateTimeToSeconds(&dateTime);
 
       if (examAlarm == searchTime) {
-        // This exam was meant, post it to the Attention manager
-        //if (gAlarmSet < 2) {
         UInt32 uid=0;
 
         DmRecordInfo(cats, index, NULL, &uid, NULL);
         AttnGetAttention(cardNo, dbID, uid, NULL, kAttnLevelInsistent, kAttnFlagsUseUserSettings, 300, 3);
-
-        //gAlarmSet += 1;
       }
-        
-      //}
     }
     MemHandleUnlock(m);
     index += 1;
   }
 }
 
-void AlarmSetTrigger(UInt32 alarmTime, UInt32 ref) {
+static void AlarmSetTrigger(UInt32 alarmTime, UInt32 ref) {
 	DmSearchStateType searchInfo;
   UInt16 cardNo;
   LocalID dbID;
@@ -137,45 +144,28 @@ void AlarmReset(DmOpenRef cats) {
     nextAlarm = AlarmFindNext(cats, &prefs, TimGetSeconds());
     nextAlarm -= AlarmAdvanceSeconds(&prefs);
 
-    if (nextAlarm) {
-/*
-      Char temp[50];
-      DateTimeType d;
-      TimSecondsToDateTime(nextAlarm, &d);
-
-      StrPrintF(temp, "Alarm set to %u/%u/%u %u:%u:%u (%lu -> %lu [%lu])", d.year, d.month, d.day, d.hour, d.minute, d.second, TimGetSeconds(), nextAlarm, AlarmAdvanceSeconds(&prefs));
-      FrmCustomAlert(ALERT_debug, temp, "", "");
-      */
-      AlmSetAlarm(cardNo, dbID, nextAlarm, nextAlarm, false);
-    }
+    if (nextAlarm)  AlmSetAlarm(cardNo, dbID, nextAlarm, nextAlarm, false);
   }
 }
 
 void AlarmTriggered(DmOpenRef cats, SysAlarmTriggeredParamType *cmdPBP) {
-  //DmOpenRef					dbP;
   UInt32						alarmTime;
   UniMatrixPrefs    prefs;
 
-  
   // all triggered alarms are sent to attention manager for display so there is
   // no need for alarm manager to send the sysAppLaunchCmdDisplayAlarm launchcode
   cmdPBP->purgeAlarm = true;
   
-  // Open the appointment database.
-  //dbP = DmOpenDatabaseByTypeCreator(DATABASE_TYPE, APP_CREATOR, dmModeReadOnly);
-  //if (!dbP) return;
-
   // Establish the time for which alarms need to be retrieved.
   alarmTime= cmdPBP->alarmSeconds;
 
-  // Load preferences to local var
   PrefLoadPrefs(&prefs);
 
   // Post currently "running" alerts
   AlarmPostTriggered(cats, &prefs, alarmTime);
 
   // Set the alarm trigger for the time of the next alarm to ring.
-  // AlarmSetTrigger(AlarmFindNext(cats, &prefs, alarmTime + minutesInSeconds), 0);
+  AlarmSetTrigger(AlarmFindNext(cats, &prefs, alarmTime + minutesInSeconds), 0);
   
 }
 
@@ -366,7 +356,59 @@ static void AlarmDraw(DmOpenRef cats, UniMatrixPrefs *prefs, UInt32 uniqueID, At
 }
 
 
-void AlarmGoto(UInt32 uniqueID) {
+static void AlarmPlaySound(UInt32 uniqueRecID) {
+  Err                 err;
+  MemHandle	          midiH;          // handle of MIDI record
+  SndMidiRecHdrType  *midiHdrP;       // pointer to MIDI record header
+  UInt8*              midiStreamP;    // pointer to MIDI stream beginning with the 'MThd'
+                                      // SMF header chunk
+  UInt16              cardNo;         // card number of System MIDI database
+  LocalID             dbID;           // Local ID of System MIDI database
+  DmOpenRef	          midiDB = NULL;  // reference to open database
+  UInt16		          recIndex;       // record index of the MIDI record to play
+  SndSmfOptionsType	  smfOpt;         // SMF play options
+  DmSearchStateType	  searchState;    // search state for finding the System MIDI database
+  
+    
+  // Find the system MIDI database
+  err = DmGetNextDatabaseByTypeCreator(true, &searchState, sysFileTMidi, sysFileCSystem, true, &cardNo, &dbID);
+  if ( err != errNone )  return; // DB not found
+  
+  // Open the MIDI database in read-only mode
+  midiDB = DmOpenDatabase (cardNo, dbID, dmModeReadOnly);
+  if ( ! midiDB ) return;
+  
+  // Find the MIDI track record
+  err = DmFindRecordByID (midiDB, uniqueRecID, &recIndex);
+  if ( err ) {
+    // record not found
+    DmCloseDatabase(midiDB);
+    return;
+  }
+    
+  // Lock the record and play the sound
+  // Find the record handle and lock the record
+  midiH = DmQueryRecord(midiDB, recIndex);
+  midiHdrP = MemHandleLock(midiH);
+    
+  // Get a pointer to the SMF stream
+  midiStreamP = (UInt8*)midiHdrP + midiHdrP->bDataOffset;
+    
+  // Play the sound (ignore the error code)
+  // The sound can be interrupted by a key/digitizer event
+  smfOpt.dwStartMilliSec = 0;
+  smfOpt.dwEndMilliSec = sndSmfPlayAllMilliSec;
+  smfOpt.amplitude = PrefGetPreference(prefAlarmSoundVolume);
+  smfOpt.interruptible = true;
+  smfOpt.reserved = 0;
+  err = SndPlaySmf (NULL, sndSmfCmdPlay, midiStreamP, &smfOpt, NULL, NULL, false);
+    
+  MemPtrUnlock (midiHdrP);
+  if ( midiDB )  DmCloseDatabase (midiDB);
+}
+
+
+static void AlarmGoto(UInt32 uniqueID) {
 	DmSearchStateType searchInfo;
   UInt16 cardNo;
   LocalID dbID;
@@ -399,18 +441,12 @@ Boolean AttentionBottleNeckProc(DmOpenRef cats, AttnLaunchCodeArgsType *paramP) 
     case kAttnCommandDrawList:
       AlarmDraw(cats, &prefs, paramP->userData, paramP->commandArgsP, false);
       break;
-/*    
+
     case kAttnCommandPlaySound:
-      {
-      DatebookPreferenceType prefs;
-      
-      // Load Date Book's prefs so we can get the user-specified alarm sound.
-      DatebookLoadPrefs (&prefs);
-  
-      PlayAlarmSound(prefs.alarmSoundUniqueRecID);
-      }
-      break;		
+      AlarmPlaySound(prefs.alarmInfo.soundUniqueRecID);
+      break;
             
+/*
     case kAttnCommandGotIt:
       {
       if (argsP->gotIt.dismissedByUser)
@@ -467,10 +503,144 @@ Boolean AttentionBottleNeckProc(DmOpenRef cats, AttnLaunchCodeArgsType *paramP) 
 
 
 
+/******************************************
+ * MIDI List stuff
+ ******************************************/
+static void MidiPickListCreate(ListPtr listP, ListDrawDataFuncPtr funcP) {
+  SndMidiListItemType*	midiListP;
+  UInt16		i;
+  UInt16		listWidth;
+  UInt16		maxListWidth;
+  RectangleType r;
+    
+  // Load list of midi record entries
+  if ( ! SndCreateMidiList(sysFileCSystem, false, &gMidiCount, &gMidiListH)) {
+    gMidiListH = 0;
+    gMidiCount = 0;
+    return;
+  }
+
+
+  // Now set the list to hold the number of sounds found.  There
+  // is no array of text to use.
+  LstSetListChoices(listP, NULL, gMidiCount);
+  
+  // Now resize the list to the number of panel found
+  LstSetHeight (listP, gMidiCount);
+  
+  // Because there is no array of text to use, we need a function
+  // to interpret the panelIDsP list and draw the list items.
+  LstSetDrawFunction(listP, funcP);
+  
+  // Make the list as wide as possible to display the full sound names
+  // when it is popped winUp.
+  
+  // Lock MIDI sound list
+  midiListP = MemHandleLock(gMidiListH);
+  // Initialize max width
+  maxListWidth = 0;
+  // Iterate through each item and get its width
+  for (i = 0; i < gMidiCount; i++) {
+      // Get the width of this item
+      listWidth = FntCharsWidth(midiListP[i].name, StrLen(midiListP[i].name));
+      // If item width is greater that max, swap it
+      if (listWidth > maxListWidth) {
+        maxListWidth = listWidth;
+      }
+  }
+
+  // Unlock MIDI sound list
+  MemPtrUnlock(midiListP);
+  // Set list width to max width + left margin
+  listP->bounds.extent.x = maxListWidth + 2;
+  // Get pref dialog window extent
+  FrmGetFormBounds(FrmGetActiveForm(), &r);
+  // Make sure width is not more than window extent
+  if (listP->bounds.extent.x > r.extent.x) {
+    listP->bounds.extent.x = r.extent.x;
+  }
+  // Move list left if it doesnt fit in window
+  if (listP->bounds.topLeft.x + listP->bounds.extent.x > r.extent.x) {
+      listP->bounds.topLeft.x = r.extent.x - listP->bounds.extent.x;
+  }
+}
+
+
+static void SetSoundLabel(FormPtr formP, const char* labelP) {
+	ControlPtr	triggerP;
+	UInt16			triggerIdx;
+
+	// Copy the label, winUp to the max into the ptr
+	StrNCopy(gAlarmSoundTriggerLabel, labelP, soundTriggerLabelLen);
+	// Terminate string at max len
+	gAlarmSoundTriggerLabel[soundTriggerLabelLen - 1] = '\0';
+	// Get trigger idx
+	triggerIdx = FrmGetObjectIndex(formP, ALARM_sound_trigger);
+	// Get trigger control ptr
+	triggerP = FrmGetObjectPtr(formP, triggerIdx);
+	// Use category routines to truncate it
+	CategoryTruncateName(gAlarmSoundTriggerLabel, ResLoadConstant(ALARM_sound_trigger_width));
+	// Set the label
+	CtlSetLabel(triggerP, gAlarmSoundTriggerLabel);
+}
+
+
+static void MidiPickListDrawItem (Int16 itemNum, RectanglePtr bounds, Char **unusedP) {
+  Char *	itemTextP;
+  Int16		itemTextLen;
+  Int16		itemWidth;
+  SndMidiListItemType*	listP;
+  
+  ErrNonFatalDisplayIf(itemNum >= gMidiCount, "index out of bounds");
+  
+  // Bail out if MIDI sound list is empty
+  if (gMidiListH == NULL)  return;
+  
+  listP = MemHandleLock(gMidiListH);
+  
+  itemTextP = listP[itemNum].name;
+  
+  // Truncate the item with an ellipsis if it doesnt fit in the list width.
+  // Get the item text length
+  itemTextLen = StrLen(itemTextP);
+  // Get the width of the text
+  itemWidth = FntCharsWidth(itemTextP, itemTextLen);
+  // Does it fit?
+  if (itemWidth <= bounds->extent.x) {
+    // Draw entire item text as is
+    WinDrawChars(itemTextP, itemTextLen, bounds->topLeft.x, bounds->topLeft.y);
+  } else {
+    // We're going to truncate the item text
+    Boolean	ignored;
+    char		ellipsisChar = chrEllipsis;
+    // Set the new max item width
+    itemWidth = bounds->extent.x - FntCharWidth(ellipsisChar);
+    // Find the item length that fits in the bounds minus the ellipsis
+    FntCharsInWidth(itemTextP, &itemWidth, &itemTextLen, &ignored);
+    // Draw item text that fits
+    WinDrawChars(itemTextP, itemTextLen, bounds->topLeft.x, bounds->topLeft.y);
+    // Draw ellipsis char
+    WinDrawChars(&ellipsisChar, 1, bounds->topLeft.x + itemWidth, bounds->topLeft.y);
+  }
+
+  // Unlock list items
+  MemPtrUnlock(listP);
+}
+
+
+static void MidiPickListFree(void) {
+  if ( gMidiListH )	{
+    MemHandleFree(gMidiListH);
+    gMidiListH = 0;
+    gMidiCount = 0;
+  }
+}
+
+
 static void AlarmFormInit(FormType *frm) {
   ControlType *ctl;
   ListType *lst;
-  UInt16 listPos=0;
+  UInt16 listPos=0, item=0;
   MemHandle new, old;
   Char *tmp;
   FieldType *fld=GetObjectPtr(ALARM_time);
@@ -527,6 +697,46 @@ static void AlarmFormInit(FormType *frm) {
   LstSetSelection(lst, listPos);
   CtlSetLabel(ctl, LstGetSelectionText(lst, listPos));
 
+  
+  // Alarm sound stuff
+  lst = GetObjectPtr(ALARM_sound);
+
+  MidiPickListCreate(lst, MidiPickListDrawItem);
+  
+  // Find selected item
+  // Default to first sound in list
+  item = 0;
+
+  // Lock MIDI sound list
+  if ( gMidiListH ) {
+  	SndMidiListItemType*	midiListP;
+    UInt16 i;
+
+    midiListP = MemHandleLock(gMidiListH);
+
+    // Iterate through each item and get its unique ID
+    for (i = 0; i < gMidiCount; ++i) {
+      if (midiListP[i].uniqueRecID == gPrefs.alarmInfo.soundUniqueRecID) {
+        item = i;
+        break;		// exit for loop
+      }
+    }
+
+    // Set the list selection
+    LstSetSelection (lst, item);
+
+    // Init the sound trigger label
+    // Create a new ptr to hold the label
+    gAlarmSoundTriggerLabel = MemPtrNew(soundTriggerLabelLen);
+    // Check for mem failure
+    ErrFatalDisplayIf(gAlarmSoundTriggerLabel == NULL, "Out of memory");
+    // Set the trigger label
+    SetSoundLabel(frm, midiListP[item].name);
+
+    // Unlock MIDI sound list
+    MemPtrUnlock(midiListP);
+  }
+
 }
 
 static Boolean AlarmFormSave(FormType *frm) {
@@ -535,6 +745,8 @@ static Boolean AlarmFormSave(FormType *frm) {
   FieldType *fld;
   AlarmUnitType unit;
   UInt16 ui16;
+  SndMidiListItemType*	sndList;
+  UInt16 sndItem=0;
   
   ctl = GetObjectPtr(ALARM_use);
   gPrefs.alarmInfo.useAlarm = (CtlGetValue(ctl));
@@ -574,10 +786,30 @@ static Boolean AlarmFormSave(FormType *frm) {
   }
   gPrefs.alarmInfo.repeatInterval = ui16;
 
+
+  lst = GetObjectPtr(ALARM_sound);
+  sndItem = LstGetSelection(lst);
+
+  sndList = MemHandleLock(gMidiListH);
+  gPrefs.alarmInfo.soundUniqueRecID = sndList[sndItem].uniqueRecID;
+  MemPtrUnlock(sndList);
+  
   PrefSavePrefs(&gPrefs);
   AlarmReset(DatabaseGetRef());
 
   return true;
+}
+
+
+static void AlarmFormFree(void) {
+  // Free the MIDI pick list
+  MidiPickListFree();
+
+  // Free the sound trigger label placeholder
+  if ( gAlarmSoundTriggerLabel ) {
+    MemPtrFree(gAlarmSoundTriggerLabel);
+    gAlarmSoundTriggerLabel = NULL;
+  }
 }
 
 
@@ -592,6 +824,7 @@ Boolean AlarmFormHandleEvent(EventPtr event) {
         if (AlarmFormSave(frm)) {
           FrmReturnToForm(gMenuCurrentForm);
           FrmUpdateForm(gMenuCurrentForm, frmRedrawUpdateCode);
+          AlarmFormFree();
         }
         handled=true;
         break;
@@ -599,12 +832,32 @@ Boolean AlarmFormHandleEvent(EventPtr event) {
       case ALARM_cancel:
         FrmReturnToForm(gMenuCurrentForm);
         FrmUpdateForm(gMenuCurrentForm, frmRedrawUpdateCode);
+        AlarmFormFree();
         handled=true;
         break;
 
       default:
         break;
     }   
+  } else if (event->eType == popSelectEvent) {
+    if (event->data.popSelect.listID == ALARM_sound) {
+      SndMidiListItemType *sndList;
+      UInt16 sndItem=0;
+
+      sndItem = event->data.popSelect.selection;
+
+      sndList = MemHandleLock(gMidiListH);
+
+      CtlEraseControl(event->data.popSelect.controlP);
+      SetSoundLabel(frm, sndList[sndItem].name);
+      CtlDrawControl(event->data.popSelect.controlP);
+
+      AlarmPlaySound(sndList[sndItem].uniqueRecID);
+
+      MemPtrUnlock(sndList);
+
+      handled = true;
+    }	
   } else if (event->eType == frmUpdateEvent) {
       // redraws the form if needed
       frm = FrmGetActiveForm();

@@ -1,4 +1,4 @@
-/* $Id: translation.de,v 1.3 2003/04/25 23:23:25 tim Exp $ */
+/* $Id: translation.de,v 1.4 2003/04/27 12:16:06 tim Exp $ */
 
 translation "german"
 begin
@@ -137,6 +137,8 @@ begin
   "sets_showtype" = "Zeige Kurstypen für Zeiten"
   "sets_showtime" = "Zeige Zeitlinie"
   "sets_showshort" = "Zeige Kurzname für Zeiten"
+  "sets_muteevents" = "Stumm während Kursen"
+  "sets_muteexams" = "Stumm während Klausuren"
 
 
 /* gadget */
@@ -207,6 +209,7 @@ begin
   "alarm_exam" = "Klausur:"
   /* ^0 = day of week, ^1 = date string */
   "alarm_date_template" = "^0, ^1"
+  "alarm_sound" = "Ereignissignal"
 
 
 end
