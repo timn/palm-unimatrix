@@ -1,4 +1,4 @@
-/* $Id: edit.c,v 1.4 2003/04/25 23:24:38 tim Exp $
+/* $Id: edit.c,v 1.5 2003/10/15 21:42:49 tim Exp $
  *
  * Code for editing times, events, courses
  */
@@ -336,14 +336,88 @@ void AddTime(void) {
   FrmPopupForm(FORM_evt_det);
 }
 
+static void EditTimeSetColor(FormType *frm, RGBColorType *color) {
+  MemHandle mr, mg, mb, old;
+  FieldType *r, *g, *b;
+  Char *buffer;
+  
+  r = FrmGetObjectPtr(frm, FrmGetObjectIndex(frm, FIELD_ed_r));
+  g = FrmGetObjectPtr(frm, FrmGetObjectIndex(frm, FIELD_ed_g));
+  b = FrmGetObjectPtr(frm, FrmGetObjectIndex(frm, FIELD_ed_b));
+
+  mr=MemHandleNew(4); // 4 is 3 digits + \0
+  mg=MemHandleNew(4); // 4 is 3 digits + \0
+  mb=MemHandleNew(4); // 4 is 3 digits + \0
+
+  // Copy contents to the memory handle
+  buffer=(Char *)MemHandleLock(mr);
+  MemSet(buffer, MemPtrSize(buffer), 0);
+  StrPrintF(buffer, "%u", color->r);
+  MemHandleUnlock(mr);
+
+  buffer=(Char *)MemHandleLock(mg);
+  MemSet(buffer, MemPtrSize(buffer), 0);
+  StrPrintF(buffer, "%u", color->g);
+  MemHandleUnlock(mg);
+
+  buffer=(Char *)MemHandleLock(mb);
+  MemSet(buffer, MemPtrSize(buffer), 0);
+  StrPrintF(buffer, "%u", color->b);
+  MemHandleUnlock(mb);
+
+  // Load fields
+  old = FldGetTextHandle(r);
+  FldSetTextHandle(r, mr);
+  if (old != NULL)    MemHandleFree(old); 
+
+  old = FldGetTextHandle(g);
+  FldSetTextHandle(g, mg);
+  if (old != NULL)    MemHandleFree(old); 
+
+  old = FldGetTextHandle(b);
+  FldSetTextHandle(b, mb);
+  if (old != NULL)    MemHandleFree(old);
+
+  FldDrawField(r);
+  FldDrawField(g);
+  FldDrawField(b);
+}
+
+static void EditTimeFindColor(FormType *frm, UInt16 courseID) {
+  UInt16 index=0;
+  MemHandle m;
+  TimeDBRecord *t;
+  RGBColorType color;
+  Boolean found=false;
+
+  color.r=0; color.b=0; color.g=0;
+  while(!found && ((m = DmQueryNextInCategory(DatabaseGetRef(), &index, DatabaseGetCat())) != NULL)) {
+    t=(TimeDBRecord *)MemHandleLock(m);
+    if ((t->type == TYPE_TIME) && (t->course == courseID)) {
+      color.r=t->color[0];
+      color.g=t->color[1];
+      color.b=t->color[2];
+      found = true;
+    }
+    MemHandleUnlock(m);
+    index += 1;
+  }
+  if (found || (! (FldDirty(GetObjectPtr(FIELD_ed_r)) ||
+                   FldDirty(GetObjectPtr(FIELD_ed_g)) ||
+                   FldDirty(GetObjectPtr(FIELD_ed_b)) )) ) {
+    EditTimeSetColor(frm, &color);
+  }
+}
+
 static void EditTimeFormInit(FormType *frm) {
   UInt16 selectedCourse=0;
-  MemHandle mt, mr, mg, mb, mroom, old;
+  MemHandle mt, mroom, old;
   ListType *lst, *day;
   ControlType *ctl, *dayt;
-  FieldType *r, *g, *b, *room;
+  FieldType *room;
   TimeDBRecord *t;
   Char *buffer;
+  RGBColorType color;
 
   gEditTimeNumCourses = CountCourses();
 
@@ -359,7 +433,7 @@ static void EditTimeFormInit(FormType *frm) {
 
   if (gEditTimeIsAdd) {
     // Init form as "add" form
-
+  
     gEditTimeBegin.hours = 8;
     gEditTimeBegin.minutes = 15;
     gEditTimeEnd.hours = 9;
@@ -367,9 +441,12 @@ static void EditTimeFormInit(FormType *frm) {
 
     selectedCourse = CourseListGen(gEditTimeItemList, gEditTimeItemIDs, gEditTimeItemInd, gEditTimeNumCourses, 0, CLIST_SEARCH_INDEX);
 
+    EditTimeFindColor(frm, gEditTimeItemIDs[selectedCourse]);
+
     LstSetSelection(day, 0);
     CtlSetLabel(dayt, LstGetSelectionText(day, 0));
 
+    
   } else {
     // We edit a record
 
@@ -381,31 +458,14 @@ static void EditTimeFormInit(FormType *frm) {
     gEditTimeEnd.hours=t->end.hours;
     gEditTimeEnd.minutes=t->end.minutes;
 
-    r = FrmGetObjectPtr(frm, FrmGetObjectIndex(frm, FIELD_ed_r));
-    g = FrmGetObjectPtr(frm, FrmGetObjectIndex(frm, FIELD_ed_g));
-    b = FrmGetObjectPtr(frm, FrmGetObjectIndex(frm, FIELD_ed_b));
+    color.r=t->color[0];
+    color.g=t->color[1];
+    color.b=t->color[2];
+    EditTimeSetColor(frm, &color);
+
     room = FrmGetObjectPtr(frm, FrmGetObjectIndex(frm, FIELD_ed_room));
 
-    mr=MemHandleNew(4); // 4 is 3 digits + \0
-    mg=MemHandleNew(4); // 4 is 3 digits + \0
-    mb=MemHandleNew(4); // 4 is 3 digits + \0
     mroom=MemHandleNew(sizeof(t->room));
-
-    // Copy contents to the memory handle
-    buffer=(Char *)MemHandleLock(mr);
-    MemSet(buffer, MemPtrSize(buffer), 0);
-    StrPrintF(buffer, "%u", t->color[0]);
-    MemHandleUnlock(mr);
-
-    buffer=(Char *)MemHandleLock(mg);
-    MemSet(buffer, MemPtrSize(buffer), 0);
-    StrPrintF(buffer, "%u", t->color[1]);
-    MemHandleUnlock(mg);
-
-    buffer=(Char *)MemHandleLock(mb);
-    MemSet(buffer, MemPtrSize(buffer), 0);
-    StrPrintF(buffer, "%u", t->color[2]);
-    MemHandleUnlock(mb);
 
     buffer=(Char *)MemHandleLock(mroom);
     MemSet(buffer, MemPtrSize(buffer), 0);
@@ -414,18 +474,6 @@ static void EditTimeFormInit(FormType *frm) {
 
 
     // Load fields
-    old = FldGetTextHandle(r);
-    FldSetTextHandle(r, mr);
-    if (old != NULL)    MemHandleFree(old); 
-
-    old = FldGetTextHandle(g);
-    FldSetTextHandle(g, mg);
-    if (old != NULL)    MemHandleFree(old); 
-
-    old = FldGetTextHandle(b);
-    FldSetTextHandle(b, mb);
-    if (old != NULL)    MemHandleFree(old); 
-
     old = FldGetTextHandle(room);
     FldSetTextHandle(room, mroom);
     if (old != NULL)    MemHandleFree(old); 
@@ -751,6 +799,10 @@ Boolean EditTimeFormHandleEvent(EventPtr event) {
       default:
         break;
     }
+  } else if (event->eType == popSelectEvent) {
+    if (event->data.popSelect.listID == LIST_ed_course) {
+      EditTimeFindColor(frm, gEditTimeItemIDs[event->data.popSelect.selection]);
+    }
   } else if (event->eType == frmUpdateEvent) {
       // redraws the form if needed
       frm = FrmGetActiveForm();
@@ -759,8 +811,8 @@ Boolean EditTimeFormHandleEvent(EventPtr event) {
     } else if (event->eType == frmOpenEvent) {
       // initializes and draws the form at program launch
       frm = FrmGetActiveForm();
-      EditTimeFormInit(frm);
       FrmDrawForm(frm);
+      EditTimeFormInit(frm);
       if (gEditTimeIsAdd) {
         CtlHideControl(GetObjectPtr(BUTTON_ed_beam));
         CtlHideControl(GetObjectPtr(BUTTON_ed_del));
