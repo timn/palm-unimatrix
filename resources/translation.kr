@@ -1,0 +1,213 @@
+/* $Id: translation.kr,v 1.1 2003/10/15 21:42:10 tim Exp $ */
+
+translation "korean"
+begin
+
+
+/* about translator only name is displayed */
+  "translator" = "권 오중"
+  "trans_mail" = "Inic@unitel.co.kr"
+  "trans_hdev" = "Tungsten C"
+  "trans_palm" = "5.2"
+  "trans_trby" = "한글 번역:"
+
+
+/* common */
+  "com_cur" = "현재 학기"
+  "com_man" = "학기 관리"
+
+
+/* menu */
+  "men_addc" = "강의 추가"
+  "men_adde" = "수업시간 추가"
+  "men_cl" = "강의 목록"
+  "men_ab" = "About"
+  "men_opt" = "옵션"
+  "men_sets" = "설정"
+  "men_ex" = "시험"
+  "men_beam" = "학기 전송"
+  "men_alarm" = "알람"
+
+
+/* alerts */
+  "al_ok" = "확인"
+  "al_rominc1" = "시스템 비호환"
+  "al_rominc2" = "이 어플리케이션을 실행하기 위해서는 OS 3.5혹은 그 이상의 버전이 필요합니다. "
+  "al_noc1" = "입력된 강의 없음"
+  "al_noc2" = "수업시간을 추가하기 전에 강의를 입력해 주세요 "
+  "al_noc3" = "확인"
+  "al_nr1" = "강의실 없음"
+  "al_nr2" = "강의실을 입력해 주세요."
+  "al_nomem1" = "메모리 부족"
+  "al_nomem2" = "메모리를 할당할 수 없습니다."
+  "al_del1" = "삭제 확인"
+  "al_del2" = "선택된 항목을 삭제하시겠습니까(^1 [^2], ^3)?"
+  "al_dely" = "예"
+  "al_deln" = "아니오"
+  "al_invend1" = "시간입력 잘못됨"
+  "al_invend2" = "시간대는 08:00에서 20:00 사이여야 합니다."
+  "al_delc1" = "삭제 확인"
+  "al_delc2" = "선택된 강의(^1)와 수업 시간^2^3을 모두 삭제하시겠습니까? "
+  "al_delcy" = "예"
+  "al_delcn" = "아니오"
+  "al_ni1" = "선택된 항목 없음"
+  "al_ni2" = "편집/삭제하고자 하는 항목을 선택해 주세요."
+  "al_ecn1" = "강의명 없음"
+  "al_ecn2" = "강의의 이름을 입력해 주세요."
+  "al_ect1" = "교수님 이름 없음"
+  "al_ect2" = "교수님 이름을 입력해 주세요."
+  "al_unt1" = "시간이 입력되지 않음"
+  "al_unt2" = "수업은 시간대가 지정되어야 합니다."
+  "al_old1" = "구버전의 데이터베이스"
+  "al_old2" = "이 데이터베이스는 구버전의 UniMatrix로 작성되었습니다. 변환하시겠습니까?"
+  "al_old3" = "예"
+  "al_old4" = "아니오"
+  "al_ctd1" = "입력값에 오류 있음"
+  "al_ctd2" = "이름과 축약명 모두를 입력해 주세요."
+  "al_ct_del1" = "삭제 확인"
+  "al_ct_del2" = "강의 타입^1 [^2]을 삭제하시겠습니까?^3"
+  "al_ex_del1" = "삭제 확인"
+  "al_ex_del2" = "^3에서 ^2에 치는 시험(^1)를 삭제하시겠습니까?"
+  "al_timecol1" = "시간대 겹침 "
+  "al_timecol2" = "입력한 시간대가 이미 입력된 수업과 겹칩니다. "
+  "al_beamdbfail1" = "데이터베이스 오류"
+  "al_beamdbfail2" = "데이터베이스를 열 수 없습니다. 비밍받기 전 초기화를 위해 UniMatrix를 한 번 실행해 주세요."
+
+  "al_beamnocat1" = "메모리 부족"
+  "al_beamnocat2" = "최대 생성 가능한 카테고리 수를 초과했습니다. 다른 카테고리를 지우고 재시도 해주세요."
+
+
+/* about */
+  "ab_title" = "UniMatrix는?"
+  "ab_d1" = "Software for planning your"
+  "ab_d2" = " everyday business at university"
+  "ab_get" = "Get newest version at"
+
+
+/* beam */
+  "b_title" = "학기 선택"
+  "b_d1" = "전송받은 항목들이"
+  "b_d2" = "저장될 학기를"
+  "b_d3" = "선택해 주세요."
+  "bs_d1" = "전송받은 항목들이"
+  "bs_d2" = "저장될 학기를 새로"
+  "bs_d3" = "생성합니다."
+  "b_sem" = "학기"
+
+
+/* course list */
+  "cl_title" = "강의 목록"
+  "cl_desc" = "이 학기의 모든 강의들:"
+
+
+/* course details (add and edit) */
+  "cd_title" = "강의 편집"
+  "cd_name" = "이름"
+  "cd_type" = "타입"
+  "cd_teacher" = "교수님"
+  "cd_email" = "Email"
+  "cd_website" = "홈페이지"
+  "cd_phone" = "전화"
+
+
+/* event details (add and edit */
+  "ed_title" = "수업 편집"
+  "ed_course" = "강의"
+  "ed_day" = "날짜"
+  "ed_time" = "시간"
+  "ed_title" = "시간대 선택"
+  "ed_color" = "색"
+  "ed_room" = "강의실"
+  "ed_mo" = "월요일"
+  "ed_tu" = "화요일"
+  "ed_we" = "수요일"
+  "ed_th" = "목요일"
+  "ed_fr" = "금요일"
+  "ed_sa" = "토요일"
+  "ed_r" = "R"
+  "ed_g" = "G"
+  "ed_b" = "B"
+
+
+/* settings */
+  "sets_title" = "설정"
+  "sets_day" = "토요일에 수업 있음"
+  "sets_showtype" = "수업의 축약 타입 보이기"
+  "sets_showtime" = "현재 시간 타임라인 보이기"
+  "sets_showshort" = "수업의 축약명 보이기"
+  "sets_muteevents" = "수업중 소리 끄기"
+  "sets_muteexams" = "시험중 소리 끄기"
+
+
+/* gadget */
+  "gad_mo" = "월"
+  "gad_tu" = "화"
+  "gad_we" = "수"
+  "gad_th" = "목"
+  "gad_fr" = "금"
+  "gad_sa" = "토"
+
+
+/* Course types */
+  "ct_title" = "강의 타입"
+  "ct_desc" = "편집할 강의 타입을 선택하세요:"
+  "ct_edct" = "타입 편집"
+  /* Course type defaults for database initialization */
+  "ct_lec" = "강의"
+  "ct_ex" = "연습"
+  "ct_bex" = "청강"
+  "ct_sem" = "세미나"
+  "ct_psem" = "프로세미나"
+  "ct_rep" = "재수강"
+  "ct_unk" = "Unknown"
+  /* The short names may be only 3 chars in length! */
+  "ct_sh_lec" = "강"
+  "ct_sh_ex" = "연"
+  "ct_sh_bex" = "청"
+  "ct_sh_sem" = "세"
+  "ct_sh_psem" = "프"
+  "ct_sh_rep" = "재"
+  "ct_sh_unk" = "?"
+
+
+/* Course type details */
+  "ctdet_title" = "강의 타입 세부항목"
+  "ctdet_name" = "이름"
+  "ctdet_short" = "축약명"
+
+
+/* Exam list and exam details */
+  "ex_title" = "시험"
+  "exd_title" = "시험 세부항목"
+  "exd_course" = "강의"
+  "exd_date" = "날짜"
+  "exd_time" = "시간"
+  "exd_length" = "길이"
+
+
+/* Alarm related entries */
+  "alarm_today" = "오늘"
+  "alarm_title" = "알람"
+  "alarm_use" = "시험대비 알람"
+  "alarm_time" = "일찍 울림:"
+  "alarm_mins" = "분"
+  "alarm_hours" = "시간"
+  "alarm_days" = "날"
+  "alarm_remind" = "알리기:"
+  "alarm_repeat" = "주기:"
+  "alarm_rem_1" = "한 번"
+  "alarm_rem_2" = "두 번"
+  "alarm_rem_3" = "세 번"
+  "alarm_rem_5" = "다섯 번"
+  "alarm_rem_10" = "열 번"
+  "alarm_rep_1" = "분"
+  "alarm_rep_5" = "5분"
+  "alarm_rep_10" = "10분"
+  "alarm_rep_30" = "30분"
+  "alarm_exam" = "시험:"
+  /* ^0 = day of week, ^1 = date string */
+  "alarm_date_template" = "^0, ^1"
+  "alarm_sound" = "Alarm Sound"
+
+
+end
