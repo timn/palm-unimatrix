@@ -1,4 +1,4 @@
-/* $Id: UniMatrix.c,v 1.4 2003/04/25 23:24:38 tim Exp $
+/* $Id: UniMatrix.c,v 1.5 2003/11/20 22:53:48 tim Exp $
  *
  * UniMatrix main, event handling
  * Created: July 2002
@@ -53,7 +53,7 @@ static UInt16 StartApplication (void) {
 
   // Load prefs
   PrefLoadPrefs(&gPrefs);
-  
+
   // Initialize TNglue
   err = TNGlueColorInit();
 
@@ -623,9 +623,11 @@ UInt32 PilotMain(UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlags){
     } else {
       // Another app was running when we were called
       DmOpenRef cats = DmOpenDatabaseByTypeCreator(DATABASE_TYPE, APP_CREATOR, dmModeReadWrite);
-      AlarmReset(cats);
-      //AlarmUpdatePosted(DeviceTimeChanged);
-      DmCloseDatabase(cats);
+      if (cats != 0) {
+        AlarmReset(cats);
+        //AlarmUpdatePosted(DeviceTimeChanged);
+        DmCloseDatabase(cats);
+      }
     }
     
   
@@ -636,12 +638,14 @@ UInt32 PilotMain(UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlags){
   } else if (cmd == sysAppLaunchCmdSystemReset) {
     if (! ((SysAppLaunchCmdSystemResetType*)cmdPBP)->hardReset) {
       if (launchFlags & sysAppLaunchFlagSubCall) {
-      AlarmReset(DatabaseGetRefN(DB_MAIN));
+        AlarmReset(DatabaseGetRefN(DB_MAIN));
       } else {
         // Another app was running when we were called
         DmOpenRef cats = DmOpenDatabaseByTypeCreator(DATABASE_TYPE, APP_CREATOR, dmModeReadWrite);
-        AlarmReset(cats);
-        DmCloseDatabase(cats);
+        if (cats != 0) {
+          AlarmReset(cats);
+          DmCloseDatabase(cats);
+        }
       }
     }
 
