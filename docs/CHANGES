@@ -9,7 +9,7 @@
 - Finally most translations are done, spanish is not, needs new translator
 - Fixed bug in exams, note edit resulted in invalid row when the note icon in
   a table row was used. It updated twice -> removed FrmUpdateForm calls from
-  Note exit code in button handlind then it gets updated only once and works
+  Note exit code in button handling then it gets updated only once and works
   just fine
 - Update webpage
 - Added changelog.php
@@ -303,4 +303,4 @@
 
 
 
-$Id: CHANGES,v 1.13 2003/06/18 11:40:41 tim Exp $
+$Id: CHANGES,v 1.14 2003/06/18 15:11:09 tim Exp $

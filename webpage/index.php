@@ -1,6 +1,6 @@
 <?php
 
-/* $Id: index.php,v 1.6 2003/06/18 15:04:44 tim Exp $ */
+/* $Id: index.php,v 1.7 2003/06/18 15:11:09 tim Exp $ */
 
 $title="niemueller.de - palm software - UniMatrix";
 $meta_desc="A software to manage your daily university business.";
@@ -226,7 +226,7 @@ You may download the Palm install file provided as a .zip and as a .tar.gz file.
   <td>&nbsp; &nbsp;</td>
   <td></td>
   <td>&nbsp;</td>
-  <td><a href="http://www.palmgear.com/software/redirector.cfm/unimatrix<?=$version>en.zip?prodID=43484&type=zip">.zip</a> (<?=filesize("{$basename}-{$version}_dist/{$basename}-{$version}-en.zip")?> Bytes)</td>
+  <td><a href="http://www.palmgear.com/software/redirector.cfm/unimatrix<?=$version?>en.zip?prodID=43484&type=zip">.zip</a> (<?=filesize("{$basename}-{$version}_dist/{$basename}-{$version}-en.zip")?> Bytes)</td>
  </tr>
 </table>
 <br/>
