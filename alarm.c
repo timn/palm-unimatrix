@@ -1,4 +1,4 @@
-/* $Id: alarm.c,v 1.7 2003/06/18 15:05:35 tim Exp $
+/* $Id: alarm.c,v 1.8 2003/10/15 21:43:22 tim Exp $
  *
  * Support for exam alarms
  * Created: 2003/04/19
@@ -484,14 +484,16 @@ static void AlarmDraw(DmOpenRef cats, UniMatrixPrefs *prefs, UInt32 uniqueID, At
   } else {
     // Draw the icon. Ignore the 'selected' flag for this example 
     BitmapType *icon;
-    UInt16 iconOffset;
+    UInt16 iconOffset=0;
     DateTimeType today;
+    Coord icon_width=0;
 
     resH = DmGetResource(bitmapRsc, BITMAP_alarm_small_color); 
     icon = (BitmapType *)(MemHandleLock(resH)); 
-
+    BmpGetDimensions(icon, &icon_width, NULL, NULL);
+    
     // center it in the space allotted 
-    iconOffset = (kAttnListMaxIconWidth - icon->width)/2; 
+    iconOffset = ((kAttnListMaxIconWidth - icon_width)/2);
 
     x = paramsP->drawList.bounds.topLeft.x; 
     y = paramsP->drawList.bounds.topLeft.y; 
@@ -737,12 +739,13 @@ Boolean AttentionBottleNeckProc(DmOpenRef cats, AttnLaunchCodeArgsType *paramP) 
 *               drawing the list
 * RETURNS:      nothing
 *****************************************************************************/
-static void MidiPickListCreate(ListPtr listP, ListDrawDataFuncPtr funcP) {
+static void MidiPickListCreate(FormType *frm, ListPtr listP, ListDrawDataFuncPtr funcP) {
   SndMidiListItemType*	midiListP;
   UInt16		i;
   UInt16		listWidth;
   UInt16		maxListWidth;
-  RectangleType r;
+  RectangleType r, listBounds;
+  UInt16 listW=0, listX=0;
     
   // Load list of midi record entries
   if ( ! SndCreateMidiList(sysFileCSystem, false, &gMidiCount, &gMidiListH)) {
@@ -770,6 +773,11 @@ static void MidiPickListCreate(ListPtr listP, ListDrawDataFuncPtr funcP) {
   midiListP = MemHandleLock(gMidiListH);
   // Initialize max width
   maxListWidth = 0;
+  
+  FrmGetObjectBounds(frm, FrmGetObjectIndexFromPtr(frm, listP), &listBounds);
+  listW = listBounds.extent.x;
+  listX = listBounds.topLeft.x;
+
   // Iterate through each item and get its width
   for (i = 0; i < gMidiCount; i++) {
       // Get the width of this item
@@ -783,17 +791,21 @@ static void MidiPickListCreate(ListPtr listP, ListDrawDataFuncPtr funcP) {
   // Unlock MIDI sound list
   MemPtrUnlock(midiListP);
   // Set list width to max width + left margin + right margin
-  listP->bounds.extent.x = maxListWidth + 4;
+  listW = maxListWidth + 4;
   // Get pref dialog window extent
   FrmGetFormBounds(FrmGetActiveForm(), &r);
   // Make sure width is not more than window extent
-  if (listP->bounds.extent.x > r.extent.x) {
-    listP->bounds.extent.x = r.extent.x;
+  if (listW > r.extent.x) {
+    listW = r.extent.x;
   }
   // Move list left if it doesnt fit in window
-  if (listP->bounds.topLeft.x + listP->bounds.extent.x > r.extent.x) {
-      listP->bounds.topLeft.x = r.extent.x - listP->bounds.extent.x;
+  if (listX + listW > r.extent.x) {
+      listX = r.extent.x - listX;
   }
+
+  RctSetRectangle(&listBounds, listX, listBounds.topLeft.y,
+                               listW, listBounds.extent.y);
+  FrmSetObjectBounds(frm, FrmGetObjectIndexFromPtr(frm, listP), &listBounds);
 }
 
 
@@ -965,7 +977,7 @@ static void AlarmFormInit(FormType *frm) {
   // Alarm sound stuff
   lst = GetObjectPtr(ALARM_sound);
 
-  MidiPickListCreate(lst, MidiPickListDrawItem);
+  MidiPickListCreate(frm, lst, MidiPickListDrawItem);
   
   // Find selected item
   // Default to first sound in list
