@@ -1,119 +1,118 @@
-/* $Id: translation.si_cp1250,v 1.1 2003/02/06 21:27:23 tim Exp $ */
+/* $Id: translation.si_cp1250,v 1.2 2003/03/11 16:10:55 tim Exp $ */
 
-translation "slovenian_cp1250"
+translation "slovene"
 begin
 
 
 /* about translator only name is displayed */
   "translator" = "Boötjan MÅller"
-  "trans_mail" = "neonatus@neonatus.net"
+  "trans_mail" = "n@neonatus.net"
   "trans_hdev" = "Palm m105"
-  "trans_palm" = "3.51"
+  "trans_palm" = "3.53"
   "trans_trby" = "Slovenian translation by:"
 
 
 /* common */
-  "com_cur" = "Trenutno"
+  "com_cur" = "Trenutni"
   "com_man" = "Uredi Sem."
 
 
 /* menu */
-  "men_addc" = "Novo Predav."
-  "men_adde" = "Nov Vnos"
+  "men_addc" = "Dodaj Pred."
+  "men_adde" = "Dodaj Vnos"
   "men_cl" = "Spisek Pred."
   "men_ab" = "O Programu"
   "men_opt" = "Moûnosti"
-  "men_ex" = "Izpiti"
   "men_sets" = "Nastavitve"
-  "men_beam" = "Poölji sem."
+  "men_ex" = "Izpiti"
+  "men_beam" = "Poölji Sem."
 
 
 /* alerts */
-  "al_ok" = "V redu"
-  "al_rominc1" = "Nekompatibilen sistem"
-  "al_rominc2" = "Za uporabo tega programa je zahtevana verzija sistema 3.5 ali viöja."
-  "al_noc1" = "Napaka: Brez Predavanja"
-  "al_noc2" = "Najprej morate ustvariti predavanje, nato dogodek."
-  "al_noc3" = "V redu"
-  "al_nr1" = "Napaka: Ni Uöilnice"
-  "al_nr2" = "Morate vpisati uöilnico."
-  "al_nomem1" = "Premalo spomina"
+  "al_ok" = "OK"
+  "al_rominc1" = "Sistem nekompatibilen"
+  "al_rominc2" = "Ta aplikacija zahteva sistem verzije 3.5 ali viöji."
+  "al_noc1" = "Napaka: Ni Predavanj"
+  "al_noc2" = "Najprej morate ustvariti predavanje da lahko dodate vnos."
+  "al_noc3" = "OK"
+  "al_nr1" = "Napaka: Ni Sobe"
+  "al_nr2" = "Morate vnesti sobo."
+  "al_nomem1" = "Ni Dovolj Spomina"
   "al_nomem2" = "Nisem mogel alocirati spomina."
   "al_del1" = "Res izbriöem?"
-  "al_del2" = "Izbriöem izbran vnos (^1 [^2], ^3)?"
+  "al_del2" = "Izbriöi izbran vnos (^1 [^2], ^3)?"
   "al_dely" = "Da"
   "al_deln" = "Ne"
   "al_ebb1" = "Konec pred zaöetkom"
-  "al_ebb2" = "‘as konca je pred öasom zaöetka. To se zdi nemogoöe."
+  "al_ebb2" = "‘as konca je pred zaöetkom dogodka. To naj bi bilo nemogoöe."
   "al_invend1" = "Napaöen ‘as"
-  "al_invend2" = "‘as mora biti med 08:00 ter 20:00!"
+  "al_invend2" = "Vneöen öas je lahko med 08:00 ter 20:00!"
   "al_delc1" = "Res izbriöem?"
-  "al_delc2" = "Res izbriöem izbrana predavanja (^1) ter vse pripradajoöe dogodke?^2^3"
+  "al_delc2" = "Res izbriöem izbrano predavanje (^1) ter vse pripadajoöe dogodke?^2^3"
   "al_delcy" = "Da"
   "al_delcn" = "Ne"
-  "al_ni1" = "Noben vnos ni izbran."
-  "al_ni2" = "Morate izbratu vnos ki ga hoöete urediti/izbrisati."
-  "al_ecn1" = "Brez Imena"
-  "al_ecn2" = "Morate vnesti ime predavanja!"
+  "al_ni1" = "Noben vnos ni bil izbran."
+  "al_ni2" = "Morate izbrati vnos, katerega ûelite urediti/izbrusati."
+  "al_ecn1" = "Breu Imena"
+  "al_ecn2" = "Morate vnesti ime za predavanje!"
   "al_ect1" = "Brez Predavatelja"
-  "al_ect2" = "Morate vnesti ime predavatelja!"
-  "al_unt1" = "Brez öasa"
+  "al_ect2" = "Morate podati ime predavatelja!"
+  "al_unt1" = "Brez ‘asa"
   "al_unt2" = "Dogodki morajo imeti öas."
-  "al_old1" = "Stara baza podatkov"
-  "al_old2" = "Baza je bila ustvarjena s staro verzijo UniMatrixa. Lahko jo pretvorim. Naj to storim sedaj?"
+  "al_old1" = "Stara Baza"
+  "al_old2" = "Baza je bila ustvarjena z starejöo verzijo UniMatrix-a. Lahko jo pretvorim. Naj jo pretvorim sedaj?"
   "al_old3" = "Da"
   "al_old4" = "Ne"
   "al_ctd1" = "Neveljavna vrednost"
-  "al_ctd2" = "Vnesti morate tako ime kot kratko ime!"
+  "al_ctd2" = "Morate vnesti ime in okrajöavo!"
   "al_ct_del1" = "Res izbriöem?"
-  "al_ct_del2" = "Izbriöem vrsto predavanja ^1 [^2]?^3"
+  "al_ct_del2" = "Izbriöi predavane tipa ^1 [^2]?^3"
   "al_ex_del1" = "Res izbriöem?"
-  "al_ex_del2" = "Res izbriöem izpit za ^1 ^2 ob ^3?"
-  "al_timecol1" = "‘asa Sovpada"
-  "al_timecol2" = "Podana öas sovpada z ûe vnesenim dogodkom."
-  "al_beamdbfail1" = "Napaka v bazi"
-  "al_beamdbfail2" = "Nisem mogel odpreti baze. UniMatrix poûenite vsaj 1x preden poskuöate poöiljati ali sprejemati."
-  "al_beamnocat1" = "Premalo Spomina"
-  "al_beamnocat2" = "Dodanih je ûe maksimalno ötevilo kategorij. Izbriöite stare kategorije ter poskusite znova."
+  "al_ex_del2" = "Res izbriöem izpit za ^1 dne ^2 ob ^3?"
+  "al_timecol1" = "Sovpadanje ‘asov"
+  "al_timecol2" = "Podani öasi sovpadajo z ûe obstojeöim dogodkom."
+  "al_beamdbfail1" = "Napaka v Bazi"
+  "al_beamdbfail2" = "Nisem mogel odpreti baze. UniMatrix poûenite vsaj enkrat preden prejmete inicializirano bazo preko IR."
+  "al_beamnocat1" = "Ni dovolj spomina"
+  "al_beamnocat2" = "Imate maksimalno ötevilo moûnih kategorij. Izbriöite stare kategorije ter poskusite ponovno."
 
 
 /* about */
   "ab_title" = "O UniMatrix-u"
-  "ab_d1" = "Program za planiranje vaöe"
-  "ab_d2" = " vsakodnevne aktivnosti na univerzi"
-  "ab_get" = "Najnovejöo verzijo dobite na"
+  "ab_d1" = "Program za naörtovanje vaöega"
+  "ab_d2" = " vsakdana na univerzi"
+  "ab_get" = "Najnovejöa verzija na"
 
 
 /* beam */
-  "b_title" = "Izberite semester"
+  "b_title" = "Izberite Semester"
   "b_d1" = "Prosim izberite semester, v"
-  "b_d2" = "katerem naj bo sprejet predmet"
-  "b_d3" = "shranjena."
+  "b_d2" = "katerem naj bo prejeto predavanje"
+  "b_d3" = "shranjeno."
   "bs_d1" = "To bo kreiralo nov semester"
   "bs_d2" = "v katerega bodo shranjeni"
-  "bs_d3" = "sprejeti vnosi."
-  "b_ok" = "V redu"
+  "bs_d3" = "prejeti vnosi."
   "b_sem" = "Semester:"
 
 
 /* course list */
-  "cl_title" = "Spisek Predmetov"
-  "cl_desc" = "Vsi predmeti v tem semestru:"
+  "cl_title" = "Spisek Predavanj"
+  "cl_desc" = "Vsa predavanja v tem semestru:"
 
 
 /* course details (add and edit) */
-  "cd_title" = "Detajli o ®tudiju"
+  "cd_title" = "Uredi Predavanje"
   "cd_name" = "Ime"
   "cd_type" = "Tip"
-  "cd_teacher" = "Uöitelj"
+  "cd_teacher" = "Predavatelj"
   "cd_email" = "Email"
   "cd_website" = "WWW"
-  "cd_phone" = "Telefon"
+  "cd_phone" = "Tel."
 
 
-/* event details (add and edit) */
-  "ed_title" = "Detalji o dogodkih"
-  "ed_course" = "Predmet"
+/* event details (add and edit */
+  "ed_title" = "Uredi Dogodek"
+  "ed_course" = "Predavanje"
   "ed_day" = "Dan"
   "ed_time" = "‘as"
   "ed_title" = "Izberite ‘as"
@@ -132,9 +131,9 @@ begin
 
 /* settings */
   "sets_title" = "Nastavitve"
-  "sets_day" = "Sobota je delovnik"
-  "sets_showtype" = "Prikaûi kratke tipe dogodkov"
-  "sets_showtime" = "Prikaûi pravoöasno trenutni öas"
+  "sets_day" = "Sobota je delavnik"
+  "sets_showtype" = "Prikaûi okrajöave za dogodke"
+  "sets_showtime" = "Prikaûi öasovno örto trenutnega öasa"
 
 
 /* gadget */
@@ -147,12 +146,12 @@ begin
 
 
 /* Course types */
-  "ct_title" = "Vrste Predmetov"
-  "ct_desc" = "Izberite vrsto predmeta za urejanje:"
-  "ct_edct" = "Uredi vrste..."
+  "ct_title" = "Tip Predavanj"
+  "ct_desc" = "Izberite vrsto predavanja za urejanje:"
+  "ct_edct" = "Uredi Tipe..."
   /* Course type defaults for database initialization */
   "ct_lec" = "Predavanje"
-  "ct_ex" = "Vaja"
+  "ct_ex" = "Vaje"
   "ct_bex" = "Monitoring"
   "ct_sem" = "Seminar"
   "ct_psem" = "Proseminar"
@@ -169,18 +168,18 @@ begin
 
 
 /* Course type details */
-  "ctdet_title" = "Course Type Details"
-  "ctdet_name" = "Name"
-  "ctdet_short" = "Short"
+  "ctdet_title" = "Detajli o Predavanju"
+  "ctdet_name" = "Ime"
+  "ctdet_short" = "Okrajöava"
 
 
 /* Exam list and exam details */
-  "ex_title" = "Izpit"
+  "ex_title" = "Izpiti"
   "exd_title" = "Detajli o Izpitih"
-  "exd_course" = "Smer"
+  "exd_course" = "Predavanje"
   "exd_date" = "Datum"
   "exd_time" = "‘as"
-  "exd_length" = "Trajanje"
+  "exd_length" = "Dolûina"
 
 
 end

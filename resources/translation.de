@@ -1,4 +1,4 @@
-/* $Id: translation.de,v 1.1 2003/02/06 21:27:23 tim Exp $ */
+/* $Id: translation.de,v 1.2 2003/03/11 16:10:55 tim Exp $ */
 
 translation "german"
 begin
@@ -134,6 +134,7 @@ begin
   "sets_day" = "Samstag ist Arbeitstag"
   "sets_showtype" = "Zeige Kurstypen für Zeiten"
   "sets_showtime" = "Zeige Zeitlinie"
+  "sets_showshort" = "Zeige Kurzname für Zeiten"
 
 
 /* gadget */

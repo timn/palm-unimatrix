@@ -5,6 +5,33 @@
 
 === v0.9
 
+* Tue Mar 11 2003 Tim Niemueller <tim@niemueller.de>
+- Fixed Cache, cann now call CacheRegister within anothers Cache's LoadFunc
+- Added Caching for short names
+
+* Sun Mar 09 2003 Tim Niemueller <tim@niemueller.de>
+- Lots of changes :-)
+- Removed MainFormInit(), was useless anyway
+- Added caching functionality to speed up drawing of short names and short
+  types (when enabled in preferences screen)
+  I really like that feature since it is my first useful implementation of
+  binary search :-)
+  You can see this feature used in clist.c in CourseGetName
+- DATABASE_VERSION changed to three. Need to do a sort for version 2.
+- Removed DatabaseGetNewCID, this functionality is now implemented as
+  CourseNewID in clist.c.
+- 
+
+
+* Sun Mar 02 2003 Tim Niemueller <tim@niemueller.de>
+- Restructered prefs code, now we have one preferences struct
+- removed feature stuff from gadget.c. Not needed any more with the new
+  prefs struct. Could even get rid of DatabaseGetCat and GadgetSetNumdays.
+  Maybe later
+- Rewrote stroke code. No we have stroke from upper right to lower right and
+  lower right to upper right. Feels better.
+- Added code to show short names for courses in main form in event boxes
+
 * Thu Feb 13 2003 Tim Niemueller <tim@niemueller.de>
 - Added italian translation. Thanx to Carlo Seenam Cavaliere
 - Added typo fix for english translation
@@ -183,4 +210,4 @@
 
 
 
-$Id: CHANGES,v 1.3 2003/02/13 13:22:18 tim Exp $
+$Id: CHANGES,v 1.4 2003/03/11 16:10:55 tim Exp $
