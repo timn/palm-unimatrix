@@ -3,6 +3,18 @@
 ==============================================================================
 
 
+=== v0.9a
+
+* Thu Oct 09 2003 Tim Niemueller <tim@niemueller.de>
+- More intelligent event detail screen. It now tries to "guess" the color:
+  - If a course has been selected that has already an existing event the
+    color of this event is loaded
+  - If the course has no event yet then either black is set (#000000) or
+    if one or more of the fields has been edited the color is not changed
+- Removed some bugs that where sleeping deep inside the caching code. They
+  occured only when CacheGet was called on an empty or almost empty (one
+  element). Had to make l, r, x Int32 (signed)
+
 === v0.9
 
 * Wed Jun 18 2003 Tim Niemueller <tim@niemueller.de>
@@ -303,4 +315,4 @@
 
 
 
-$Id: CHANGES,v 1.14 2003/06/18 15:11:09 tim Exp $
+$Id: CHANGES,v 1.15 2003/10/15 21:38:18 tim Exp $
