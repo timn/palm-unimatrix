@@ -1,6 +1,6 @@
 <?php
 
-/* $Id: index.php,v 1.14 2003/11/20 23:10:45 tim Exp $ */
+/* $Id: index.php,v 1.15 2004/01/05 23:29:38 tim Exp $ */
 
 $title="niemueller.de - palm software - UniMatrix";
 $meta_desc="A software to manage your daily university business.";
@@ -32,6 +32,7 @@ $languages=array( "de" => "German/Deutsch",
 
 $preversion=0;
 
+count_page("unimatrix");
 heading_lastmod();
 heading("Uni Matrix",
         "Software for planning your everyday business at university",
