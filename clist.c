@@ -1,4 +1,4 @@
-/* $Id: clist.c,v 1.3 2003/03/13 14:56:47 tim Exp $
+/* $Id: clist.c,v 1.4 2003/03/13 17:49:13 tim Exp $
  *
  * Course List functions
  * Created: 2002-07-11
@@ -176,7 +176,7 @@ UInt16 CourseListGen(Char **itemList, UInt16 *courseID, UInt16 *courseInd, UInt1
       UInt16 j;
       CourseDBRecord c;
       Char *tempString;
-      MemHandle shortType;
+      MemHandle shortType=MemHandleNew(1);
 
       UnpackCourse(&c, s);
 
@@ -185,7 +185,7 @@ UInt16 CourseListGen(Char **itemList, UInt16 *courseID, UInt16 *courseInd, UInt1
       // StrPrintF(shortType, "T");
       StrPrintF(tempString, "%s (%s) [%s]", c.name, c.teacherName, (Char *)MemHandleLock(shortType));
       MemHandleUnlock(shortType);
-      
+      MemHandleFree(shortType);
 
       // Do a nice insertion sort here. DatAlg MUST have been good for something :-)
       j = i;
