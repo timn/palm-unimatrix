@@ -1,0 +1,38 @@
+/* $Id: form_coursedet.rcp.in,v 1.1 2003/02/06 21:27:23 tim Exp $
+ *
+ * Course details form
+ */
+
+#include "UniMatrix.h"
+
+##TRANSLATION##
+
+form id FORM_course_det at (2 30 156 128)
+modal
+begin
+  title "cd_title"
+
+  label "cd_name" autoid at (5 17)
+  label "cd_type" autoid at (prevleft prevbottom+2)
+  label "cd_teacher" autoid at (prevleft prevbottom+5)
+  label "cd_email" autoid at (prevleft prevbottom+2)
+  label "cd_website" autoid at (prevleft prevbottom+2)
+  label "cd_phone" autoid at (prevleft prevbottom+2)
+
+  field id FIELD_cd_name at (45 17 110 auto) underlined maxchars 30 autoshift
+
+  list "" id LIST_cd_type at (prevleft prevbottom+2 105 auto) visibleitems 6 nonusable
+  popuplist id LIST_cd_type_trigger LIST_cd_type
+  popuptrigger "" id LIST_cd_type_trigger at (prevleft prevtop auto auto) font 0 usable leftanchor
+
+  field id FIELD_cd_teacher at (prevleft prevbottom+5 110 auto) underlined autoshift maxchars 30
+  field id FIELD_cd_email at (prevleft prevbottom+2 prevwidth prevheight) underlined maxchars 30
+  field id FIELD_cd_website at (prevleft prevbottom+2 prevwidth prevheight) underlined maxchars 40
+  field id FIELD_cd_phone at (prevleft prevbottom+2 prevwidth prevheight) underlined maxchars 15
+
+  button "" id BUTTON_cd_cancel at (105 110 11 11) noframe graphical bitmapid BITMAP_cancel selectedbitmapid BITMAP_cancel_clicked
+  button "" id BUTTON_cd_ok at (prevright+3 prevtop 11 11) noframe graphical bitmapid BITMAP_ok selectedbitmapid BITMAP_ok_clicked
+
+  graffitistateindicator at (144 prevtop)
+
+end

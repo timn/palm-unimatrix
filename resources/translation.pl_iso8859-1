@@ -1,0 +1,186 @@
+/* $Id: translation.pl_iso8859-1,v 1.1 2003/02/06 21:27:23 tim Exp $ */
+
+translation "polish_iso8859-1"
+begin
+
+
+/* about translator only name is displayed */
+  "translator" = "Tomasz Zielinski"
+  "trans_mail" = "tomash@fidonet.org.pl"
+  "trans_hdev" = "Palm III"
+  "trans_palm" = "4.1"
+  "trans_trby" = "Polskie tlumaczenie:"
+
+
+/* common */
+  "com_cur" = "Aktualny"
+  "com_man" = "Organizuj sem."
+
+
+/* menu */
+  "men_addc" = "Dodaj przedmiot"
+  "men_adde" = "Dodaj zdarzenie"
+  "men_cl" = "Lista przedmiotow"
+  "men_ab" = "O programie"
+  "men_opt" = "Opcje"
+  "men_sets" = "Ustawienia"
+  "men_ex" = "Egzaminy"
+  "men_beam" = "Wyslij sem."
+
+
+/* alerts */
+  "al_ok" = "OK"
+  "al_rominc1" = "System niekompatybilny"
+  "al_rominc2" = "Aplikacja wymaga systemu PalmOS 3.5 lub nowszego."
+  "al_noc1" = "Blad: Brak przedmiotu"
+  "al_noc2" = "Musisz najpierw zdefiniowac jakis przedmiot."
+  "al_noc3" = "OK"
+  "al_nr1" = "Blad: brak sali"
+  "al_nr2" = "Musisz podac sale."
+  "al_nomem1" = "Za malo pamieci"
+  "al_nomem2" = "Nie moge zaalokowac wystarczajacej ilosci pamieci."
+  "al_del1" = "Naprawde skasowac?"
+  "al_del2" = "Skasowac wpis (^1 [^2], ^3)?"
+  "al_dely" = "Tak"
+  "al_deln" = "Nie"
+  "al_ebb1" = "Blad godzin"
+  "al_ebb2" = "Koniec zajec musi nastepowac po rozpoczeciu, nie odwrotnie."
+  "al_invend1" = "Blad godzin"
+  "al_invend2" = "Czas musi zawierac sie miedzy 08:00 a 20:00!"
+  "al_delc1" = "Naprawde skasowac?"
+  "al_delc2" = "Naprawde skasowac przedmiot (^1) i wszystkie powiazane zdarzenia?^2^3"
+  "al_delcy" = "Tak"
+  "al_delcn" = "Nie"
+  "al_ni1" = "Nie podano wpisu."
+  "al_ni2" = "Wskaz wpis, ktory chcesz usunac lub edytowac."
+  "al_ecn1" = "Brak nazwy"
+  "al_ecn2" = "Musisz podac nazwe przedmiotu!"
+  "al_ect1" = "Brak prowadzacego"
+  "al_ect2" = "Musisz podac nazwisko prowadzacego!"
+  "al_unt1" = "Brak godzin"
+  "al_unt2" = "Zdarzenia musza miec okreslone godziny."
+  "al_old1" = "Stara baza danych"
+  "al_old2" = "Baza danych utworzona zostala w starszej wersji programu UniMatrix. Skonwertowac baze?"
+  "al_old3" = "Tak"
+  "al_old4" = "Nie"
+  "al_ctd1" = "Bledne wartosci"
+  "al_ctd2" = "Musisz podac nazwe pelna i skrocona!"
+  "al_ct_del1" = "Naprawde skasowac?"
+  "al_ct_del2" = "Naprawde skasowac typ ^1 [^2]?^3"
+  "al_ex_del1" = "Naprawde skasowac?"
+  "al_ex_del2" = "Naprawde skasowac egzamin z ^1 w ^2 o ^3?"
+  "al_timecol1" = "Niezgodnosc czasu"
+  "al_timecol2" = "Ta godzina koliduje z juz istniejacymi zajeciami."
+  "al_beamdbfail1" = "Blad bazy danych"
+  "al_beamdbfail2" = "Nie mozna otworzyc bazy. Uruchom UniMatrix by zainicjalizowac baze danych."
+  "al_beamnocat1" = "Niewystarczajaca pamiec"
+  "al_beamnocat2" = "Osiagnieto limit kategorii. Skasuj stare kategorie i sprobuj ponownie."
+
+
+/* about */
+  "ab_title" = "O programie UniMatrix"
+  "ab_d1" = "Program do planowania"
+  "ab_d2" = " zajec na uczelni"
+  "ab_get" = "Pobierz nowe wersje z"
+
+
+/* beam */
+  "b_title" = "Wybierz semestr"
+  "b_d1" = "Wybierz semester, w ktorym"
+  "b_d2" = "otrzymany przedmiot zostanie"
+  "b_d3" = "zapisany."
+  "bs_d1" = "Utworzysz nowy semestr"
+  "bs_d2" = "w ktorym zostana zapisane"
+  "bs_d3" = "otrzymane dane."
+  "b_ok" = "OK"
+  "b_sem" = "Semestry:"
+
+
+/* course list */
+  "cl_title" = "Lista przedmiotow"
+  "cl_desc" = "Przedmioty w tym semestrze:"
+
+
+/* course details (add and edit) */
+  "cd_title" = "Edytuj przedmiot"
+  "cd_name" = "Nazwa"
+  "cd_type" = "Typ"
+  "cd_teacher" = "Osoba"
+  "cd_email" = "E-mail"
+  "cd_website" = "WWW"
+  "cd_phone" = "Telefon"
+
+
+/* event details (add and edit */
+  "ed_title" = "Edytuj zdarzenie"
+  "ed_course" = "Przedmiot"
+  "ed_day" = "Dzien"
+  "ed_time" = "Godziny"
+  "ed_title" = "Wybierz godziny"
+  "ed_color" = "Kolor"
+  "ed_room" = "Sala"
+  "ed_mo" = "Poniedzialek"
+  "ed_tu" = "Wtorek"
+  "ed_we" = "Sroda"
+  "ed_th" = "Czwartek"
+  "ed_fr" = "Piatek"
+  "ed_sa" = "Sobota"
+  "ed_r" = "R"
+  "ed_g" = "G"
+  "ed_b" = "B"
+
+
+/* settings */
+  "sets_title" = "Ustawienia"
+  "sets_day" = "Sobota dniem roboczym"
+  "sets_showtype" = "Pokaz typy zajec"
+  "sets_showtime" = "Pokaz linie czasu"
+
+
+/* gadget */
+  "gad_mo" = "Pon"
+  "gad_tu" = "Wto"
+  "gad_we" = "Sro"
+  "gad_th" = "Czw"
+  "gad_fr" = "Pia"
+  "gad_sa" = "Sob"
+
+
+/* Course types */
+  "ct_title" = "Typy zajec"
+  "ct_desc" = "Wybierz typ do edycji:"
+  "ct_edct" = "Edytuj typy..."
+  /* Course type defaults for database initialization */
+  "ct_lec" = "Wyklad"
+  "ct_ex" = "Cwiczenia"
+  "ct_bex" = "Laboratorium"
+  "ct_sem" = "Seminarium"
+  "ct_psem" = "Proseminarium"
+  "ct_rep" = "Repetytorium"
+  /* The short names may be only 3 chars in length! */
+  "ct_sh_lec" = "W"
+  "ct_sh_ex" = "Cw"
+  "ct_sh_bex" = "L"
+  "ct_sh_sem" = "Sem"
+  "ct_sh_psem" = "PS"
+  "ct_sh_rep" = "Rep"
+  "ct_unk" = "Nieznany"
+  "ct_sh_unk" = "?"
+
+
+/* Course type details */
+  "ctdet_title" = "Szczegoly przedmiotu"
+  "ctdet_name" = "Nazwa"
+  "ctdet_short" = "Skrot"
+
+
+/* Exam list and exam details */
+  "ex_title" = "Egzaminy"
+  "exd_title" = "Szczegoly egzaminow"
+  "exd_course" = "Przedmiot"
+  "exd_date" = "Data"
+  "exd_time" = "Godzina"
+  "exd_length" = "Dlugosc"
+
+
+end

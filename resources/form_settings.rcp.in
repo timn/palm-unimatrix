@@ -1,0 +1,29 @@
+/* $Id: form_settings.rcp.in,v 1.1 2003/02/06 21:27:23 tim Exp $
+ *
+ * Uni Matrix
+ * Software to manage your daily university business
+ * Copyright (C) 2002 by Tim Niemueller <tim@niemueller.de>
+ * Website: http://www.niemueller.de/software/palm/unimatrix/
+ *
+ * Settings form
+ * Created 2002/08/19
+ */
+
+#include "UniMatrix.h"
+
+##TRANSLATION##
+
+form id FORM_settings at (2 74 156 84)
+modal
+begin
+  title "sets_title"
+  checkbox "sets_day" id CHECKBOX_sets_saturday at (4 18 auto auto)
+  checkbox "sets_showtype" id CHECKBOX_sets_showtype at (prevleft prevbottom+1 auto auto)
+  checkbox "sets_showtime" id CHECKBOX_sets_showtime at (prevleft prevbottom+1 auto auto)
+
+  button "" id BUTTON_sets_cancel at (105 prevbottom+12 11 11) noframe graphical bitmapid BITMAP_cancel selectedbitmapid BITMAP_cancel_clicked
+  button "" id BUTTON_sets_ok at (prevright+3 prevtop 11 11) noframe graphical bitmapid BITMAP_ok selectedbitmapid BITMAP_ok_clicked
+
+end
+
+

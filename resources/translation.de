@@ -1,0 +1,185 @@
+/* $Id: translation.de,v 1.1 2003/02/06 21:27:23 tim Exp $ */
+
+translation "german"
+begin
+
+/* about translation */
+  "translator" = "Tim Niemueller"
+  "trans_mail" = "tim@niemueller.de"
+  "trans_hdev" = "Palm m515"
+  "trans_palm" = "4.1"
+  "trans_trby" = "Deutsche Übersetzung von:"
+
+
+/* common */
+  "com_cur" = "Aktuell"
+  "com_man" = "Semester verw."
+
+
+/* menu */
+  "men_addc" = "Kurs hinzu"
+  "men_adde" = "Zeit hinzu"
+  "men_cl" = "Kursliste"
+  "men_ex" = "Klausuren"
+  "men_ab" = "Info"
+  "men_opt" = "Optionen"
+  "men_sets" = "Einstellungen"
+  "men_beam" = "Sem. beamen"
+
+/* alerts */
+  "al_ok" = "OK"
+  "al_rominc1" = "System inkompatibel"
+  "al_rominc2" = "System Version 3.5 oder höher wird benötigt, um diese Anwendung zu nutzen."
+  "al_noc1" = "Fehler: Keine Kurse"
+  "al_noc2" = "Sie müssen zuerst einen Kurs anlegen, um ein zeitliches Ereignis einzutragen."
+  "al_noc3" = "Och maaan"
+  "al_nr1" = "Fehler: Kein Raum"
+  "al_nr2" = "Sie müssen einen Raum angeben."
+  "al_nomem1" = "Kein Speicher"
+  "al_nomem2" = "Es konnte kein Speicher reserviert werden. Der Vorgang ist fehlgeschlagen."
+  "al_del1" = "Wirklich löschen?"
+  "al_del2" = "Soll der gerade selektierte Eintrag (^1 [^2], ^3) wirklich gelöscht werden?"
+  "al_dely" = "Ja"
+  "al_deln" = "Nein"
+  "al_ebb1" = "Ende vor Beginn"
+  "al_ebb2" = "Die Endzeit ist vor dem Beginn der Veranstaltung. Dies scheint unmöglich."
+  "al_invend1" = "Ungültige Zeit"
+  "al_invend2" = "Die Zeiten müssen zwischen 8:00 und 20:00 liegen!"
+  "al_delc1" = "Wirklich löschen?"
+  "al_delc2" = "Sollen der selektierte Kurs (^1) und alle dazugehörigen Ereignisse wirklich gelöscht werden?^2^3"
+  "al_delcy" = "Ja"
+  "al_delcn" = "Nein"
+  "al_ni1" = "Kein Eintrag ausgewählt"
+  "al_ni2" = "Sie müssen einen Eintrag wählen, der bearbeitet/gelöscht werden soll."
+  "al_ecn1" = "Kein Name"
+  "al_ecn2" = "Sie müssen einen Namen für den Kurs angeben!"
+  "al_ect1" = "Kein Referent"
+  "al_ect2" = "Sie müssen einen Referenten für den Kurs angeben!"
+  "al_unt1" = "Keine Uhrzeit"
+  "al_unt2" = "Ereignisse müssen Zeiten haben."
+  "al_old1" = "Alte Datenbank"
+  "al_old2" = "Die Datenbank wurde mit einer alten Version von UniMatrix erstellt. Soll die Datenbank nun konvertiert werden?"
+  "al_old3" = "Ja"
+  "al_old4" = "Nein"
+  "al_ctd1" = "Ungültige Eingabe"
+  "al_ctd2" = "Sie müssen Name und Kurzname angeben!"
+  "al_ct_del1" = "Wirklich löschen?"
+  "al_ct_del2" = "Soll der Kurstyp ^1 [^2] wirklich gelöscht werden?^3"
+  "al_ex_del1" = "Wirklich löschen?"
+  "al_ex_del2" = "Soll die Klausur für ^1 am ^2 um ^3 wirklich gelöscht werden?"
+  "al_timecol1" = "Zeitkollision"
+  "al_timecol2" = "Die angegebenen Zeiten überschneiden sich mit einem bereits eingetragenem Ereignis."
+  "al_beamdbfail1" = "Datenbank Fehler"
+  "al_beamdbfail2" = "Konnte Datenbank nicht öffnen. Starten Sie UniMatrix vor dem Empfang einmalig, um die Datenbanken zu initialisieren."
+  "al_beamnocat1" = "Keine Platz"
+  "al_beamnocat2" = "Es ist bereits die maximale Anzahl an Kategorien angelegt. Löschen Sie eine alte Kategorie und versuchen Sie es erneut."
+
+
+/* about */
+  "ab_title" = "Über UniMatrix"
+  "ab_d1" = "Software zur Planung des"
+  "ab_d2" = "täglichen Universitäts-Lebens"
+  "ab_get" = "Neueste Version auf"
+
+
+/* beam */
+  "b_title" = "Semester wählen"
+  "b_d1" = "Bitte wählen Sie ein Semester, in dem"
+  "b_d2" = "der empfangene Kurs gespeichert"
+  "b_d3" = "werden soll."
+  "bs_d1" = "Es wird ein neues Semester angelegt,"
+  "bs_d2" = "in dem das empfangene Semester"
+  "bs_d3" = "gespeichert werden wird."
+  "b_sem" = "Semester:"
+
+
+/* course list */
+  "cl_title" = "Kursliste"
+  "cl_desc" = "Alle Kurse in diesem Semester:"
+
+
+/* course details (add and edit) */
+  "cd_title" = "Kurs bearbeiten"
+  "cd_cancel" = "Abbrechen"
+  "cd_ok" = "OK"
+  "cd_name" = "Name"
+  "cd_type" = "Typ"
+  "cd_teacher" = "Referent"
+  "cd_email" = "Email"
+  "cd_website" = "Website"
+  "cd_phone" = "Telefon"
+
+
+/* event details (add and edit */
+  "ed_title" = "Zeitdetails"
+  "ed_course" = "Kurs"
+  "ed_day" = "Tag"
+  "ed_time" = "Zeit"
+  "ed_title" = "Zeit einstellen"
+  "ed_color" = "Farbe"
+  "ed_room" = "Raum"
+  "ed_mo" = "Montag"
+  "ed_tu" = "Dienstag"
+  "ed_we" = "Mittwoch"
+  "ed_th" = "Donnerstag"
+  "ed_fr" = "Freitag"
+  "ed_sa" = "Samstag"
+  "ed_r" = "R"
+  "ed_g" = "G"
+  "ed_b" = "B"
+
+
+/* settings */
+  "sets_title" = "Einstellungen"
+  "sets_day" = "Samstag ist Arbeitstag"
+  "sets_showtype" = "Zeige Kurstypen für Zeiten"
+  "sets_showtime" = "Zeige Zeitlinie"
+
+
+/* gadget */
+  "gad_mo" = "Mo"
+  "gad_tu" = "Di"
+  "gad_we" = "Mi"
+  "gad_th" = "Do"
+  "gad_fr" = "Fr"
+  "gad_sa" = "Sa"
+
+
+/* Course types */
+  "ct_title" = "Kurstypen"
+  "ct_desc" = "Wähle Kurstyp zum Bearbeiten:"
+  "ct_edct" = "Typen bearbeiten..."
+  /* Course type defaults for database initialization */
+  "ct_lec" = "Vorlesung"
+  "ct_ex" = "Übung"
+  "ct_bex" = "Großübung"
+  "ct_sem" = "Seminar"
+  "ct_psem" = "Proseminar"
+  "ct_rep" = "Repetitorium"
+  /* The short names may be only 3 chars in length! */
+  "ct_sh_lec" = "V"
+  "ct_sh_ex" = "Ü"
+  "ct_sh_bex" = "GÜ"
+  "ct_sh_sem" = "S"
+  "ct_sh_psem" = "PS"
+  "ct_sh_rep" = "Rep"
+  "ct_unk" = "Unbekannt"
+  "ct_sh_unk" = "?"
+
+
+/* Course type details */
+  "ctdet_title" = "Kurstypdetails"
+  "ctdet_name" = "Name"
+  "ctdet_short" = "Kurzname"
+
+
+/* Exam list and exam details */
+  "ex_title" = "Klausuren"
+  "exd_title" = "Klausurdetails"
+  "exd_course" = "Kurs"
+  "exd_date" = "Datum"
+  "exd_time" = "Uhrzeit"
+  "exd_length" = "Dauer"
+
+
+end

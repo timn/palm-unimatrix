@@ -1,0 +1,29 @@
+/* $Id: form_courselist.rcp.in,v 1.1 2003/02/06 21:27:23 tim Exp $
+ *
+ * List of courses with ability to edit and delete
+ */
+
+#include "UniMatrix.h"
+
+##TRANSLATION##
+
+form id FORM_courselist at (0 0 160 160)
+menuid MENU_main
+begin
+  title "cl_title"
+  label "cl_desc" autoid at (1 16)
+  list "" id LIST_cl_cat at (90 2 70 auto) visibleitems 5 nonusable
+  popuptrigger "" id LIST_cl_cat_trigger at (140 0 auto auto) font 0 usable rightanchor
+  list "" id LIST_courses at (1 30 158 62) visibleitems 5
+
+  label "cd_website" autoid at (prevleft prevbottom+4) font 1
+  field id FIELD_cl_website at (prevleft prevbottom-1 158 12) noneditable
+  label "cd_email" autoid at (prevleft prevbottom) font 1
+  field id FIELD_cl_email at (prevleft prevbottom-1 158 12) noneditable
+
+  button "" id BUTTON_courselist_back at (1 146 11 11) noframe graphical bitmapid BITMAP_back selectedbitmapid BITMAP_back_clicked
+  button "" id BUTTON_courselist_add at (prevright+12 prevtop 11 11) noframe graphical bitmapid BITMAP_add selectedbitmapid BITMAP_add_clicked
+  button "" id BUTTON_courselist_edit at (prevright+4 prevtop 11 11) noframe graphical bitmapid BITMAP_edit selectedbitmapid BITMAP_edit_clicked
+  button "" id BUTTON_courselist_del at (prevright+4 prevtop 11 11) noframe graphical bitmapid BITMAP_del selectedbitmapid BITMAP_del_clicked
+  button "" id BUTTON_courselist_beam at (prevright+4 prevtop 11 11) noframe graphical bitmapid BITMAP_beam selectedbitmapid BITMAP_beam_clicked
+end

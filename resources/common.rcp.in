@@ -1,0 +1,221 @@
+/* $Id: common.rcp.in,v 1.1 2003/02/06 21:27:23 tim Exp $
+ *
+ * common stuff like menus, bitmaps, alerts
+ */
+
+#include "UniMatrix.h"
+
+bitmapfamily id BITMAP_logo "images/icon_sw.bmp" "" "" "images/icon_256c.bmp" compress
+
+##TRANSLATION##
+
+categories APP_CATEGORIES "com_cur"
+string id STRING_cat_edit "com_man"
+
+bitmapcolor id BITMAP_edit "images/edit.bmp" compress
+bitmapcolor id BITMAP_edit_clicked "images/edit_clicked.bmp" compress
+bitmapcolor id BITMAP_del "images/delete.bmp" compress
+bitmapcolor id BITMAP_del_clicked "images/delete_clicked.bmp" compress
+bitmapcolor id BITMAP_next "images/next.bmp" compress
+bitmapcolor id BITMAP_next_clicked "images/next_clicked.bmp" compress
+bitmapcolor id BITMAP_beam "images/beam.bmp" compress
+bitmapcolor id BITMAP_beam_clicked "images/beam_clicked.bmp" compress
+bitmapcolor id BITMAP_add "images/add.bmp" compress
+bitmapcolor id BITMAP_add_clicked "images/add_clicked.bmp" compress
+bitmapcolor id BITMAP_back "images/back.bmp" compress
+bitmapcolor id BITMAP_back_clicked "images/back_clicked.bmp" compress
+bitmapcolor id BITMAP_ok "images/ok.bmp" compress
+bitmapcolor id BITMAP_ok_clicked "images/ok_clicked.bmp" compress
+bitmapcolor id BITMAP_cancel "images/cancel.bmp" compress
+bitmapcolor id BITMAP_cancel_clicked "images/cancel_clicked.bmp" compress
+
+
+/* menus */
+
+menu id MENU_main
+begin
+  pulldown "Uni Matrix"
+  begin
+    menuitem "men_addc" id MENUITEM_course "K"
+    menuitem "men_adde" id MENUITEM_time "Z"
+    menuitem "men_beam" id MENUITEM_beam "B"
+    menuitem separator
+    menuitem "men_cl" id MENUITEM_courselist "L"
+    menuitem "men_ex" id MENUITEM_exams "E"
+    menuitem separator
+    menuitem "men_ab" id MENUITEM_about "A"
+  end
+  pulldown "men_opt"
+  begin
+    menuitem "men_sets" id MENUITEM_settings "S"
+  end
+end
+
+
+/* alerts */
+
+alert id ALERT_ROMIncompatible
+error
+begin
+  title "al_rominc1"
+  message "al_rominc2"
+  buttons "al_ok"
+end
+
+alert id ALERT_debug
+information
+begin
+  title "Guru Meditation"
+  message "^1^2^3"
+  buttons "OK"
+end
+
+alert id ALERT_nocourses
+information
+begin
+  title "al_noc1"
+  message "al_noc2"
+  buttons "al_noc3"
+end
+
+alert id ALERT_noroom
+information
+begin
+  title "al_nr1"
+  message "al_nr2"
+  buttons "al_ok"
+end
+
+
+alert id ALERT_nomem
+warning
+begin
+  title "al_nomem1"
+  message "al_nomem2"
+  buttons "al_ok"
+end
+
+alert id ALERT_dodel
+confirmation
+defaultbutton 1
+begin
+  title "al_del1"
+  message "al_del2"
+  buttons "al_dely" "al_deln"
+end
+
+alert id ALERT_endBeforeBegin
+information
+begin
+  title "al_ebb1"
+  message "al_ebb2"
+  buttons "al_ok"
+end
+
+alert id ALERT_invend
+information
+begin
+  title "al_invend1"
+  message "al_invend2"
+  buttons "al_ok"
+end
+
+alert id ALERT_dodelc
+confirmation
+defaultbutton 1
+begin
+  title "al_delc1"
+  message "al_delc2"
+  buttons "al_delcy" "al_delcn"
+end
+
+alert id ALERT_clist_noitem
+information
+begin
+  title "al_ni1"
+  message "al_ni2"
+  buttons "al_ok"
+end
+
+alert id ALERT_ec_noname
+information
+begin
+  title "al_ecn1"
+  message "al_ecn2"
+  buttons "al_ok"
+end
+
+alert id ALERT_ec_noteacher
+information
+begin
+  title "al_ect1"
+  message "al_ect2"
+  buttons "al_ok"
+end
+
+alert id ALERT_untimed_imp
+information
+begin
+  title "al_unt1"
+  message "al_unt2"
+  buttons "al_ok"
+end
+
+alert id ALERT_oldDB
+confirmation
+defaultbutton 1
+begin
+  title "al_old1"
+  message "al_old2"
+  buttons "al_old3" "al_old4"
+end
+
+alert id ALERT_ctdet_inv
+information
+begin
+  title "al_ctd1"
+  message "al_ctd2"
+  buttons "al_ok"
+end
+
+alert id ALERT_ct_dodel
+confirmation
+defaultbutton 1
+begin
+  title "al_ct_del1"
+  message "al_ct_del2"
+  buttons "al_dely" "al_deln"
+end
+
+alert id ALERT_ex_dodel
+confirmation
+defaultbutton 1
+begin
+  title "al_ex_del1"
+  message "al_ex_del2"
+  buttons "al_dely" "al_deln"
+end
+
+alert id ALERT_timeCollision
+information
+begin
+  title "al_timecol1"
+  message "al_timecol2"
+  buttons "al_ok"
+end
+
+alert id ALERT_beamdbfail
+error
+begin
+  title "al_beamdbfail1"
+  message "al_beamdbfail2"
+  button "al_ok"
+end
+
+alert id ALERT_beamnocatleft
+error
+begin
+  title "al_beamnocat1"
+  message "al_beamnocat2"
+  button "al_ok"
+end

@@ -1,0 +1,185 @@
+/* $Id: translation.en,v 1.1 2003/02/06 21:27:23 tim Exp $ */
+
+translation "english"
+begin
+
+
+/* about translator only name is displayed */
+  "translator" = "Tim Niemueller"
+  "trans_mail" = "tim@niemueller.de"
+  "trans_hdev" = "Palm m515"
+  "trans_palm" = "4.1"
+  "trans_trby" = "English translation by:"
+
+
+/* common */
+  "com_cur" = "Current"
+  "com_man" = "Manage Sem."
+
+
+/* menu */
+  "men_addc" = "Add Course"
+  "men_adde" = "Add Event"
+  "men_cl" = "Course list"
+  "men_ab" = "About"
+  "men_opt" = "Options"
+  "men_sets" = "Settings"
+  "men_ex" = "Exams"
+  "men_beam" = "Beam Sem."
+
+
+/* alerts */
+  "al_ok" = "OK"
+  "al_rominc1" = "System incompatible"
+  "al_rominc2" = "System Version 3.5 or higher is required to use this application."
+  "al_noc1" = "Error: No Course"
+  "al_noc2" = "You must first create a course to add an event."
+  "al_noc3" = "OK"
+  "al_nr1" = "Error: No Room"
+  "al_nr2" = "You must enter a room."
+  "al_nomem1" = "Insufficient Memory"
+  "al_nomem2" = "Could not allocate memory."
+  "al_del1" = "Really delete?"
+  "al_del2" = "Delete the selected entry (^1 [^2], ^3)?"
+  "al_dely" = "Yes"
+  "al_deln" = "No"
+  "al_ebb1" = "End before begin"
+  "al_ebb2" = "The ending time is before the begin of the event. This seems impossible."
+  "al_invend1" = "Invalid Time"
+  "al_invend2" = "The times must be between 08:00 and 20:00!"
+  "al_delc1" = "Really delete?"
+  "al_delc2" = "Really delete the selected course (^1) and all depending events?^2^3"
+  "al_delcy" = "Yes"
+  "al_delcn" = "No"
+  "al_ni1" = "No entry selected."
+  "al_ni2" = "You must select an entry that you want to edit/delete."
+  "al_ecn1" = "No Name"
+  "al_ecn2" = "You must enter a name for the course!"
+  "al_ect1" = "No Teacher"
+  "al_ect2" = "You must give the name of the teacher!"
+  "al_unt1" = "No Time"
+  "al_unt2" = "Events must have times."
+  "al_old1" = "Old Database"
+  "al_old2" = "The database has been created with an old version of UniMatrix. It can be converted. May I convert the database now?"
+  "al_old3" = "Yes"
+  "al_old4" = "No"
+  "al_ctd1" = "Invalid values"
+  "al_ctd2" = "Your must give both name and short name!"
+  "al_ct_del1" = "Really delete?"
+  "al_ct_del2" = "Delete course type ^1 [^2]?^3"
+  "al_ex_del1" = "Really delete?"
+  "al_ex_del2" = "Really delete exam for ^1 on ^2 at ^3?"
+  "al_timecol1" = "Time Collision"
+  "al_timecol2" = "The given times collide with an already entered event."
+  "al_beamdbfail1" = "Database Error"
+  "al_beamdbfail2" = "Could not open database. Start UniMatrix once before receiving a beam to initialise database."
+  "al_beamnocat1" = "Insufficient Memory"
+  "al_beamnocat2" = "There are already the maximum number of categories possible. Delete an old category and try again."
+
+
+/* about */
+  "ab_title" = "About UniMatrix"
+  "ab_d1" = "Software for planning your"
+  "ab_d2" = " everyday business at university"
+  "ab_get" = "Get newest version at"
+
+
+/* beam */
+  "b_title" = "Choose Semester"
+  "b_d1" = "Please select the semester, in"
+  "b_d2" = "which the received course will"
+  "b_d3" = "be saved."
+  "bs_d1" = "This will create a new semester"
+  "bs_d2" = "that the received entries will"
+  "bs_d3" = "be saved to."
+  "b_sem" = "Semester:"
+
+
+/* course list */
+  "cl_title" = "Course List"
+  "cl_desc" = "All courses in this semester:"
+
+
+/* course details (add and edit) */
+  "cd_title" = "Edit Course"
+  "cd_name" = "Name"
+  "cd_type" = "Type"
+  "cd_teacher" = "Teacher"
+  "cd_email" = "Email"
+  "cd_website" = "Website"
+  "cd_phone" = "Phone"
+
+
+/* event details (add and edit */
+  "ed_title" = "Edit Event"
+  "ed_course" = "Course"
+  "ed_day" = "Day"
+  "ed_time" = "Time"
+  "ed_title" = "Select Time"
+  "ed_color" = "Color"
+  "ed_room" = "Room"
+  "ed_mo" = "Monday"
+  "ed_tu" = "Tuesday"
+  "ed_we" = "Wednesday"
+  "ed_th" = "Thursday"
+  "ed_fr" = "Friday"
+  "ed_sa" = "Saturday"
+  "ed_r" = "R"
+  "ed_g" = "G"
+  "ed_b" = "B"
+
+
+/* settings */
+  "sets_title" = "Settings"
+  "sets_day" = "Saturday is work day"
+  "sets_showtype" = "Show short types for events"
+  "sets_showtime" = "Show timeline for current time"
+
+
+/* gadget */
+  "gad_mo" = "Mon"
+  "gad_tu" = "Tue"
+  "gad_we" = "Wed"
+  "gad_th" = "Thu"
+  "gad_fr" = "Fri"
+  "gad_sa" = "Sat"
+
+
+/* Course types */
+  "ct_title" = "Course Types"
+  "ct_desc" = "Choose course type to edit:"
+  "ct_edct" = "Edit Types..."
+  /* Course type defaults for database initialization */
+  "ct_lec" = "Lecture"
+  "ct_ex" = "Exercise"
+  "ct_bex" = "Monitoring"
+  "ct_sem" = "Seminar"
+  "ct_psem" = "Proseminar"
+  "ct_rep" = "Revision"
+  "ct_unk" = "Unknown"
+  /* The short names may be only 3 chars in length! */
+  "ct_sh_lec" = "L"
+  "ct_sh_ex" = "E"
+  "ct_sh_bex" = "M"
+  "ct_sh_sem" = "S"
+  "ct_sh_psem" = "PS"
+  "ct_sh_rep" = "Rev"
+  "ct_sh_unk" = "?"
+
+
+/* Course type details */
+  "ctdet_title" = "Course Type Details"
+  "ctdet_name" = "Name"
+  "ctdet_short" = "Short"
+
+
+/* Exam list and exam details */
+  "ex_title" = "Exams"
+  "exd_title" = "Exam Details"
+  "exd_course" = "Course"
+  "exd_date" = "Date"
+  "exd_time" = "Time"
+  "exd_length" = "Length"
+
+
+end

@@ -1,0 +1,46 @@
+/* $Id: form_beam.rcp.in,v 1.1 2003/02/06 21:27:23 tim Exp $
+ *
+ * Beam forms
+ */
+
+#include "UniMatrix.h"
+
+##TRANSLATION##
+
+form id FORM_beam_cat at (2 65 156 93)
+modal
+begin
+  title "b_title"
+  label "b_d1" autoid at (2 17)
+  label "b_d2" autoid at (prevleft prevbottom)
+  label "b_d3" autoid at (prevleft prevbottom)
+
+  label "b_sem" autoid at (prevleft prevbottom+4)
+
+  popuptrigger "" id LIST_bc_cat_trigger at (prevright+3 prevtop auto auto) font 0 usable leftanchor
+  list "" id LIST_bc_cat at (prevleft prevtop 60 auto) visibleitems 3 nonusable
+  popuplist id LIST_bc_cat_trigger LIST_bc_cat
+
+  button "" id BUTTON_beam_cat_cancel at (105 77 11 11) noframe graphical bitmapid BITMAP_cancel selectedbitmapid BITMAP_cancel_clicked
+  button "" id BUTTON_beam_cat_ok at (prevright+3 prevtop 11 11) noframe graphical bitmapid BITMAP_ok selectedbitmapid BITMAP_ok_clicked
+
+end
+
+form id FORM_beam_newcat at (2 65 156 93)
+modal
+begin
+  title "b_title"
+  label "bs_d1" autoid at (2 17)
+  label "bs_d2" autoid at (prevleft prevbottom)
+  label "bs_d3" autoid at (prevleft prevbottom)
+
+  label "b_sem" autoid at (prevleft prevbottom+4)
+
+  field id FIELD_bs_cat at (prevright+3 prevtop 80 auto) underlined autoshift maxchars 15
+
+  button "" id BUTTON_bs_cancel at (105 77 11 11) noframe graphical bitmapid BITMAP_cancel selectedbitmapid BITMAP_cancel_clicked
+  button "" id BUTTON_bs_ok at (prevright+3 prevtop 11 11) noframe graphical bitmapid BITMAP_ok selectedbitmapid BITMAP_ok_clicked
+
+  graffitistateindicator at (144 prevtop)
+
+end

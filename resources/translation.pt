@@ -1,0 +1,185 @@
+/* $Id: translation.pt,v 1.1 2003/02/06 21:27:23 tim Exp $ */
+
+
+translation "portugues"
+begin
+
+/* about translator only name is displayed */
+  "translator" = "Leonardo Dias Vaz de Melo"
+  "trans_mail" = "melo@rm.com.br"
+  "trans_hdev" = "m105"
+  "trans_palm" = "3.51"
+  "trans_trby" = "Portuguese translation by:"
+
+
+/* common */
+  "com_cur" = "Atual"
+  "com_man" = "Adm. Semestre"
+
+
+/* menu */
+  "men_addc" = "Adic. Disciplina"
+  "men_adde" = "Adic. Evento"
+  "men_cl" = "Lista Disciplinas"
+  "men_ab" = "Sobre"
+  "men_opt" = "Opções"
+  "men_sets" = "Propriedades"
+  "men_ex" = "Provas"
+  "men_beam" = "Beam Sem."
+
+
+/* alerts */
+  "al_ok" = "OK"
+  "al_rominc1" = "Sistema Incompatível"
+  "al_rominc2" = "Por favor utilize a versão 3.5 ou superior do SO."
+  "al_noc1" = "Erro: Nenhuma Disciplina"
+  "al_noc2" = "Você precisa inserir uma Disciplina para inserir evento."
+  "al_noc3" = "OK"
+  "al_nr1" = "Erro: Sem Salas"
+  "al_nr2" = "Insira a sala."
+  "al_nomem1" = "Memória Insuficiente"
+  "al_nomem2" = "Não foi possível."
+  "al_del1" = "Deletar realmente?"
+  "al_del2" = "Deletar os seguintes registros (^1 [^2], ^3)?"
+  "al_dely" = "Sim"
+  "al_deln" = "Não"
+  "al_ebb1" = "Fim antes do Início"
+  "al_ebb2" = "A hora de fim está menor que a de início. Isso parece impossível."
+  "al_invend1" = "Hora Inválida"
+  "al_invend2" = "Hora deve estar entre 08:00 r 20:00!"
+  "al_delc1" = "Realmente Deletar?"
+  "al_delc2" = "Realmente deletar a discliplina (^1) e os eventos relacionados?^2^3"
+  "al_delcy" = "Sim"
+  "al_delcn" = "Não"
+  "al_ni1" = "Nenhum registro selecionado."
+  "al_ni2" = "Você precisa selecionar um evento para editar/deletar."
+  "al_ecn1" = "Sem nome"
+  "al_ecn2" = "A Disciplina precisa ter nome!"
+  "al_ect1" = "Sem professor"
+  "al_ect2" = "Cadastre o nome do professor!"
+  "al_unt1" = "Sem tempo"
+  "al_unt2" = "Eventos precisam ter hora."
+  "al_old1" = "Base velha"
+  "al_old2" = "A base foi criada em uma versão anterior, e não pode ser convertida. Deseja deletar a atual e criar uma nova vazia ?"
+  "al_old3" = "Sim"
+  "al_old4" = "Não"
+  "al_ctd1" = "Valores inválidos"
+  "al_ctd2" = "Você deve informar nome e apelido"
+  "al_ct_del1" = "Realmente Deletar?"
+  "al_ct_del2" = "Deletar disciplina tipo ^1 [^2]?^3"
+  "al_ex_del1" = "Realmente Deletar?"
+  "al_ex_del2" = "Realmente deletar prova ^1 no ^2 as ^3?"
+  "al_timecol1" = "Colisão de Tempo"
+  "al_timecol2" = "As horas informadas entram em choque com as atuais."
+  "al_beamdbfail1" = "Erro na base"
+  "al_beamdbfail2" = "Não foi possível abrir a base.Inicie o Unimatrix pelo menos uma vez para que uma base seja criada."
+  "al_beamnocat1" = "Memória Insuficiente"
+  "al_beamnocat2" = "Já existem o número máximo de categorias. Delete uma antiga e tente de novo."
+
+
+/* about */
+  "ab_title" = "Sobre UniMatrix"
+  "ab_d1" = "Controle Universitário"
+  "ab_d2" = "para PalmOS"
+  "ab_get" = "Pegue a nova versão em"
+
+
+/* beam */
+  "b_title" = "Selecione Semestre"
+  "b_d1" = "Por favor selecione o semestre"
+  "b_d2" = "no qual a disciplina recebida"
+  "b_d3" = "deve ser adicionada."
+  "b_sem" = "Semestre:"
+  "bs_d1" = "Isto vai criar um novo semestre"
+  "bs_d2" = "que as novas entradas"
+  "bs_d3" = "serão armazenadas nele."
+
+
+/* course list */
+  "cl_title" = "Lista de disciplina"
+  "cl_desc" = "Todas disciplinas nesse semestre:"
+
+
+/* course details (add and edit) */
+  "cd_title" = "Detalhes da Disciplina"
+  "cd_name" = "Nome"
+  "cd_type" = "Tipo"
+  "cd_teacher" = "Professor"
+  "cd_email" = "Mail"
+  "cd_website" = "Página"
+  "cd_phone" = "Tel."
+
+
+/* event details (add and edit) */
+  "ed_title" = "Detalhes do Evento"
+  "ed_course" = "Disciplina"
+  "ed_day" = "Dia"
+  "ed_time" = "Tempo"
+  "ed_title" = "Select Time"
+  "ed_color" = "Cor"
+  "ed_room" = "Sala"
+  "ed_mo" = "Segunda"
+  "ed_tu" = "Terça"
+  "ed_we" = "Quarta"
+  "ed_th" = "Quinta"
+  "ed_fr" = "Sexta"
+  "ed_sa" = "Sábado"
+  "ed_r" = "R"
+  "ed_g" = "G"
+  "ed_b" = "B"
+
+
+/* settings */
+  "sets_title" = "Propriedades"
+  "sets_day" = "Sábado é dia letivo"
+  "sets_showtype" = "Mostra eventos com tamanho reduzido"
+  "sets_showtime" = "Mostra linha do tempo agora"
+
+
+/* gadget */
+  "gad_mo" = "Seg"
+  "gad_tu" = "Ter"
+  "gad_we" = "Quar"
+  "gad_th" = "Quin"
+  "gad_fr" = "Sex"
+  "gad_sa" = "Sab"
+
+
+/* Course types */
+  "ct_title" = "Tipos de Disciplina"
+  "ct_desc" = "Escolha o tipo para editar:"
+  "ct_edct" = "Editar tipos..."
+  /* Course type defaults for database initialization */
+  "ct_lec" = "Palestra"
+  "ct_ex" = "Exercício"
+  "ct_bex" = "Monitoria"
+  "ct_sem" = "Seminário"
+  "ct_psem" = "Proseminar"
+  "ct_rep" = "revisão"
+  "ct_unk" = "Desconhecido"
+  /* The short names may be only 3 chars in length! */
+  "ct_sh_lec" = "L"
+  "ct_sh_ex" = "E"
+  "ct_sh_bex" = "M"
+  "ct_sh_sem" = "S"
+  "ct_sh_psem" = "PS"
+  "ct_sh_rep" = "Rev"
+  "ct_sh_unk" = "?"
+
+
+/* Course type details */
+  "ctdet_title" = "Course Type Details"
+  "ctdet_name" = "Name"
+  "ctdet_short" = "Short"
+
+
+/* Exam list and exam details */
+  "ex_title" = "Provas"
+  "exd_title" = "Detalhe de Prova"
+  "exd_course" = "Matéria"
+  "exd_date" = "Data"
+  "exd_time" = "Hora"
+  "exd_length" = "Tamanho"
+
+
+end

@@ -1,0 +1,29 @@
+/* $Id: form_about.rcp.in,v 1.1 2003/02/06 21:27:23 tim Exp $
+ *
+ * form_about.rcp: The About Dialog
+ * Created: 2002-07-12
+ */
+
+// helpid STRING_about_help
+
+#include "UniMatrix.h"
+
+##TRANSLATION##
+
+form id FORM_about at (2 2 156 156)
+modal
+begin
+  title "ab_title"
+  formbitmap at (20 20) bitmap BITMAP_logo
+  label "UniMatrix v##VERSION##" autoid at (55 prevtop+6) font 1
+  label "ab_d1" autoid at (center prevbottom+8) font 0
+  label "ab_d2" autoid at (center prevbottom+1) font 0
+  label "(C) 2002 by Tim Niemueller" autoid at (center prevbottom+8) font 1
+  label "ab_get" autoid at (center prevbottom+5) font 0
+  label "http://www.niemueller.de/" autoid at (center prevbottom+1) font 1
+  label "trans_trby" autoid at (center prevbottom+5) font 0
+  label "translator" autoid at (center prevbottom+1) font 0
+
+  button "" id BUTTON_about_ok at (140 140 11 11) noframe graphical bitmapid BITMAP_ok selectedbitmapid BITMAP_ok_clicked
+
+end

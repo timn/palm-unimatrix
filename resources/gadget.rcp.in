@@ -1,0 +1,15 @@
+/* $Id: gadget.rcp.in,v 1.1 2003/02/06 21:27:23 tim Exp $
+ *
+ * Gadget strings
+ */
+
+#include "UniMatrix.h"
+
+##TRANSLATION##
+
+string id GADGET_STRINGS_MO "gad_mo"
+string id GADGET_STRINGS_DI "gad_tu"
+string id GADGET_STRINGS_MI "gad_we"
+string id GADGET_STRINGS_DO "gad_th"
+string id GADGET_STRINGS_FR "gad_fr"
+string id GADGET_STRINGS_SA "gad_sa"

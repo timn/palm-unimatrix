@@ -1,0 +1,173 @@
+
+ [Uni Matrix] CHANGES
+==============================================================================
+
+
+=== v0.9
+
+* Thu Feb 06 2003 Tim Niemueller <tim@niemueller.de>
+- Added CVS Ids in the source, imported to internal CVS
+- First support for gadget keystrokes.
+
+
+=== v0.8a
+
+* Thu Jan 30 2003 Tim Niemueller <tim@niemueller.de>
+- Finally release, no further changes
+
+* Mon Dec 11 2002 Tim Niemueller <tim@niemueller.de>
+- Updated french translation
+- Updated czech translation
+- Updated polish translation
+
+* Tue Dec 10 2002 Tim Niemueller <tim@niemueller.de>
+- Happy Birthday Hendrik!
+
+* Mon Dec 02 2002 Tim Niemueller <tim@niemueller.de>
+- Added fixes for french translation
+- Added FAQ entry for PalmOS <3.5
+
+
+=== v0.8
+
+* Tue Nov 29 2002 Tim Niemueller <tim@niemueller.de>
+- Happy birthday Medha!
+- Fixed bug that timeline was erased under some cirumstances
+- Added support for the vchrSendData keyDown even
+
+* Tue Nov 19 2002 Tim Niemueller <tim@niemueller.de>
+- Current Weekday is now highlighted
+- Weekdays are redrawn by GadgetDrawTimeline
+- Now handling sysAppLaunchCmdAskUser. We always say "OK" since we have our
+  own code in place to handle that. Looks nicer and reduces TNOT (Total Number
+  Of Taps).
+
+* Fr Nov 15 2002 Tim Niemueller <tim@niemueller.de>
+- UniMatrix got an article in the german magazine "Notebook, Organizer und
+  Handy". Yeah! It already appeared in the September issue 10/02, but the
+  didn't tell me. An old friend pointed that out. Thanx Tine!
+
+* Thu Nov 13 2002 Tim Niemueller <tim@niemueller.de>
+- Timeline features is now working
+- Sent new strings to translators
+
+* Tue Nov 12 2002 Tim Niemueller <tim@niemueller.de>
+- Fixed bug, while demonstrating the new beam code to Medha we discovered a
+  new bug: When beaming a semester all courses got new Course ID of 0. The bug
+  was in DatabaseGetNewCID(..). It always used gCategory to get the current
+  category. But that is wrong in case of beam. We need to give it the cat
+  of the newly created category. Doh! Parameters changed and now it works.
+- Removed some functions to make the code cleaner, namely GadgetDrawComplete*
+  had to go, GadgetRedraw() will do the job. GadgetSetNeedsRedraw has been
+  removed. This is now set when a complete redraw is done in GadgetRedraw.
+- Added gGadgetFeature array to make feature handling (like showing short
+  type names or the timeline) easy
+- Fixed GadgetEventIsVisible so that it will not return true in border cases
+  (e. g. if you have a course ending at 20:00 it is no longer highlightet in
+  night screen. Makes no sense...)
+- Added Timeline feature. Shows a XOR drawn line for current time
+- Color picker is now palette for gray scale users by default and sliders for
+  color palm users
+
+* Mon Nov 11 2002 Tim Niemueller <tim@niemueller.de>
+- Begin of German Carneval in Cologne. Helau.
+- Fixed bug in color initialisation code which caused UniMatrix to fail on
+  Palms with a display that does not support gray scale display (like the
+  antique Palm III)
+- Moved TNGlueInit to TNGlueColorInit, this reflects the real purpose.
+- Moved last fragments of color initialisation code from UniMatrix.c to
+  tnglue.c/TNGlueColorInit()
+- Changed default behaviour for TNGlue. It will now use PalmOS 3.5 code as
+  default as that should always work. We use the 4.0 code only if the coder
+  calls TNGlueColorInit on a 4.0 device and use the new functions. As I don't
+  know the implementation details I can just assume they found a quicker way
+  than the 3.5 code...
+- Fixed bug in edit.c which caused that wrong data was displayed in the hint
+  after creating a new course. Data is NOT corrupted, just displayed wrong.
+  Now it does highlight the new event after adding it.
+
+* Thu Nov 06 2002 Tim Niemueller <tim@niemueller.de>
+- Beam code was not yet completely intelligent... It always took the first
+  course with a matching name and didn't care about the course type... FIXED.
+- It is now possible to beam whole semesters. Finally...
+- Fixed small bug in new semester transmission code. It always took the last
+  available free ID, but we want the first one, otherwise we would get
+  BadErrors(TM) when the user was so dumb to delete his first category...
+  That is still NotNice(C). Should think about some code to prevent the case
+  that no category exists. That sucks. Should generate some default then, I
+  think... Tommorrow :-)
+
+* Tue Nov 05 2002 Tim Niemueller <tim@niemueller.de>
+- Fixed non-initialized index in CourseTypeDelete
+- Added support for showing short type in gadget boxes for events if height
+  is greater than 10 and the if the feature is enabled in the settings dialog
+- Added czech translation
+- Fixed bug in beam.c/ReadRecordIntoDB. It used DatabaseSort and that will
+  crash UniMatrix when receiving an entry while UniMatrix is _not_ running.
+  Wrote DatabaseSortByDBRef for that purpose which will take an open
+  database handle as argument and will sort this db, not the globally opened
+  ones.
+- Changed spacing in exams table, cosmetic fix
+- MAJOR: Fixed beaming code and made it intelligent. It now detects if
+  the received course already exists (checks name) or if there are already
+  matching times or exams.
+
+
+* Sat Nov 01 2002 Tim Niemueller <tim@niemueller.de>
+- 4 1/2 years with Anne!
+- *grmpf*. Used Palm OS 4 Update 1 before, with with BuildDefaults.h from
+  non-updated version... This still allows access to struct internals, update
+  1 does not. That made me searching for "dereferencing pointer to
+  incomplete type" bugs for an hour now. That's a stupid one. I have used
+  this internal access only once: it's from the example code for extended
+  Gadgets from Palm themselves. That's dumb!
+  So I fixed gadget.c GadgetTap now to use standard functions...
+- moved color.(c|h) to tnglue.(c|h). This reflects adding
+  TNGetObjectIndexFromPtr to the file... It is more glue, than color now...
+- Added TNGlueInit() to tnglue. Will now set color mode, no further
+  interaction from outside needed for initialisation.
+
+* Fri Oct 25 2002 Tim Niemueller <tim@niemueller.de>
+- Added handling for power on events. If you switch the Palm to on while
+  UniMatrix is running it will now jump to the next upcoming event
+
+
+
+=== v0.7
+
+* Thu Oct 24 2002 Tim Niemueller <tim@niemueller.de>
+- Polish translation and dutch translation, fixed both, make extra note that
+  course type short names may be only 3 chars in length
+
+* Thu Oct 17 2002 Tim Niemueller <tim@niemueller.de>
+- Of course I forgot to maintain this file...
+- Added exam management, strike out done exams :-)
+- Better support for hard buttons, if you assigned a button to the tool you
+  you now get to the next entry by clicking this button
+- Lots of internal cleanus
+- Merged add and edit screens for courses and events, saves about 3 KB
+- Fixed course type details screen, strings were missing, added graphical
+  buttons
+- course list now shows emails and website form currently selected course
+- wrote dist section in makefile, not I can create the release really easy
+  for all languages.
+
+
+* Thu Aug 16 2002 Tim Niemueller <tim@niemueller.de>
+- Finally created the CHANGES file. 0.6 is out to the public and seems that
+  people really like UniMatrix, a good reason to fix all those glitches and
+  make it nice to use...
+- Did a lot of work on the "build system". This means that resources are now
+  in /resources with an ending of ".rcp.in". I changed the makefile so that
+  those files are piped through sed to replace all occurrences of ##VERSION##
+  in the rcp with the current version. This is now stored in a file called
+  "version", this makes it easier since I now have to maintain only one place
+  for the version number
+- Add some new variables to the Makefile, namely PROGNAME, PROGDES and APPID
+  that should make it much easier to re-use the makefile for other software.
+- Created docs subdirectory
+- OK, now some real coding stuff: 
+
+
+
+$Id: CHANGES,v 1.1 2003/02/06 21:27:23 tim Exp $

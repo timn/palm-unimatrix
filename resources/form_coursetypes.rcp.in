@@ -1,0 +1,56 @@
+/* $Id: form_coursetypes.rcp.in,v 1.1 2003/02/06 21:27:23 tim Exp $
+ *
+ * Course type forms
+ */
+
+#include "UniMatrix.h"
+
+##TRANSLATION##
+
+string id STRING_edit_ctype "ct_edct" 
+string id STRING_ctype_unknown "ct_unk"
+string id STRING_ctype_short_unknown "ct_sh_unk"
+
+string id CTYPE_DEF_SH_LECTURE "ct_sh_lec"
+string id CTYPE_DEF_SH_EXERCISE "ct_sh_ex"
+string id CTYPE_DEF_SH_BIGEXERCISE "ct_sh_bex"
+string id CTYPE_DEF_SH_SEMINAR "ct_sh_sem"
+string id CTYPE_DEF_SH_PROSEMINAR "ct_sh_psem"
+string id CTYPE_DEF_SH_REPETITORIUM "ct_sh_rep"
+
+string id CTYPE_DEF_LECTURE "ct_lec"
+string id CTYPE_DEF_EXERCISE "ct_ex"
+string id CTYPE_DEF_BIGEXERCISE "ct_bex"
+string id CTYPE_DEF_SEMINAR "ct_sem"
+string id CTYPE_DEF_PROSEMINAR "ct_psem"
+string id CTYPE_DEF_REPETITORIUM "ct_rep"
+
+
+form id FORM_coursetypes at (2 2 156 156)
+modal
+begin
+  title "ct_title"
+  label "ct_desc" autoid at (4 16)
+  list "" id LIST_coursetypes at (4 30 148 112) visibleitems 9
+  button "" id BUTTON_ct_back at (1 bottom@150 11 11) noframe graphical bitmapid BITMAP_back selectedbitmapid BITMAP_back_clicked
+  button "" id BUTTON_ct_add at (prevright+12 prevtop 11 11) noframe graphical bitmapid BITMAP_add selectedbitmapid BITMAP_add_clicked
+  button "" id BUTTON_ct_edit at (prevright+4 prevtop 11 11) noframe graphical bitmapid BITMAP_edit selectedbitmapid BITMAP_edit_clicked
+  button "" id BUTTON_ct_del at (prevright+4 prevtop 11 11) noframe graphical bitmapid BITMAP_del selectedbitmapid BITMAP_del_clicked
+end
+
+
+
+form id FORM_ct_details at (2 86 156 72)
+modal
+begin
+  title "ctdet_title"
+  label "ctdet_name" autoid at (4 18)
+  field id FIELD_ctdet_name at (60 prevtop 92 auto) underlined autoshift maxchars 20
+  label "ctdet_short" autoid at (4 prevbottom+2)
+  field id FIELD_ctdet_short at (60 prevtop 92 auto) underlined autoshift maxchars 3
+
+  button "" id BUTTON_ctdet_cancel at (105 prevbottom+12 11 11) noframe graphical bitmapid BITMAP_cancel selectedbitmapid BITMAP_cancel_clicked
+  button "" id BUTTON_ctdet_ok at (prevright+3 prevtop 11 11) noframe graphical bitmapid BITMAP_ok selectedbitmapid BITMAP_ok_clicked
+
+  graffitistateindicator at (144 prevtop+2)
+end

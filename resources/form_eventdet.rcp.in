@@ -1,0 +1,55 @@
+/* $Id: form_eventdet.rcp.in,v 1.1 2003/02/06 21:27:23 tim Exp $
+ *
+ * Event details form
+ */
+
+#include "UniMatrix.h"
+
+##TRANSLATION##
+
+/** Event detail form */
+
+string id STRING_ed_title "ed_title"
+
+form id FORM_evt_det at (2 42 156 116)
+modal
+begin
+  title "ed_title"
+
+  label "ed_course" autoid at (5 17)
+  label "ed_day" autoid at (prevleft prevbottom+5)
+  label "ed_time" autoid at (prevleft prevbottom+4)
+  label "ed_color" autoid at (prevleft prevbottom+4)
+  label "ed_room" autoid at (prevleft prevbottom+2)
+
+
+  list "" id LIST_ed_course at (40 17 105 auto) visibleitems 5 nonusable
+  popuplist id LIST_ed_course_trigger LIST_ed_course
+  popuptrigger "" id LIST_ed_course_trigger at (40 17 auto auto) font 0 usable leftanchor
+
+  list "ed_mo" "ed_tu" "ed_we" "ed_th" "ed_fr" "ed_sa" id LIST_ed_day at (prevleft prevbottom+5 75 auto) visibleitems 6 nonusable
+  popuplist id LIST_ed_day_trigger LIST_ed_day
+  popuptrigger "" id LIST_ed_day_trigger at (prevleft prevtop auto auto) font 0 usable leftanchor
+
+  selectortrigger "08:15 - 09:45" id SELECTOR_ed_time at (prevleft prevbottom+4 auto auto)
+
+  label "ed_r" autoid at (40 prevbottom+4)
+  field id FIELD_ed_r at (prevright+3 prevtop 18 auto) underlined maxchars 3 numeric
+  label "ed_g" autoid at (prevright+5 prevtop)
+  field id FIELD_ed_g at (prevright+3 prevtop 18 auto) underlined maxchars 3 numeric
+  label "ed_b" autoid at (prevright+5 prevtop)
+  field id FIELD_ed_b at (prevright+3 prevtop 18 auto) underlined maxchars 3 numeric
+
+  selectortrigger "..." id BUTTON_ed_color at (prevright+5 prevtop 12 12)
+
+  field id FIELD_ed_room at (40 prevbottom+2 105 auto) underlined autoshift maxchars 16
+
+  button "" id BUTTON_ed_del at (30 prevbottom+8 11 11) noframe graphical bitmapid BITMAP_del selectedbitmapid BITMAP_del_clicked nonusable
+  button "" id BUTTON_ed_beam at (prevright+3 prevtop 11 11) noframe graphical bitmapid BITMAP_beam selectedbitmapid BITMAP_beam_clicked nonusable
+
+  button "" id BUTTON_ed_cancel at (105 prevtop 11 11) noframe graphical bitmapid BITMAP_cancel selectedbitmapid BITMAP_cancel_clicked
+  button "" id BUTTON_ed_ok at (prevright+3 prevtop 11 11) noframe graphical bitmapid BITMAP_ok selectedbitmapid BITMAP_ok_clicked
+
+  graffitistateindicator at (144 prevtop)
+
+end

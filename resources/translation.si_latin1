@@ -1,0 +1,186 @@
+/* $Id: translation.si_latin1,v 1.1 2003/02/06 21:27:23 tim Exp $ */
+
+translation "slovenian_latin1"
+begin
+
+
+/* about translator only name is displayed */
+  "translator" = "Bostjan Müller"
+  "trans_mail" = "neonatus@neonatus.net"
+  "trans_hdev" = "Palm m105"
+  "trans_palm" = "3.51"
+  "trans_trby" = "Slovenian translation by:"
+
+
+/* common */
+  "com_cur" = "Trenutno"
+  "com_man" = "Uredi Sem."
+
+
+/* menu */
+  "men_addc" = "Novo Predav."
+  "men_adde" = "Nov Vnos"
+  "men_cl" = "Spisek Pred."
+  "men_ab" = "O Programu"
+  "men_opt" = "Moznosti"
+  "men_ex" = "Izpiti"
+  "men_sets" = "Nastavitve"
+  "men_beam" = "Poslji sem."
+
+
+/* alerts */
+  "al_ok" = "V redu"
+  "al_rominc1" = "Nekompatibilen sistem"
+  "al_rominc2" = "Za uporabo tega programa je zahtevana verzija sistema 3.5 ali visja."
+  "al_noc1" = "Napaka: Brez Predavanja"
+  "al_noc2" = "Najprej morate ustvariti predavanje, nato dogodek."
+  "al_noc3" = "V redu"
+  "al_nr1" = "Napaka: Ni Ucilnice"
+  "al_nr2" = "Morate vpisati ucilnico."
+  "al_nomem1" = "Premalo spomina"
+  "al_nomem2" = "Nisem mogel alocirati spomina."
+  "al_del1" = "Res izbrisem?"
+  "al_del2" = "Izbrisem izbran vnos (^1 [^2], ^3)?"
+  "al_dely" = "Da"
+  "al_deln" = "Ne"
+  "al_ebb1" = "Konec pred zacetkom"
+  "al_ebb2" = "Cas konca je pred casom zacetka. To se zdi nemogoce."
+  "al_invend1" = "Napacen Cas"
+  "al_invend2" = "Cas mora biti med 08:00 ter 20:00!"
+  "al_delc1" = "Res izbrisem?"
+  "al_delc2" = "Res izbrisem izbrana predavanja (^1) ter vse pripradajoce dogodke?^2^3"
+  "al_delcy" = "Da"
+  "al_delcn" = "Ne"
+  "al_ni1" = "Noben vnos ni izbran."
+  "al_ni2" = "Morate izbratu vnos ki ga hocete urediti/izbrisati."
+  "al_ecn1" = "Brez Imena"
+  "al_ecn2" = "Morate vnesti ime predavanja!"
+  "al_ect1" = "Brez Predavatelja"
+  "al_ect2" = "Morate vnesti ime predavatelja!"
+  "al_unt1" = "Brez casa"
+  "al_unt2" = "Dogodki morajo imeti cas."
+  "al_old1" = "Stara baza podatkov"
+  "al_old2" = "Baza je bila ustvarjena s staro verzijo UniMatrixa. Lahko jo pretvorim. Naj to storim sedaj?"
+  "al_old3" = "Da"
+  "al_old4" = "Ne"
+  "al_ctd1" = "Neveljavna vrednost"
+  "al_ctd2" = "Vnesti morate tako ime kot kratko ime!"
+  "al_ct_del1" = "Res izbrisem?"
+  "al_ct_del2" = "Izbrisem vrsto predavanja ^1 [^2]?^3"
+  "al_ex_del1" = "Res izbrisem?"
+  "al_ex_del2" = "Res izbrisem izpit za ^1 ^2 ob ^3?"
+  "al_timecol1" = "Casa Sovpada"
+  "al_timecol2" = "Podana cas sovpada z ze vnesenim dogodkom."
+  "al_beamdbfail1" = "Napaka v bazi"
+  "al_beamdbfail2" = "Nisem mogel odpreti baze. UniMatrix pozenite vsaj 1x preden poskusate posiljati ali sprejemati."
+  "al_beamnocat1" = "Premalo Spomina"
+  "al_beamnocat2" = "Dodanih je ze maksimalno stevilo kategorij. Izbrisite stare kategorije ter poskusite znova."
+
+
+/* about */
+  "ab_title" = "O UniMatrix-u"
+  "ab_d1" = "Program za planiranje vase"
+  "ab_d2" = " vsakodnevne aktivnosti na univerzi"
+  "ab_get" = "Najnovejso verzijo dobite na"
+
+
+/* beam */
+  "b_title" = "Izberite semester"
+  "b_d1" = "Prosim izberite semester, v"
+  "b_d2" = "katerem naj bo sprejet predmet"
+  "b_d3" = "shranjena."
+  "bs_d1" = "To bo kreiralo nov semester"
+  "bs_d2" = "v katerega bodo shranjeni"
+  "bs_d3" = "sprejeti vnosi."
+  "b_ok" = "V redu"
+  "b_sem" = "Semester:"
+
+
+/* course list */
+  "cl_title" = "Spisek Predmetov"
+  "cl_desc" = "Vsi predmeti v tem semestru:"
+
+
+/* course details (add and edit) */
+  "cd_title" = "Detajli o ¨tudiju"
+  "cd_name" = "Ime"
+  "cd_type" = "Tip"
+  "cd_teacher" = "Ucitelj"
+  "cd_email" = "Email"
+  "cd_website" = "WWW stran"
+  "cd_phone" = "Telefon"
+
+
+/* event details (add and edit) */
+  "ed_title" = "Detalji o dogodkih"
+  "ed_course" = "Predmet"
+  "ed_day" = "Dan"
+  "ed_time" = "Cas"
+  "ed_title" = "Izberite Cas"
+  "ed_color" = "Barva"
+  "ed_room" = "Soba"
+  "ed_mo" = "Ponedeljek"
+  "ed_tu" = "Torek"
+  "ed_we" = "Sreda"
+  "ed_th" = "Cetrtek"
+  "ed_fr" = "Petek"
+  "ed_sa" = "Sobota"
+  "ed_r" = "R"
+  "ed_g" = "G"
+  "ed_b" = "B"
+
+
+/* settings */
+  "sets_title" = "Nastavitve"
+  "sets_day" = "Sobota je delovnik"
+  "sets_showtype" = "Prikazi kratke tipe dogodkov"
+  "sets_showtime" = "Prikazi pravocasno trenutni cas"
+
+
+/* gadget */
+  "gad_mo" = "Pon"
+  "gad_tu" = "Tor"
+  "gad_we" = "Sre"
+  "gad_th" = "Cet"
+  "gad_fr" = "Pet"
+  "gad_sa" = "Sob"
+
+
+/* Course types */
+  "ct_title" = "Vrste Predmetov"
+  "ct_desc" = "Izberite vrsto predmeta za urejanje:"
+  "ct_edct" = "Uredi vrste..."
+  /* Course type defaults for database initialization */
+  "ct_lec" = "Predavanje"
+  "ct_ex" = "Vaja"
+  "ct_bex" = "Monitoring"
+  "ct_sem" = "Seminar"
+  "ct_psem" = "Proseminar"
+  "ct_rep" = "Obravnava"
+  "ct_unk" = "Neznano"
+  /* The short names may be only 3 chars in length! */
+  "ct_sh_lec" = "P"
+  "ct_sh_ex" = "V"
+  "ct_sh_bex" = "M"
+  "ct_sh_sem" = "S"
+  "ct_sh_psem" = "PS"
+  "ct_sh_rep" = "Obr"
+  "ct_sh_unk" = "?"
+
+
+/* Course type details */
+  "ctdet_title" = "Course Type Details"
+  "ctdet_name" = "Name"
+  "ctdet_short" = "Short"
+
+
+/* Exam list and exam details */
+  "ex_title" = "Izpit"
+  "exd_title" = "Detajli o Izpitih"
+  "exd_course" = "Smer"
+  "exd_date" = "Datum"
+  "exd_time" = "Cas"
+  "exd_length" = "Trajanje"
+
+
+end

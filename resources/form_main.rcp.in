@@ -1,0 +1,20 @@
+/* $Id: form_main.rcp.in,v 1.1 2003/02/06 21:27:23 tim Exp $
+ *
+ * Main form
+ */
+
+#include "UniMatrix.h"
+
+form id FORM_main at (0 0 160 160)
+menuid MENU_main
+begin
+  title "Uni Matrix"
+  gadget id GADGET_main at (2 16 158 114)
+  gadget id GADGET_hint at (2 132 142 28)
+  list "" ID LIST_cat AT (90 2 70 auto) visibleitems 5 nonusable
+  popuplist id LIST_cat_trigger LIST_cat
+  popuptrigger "" id LIST_cat_trigger AT (140 0 auto auto) font 0 usable rightanchor
+  button "" id BUTTON_next at (60 1 11 11) noframe graphical bitmapid BITMAP_next selectedbitmapid BITMAP_next_clicked
+  button "" id BUTTON_edit at (147 134 11 11) noframe graphical bitmapid BITMAP_edit selectedbitmapid BITMAP_edit_clicked
+  button "" id BUTTON_beam at (147 147 11 11) noframe graphical bitmapid BITMAP_beam selectedbitmapid BITMAP_beam_clicked
+end

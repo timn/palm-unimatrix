@@ -1,0 +1,184 @@
+/* $Id: translation.cz_iso8859-2,v 1.1 2003/02/06 21:27:23 tim Exp $ */
+
+translation "czech_iso8859-2"
+begin
+
+
+/* about translator only name is displayed */
+  "translator" = "Tomá¹ Kolou¹ek"
+  "trans_mail" = "kolousek@spscv.cz"
+  "trans_hdev" = "Palm m515"
+  "trans_palm" = "4.1"
+  "trans_trby" = "Èeský (ISO8859-2) pøeklad:"
+
+
+/* common */
+  "com_cur" = "Aktuální"
+  "com_man" = "Upravit rozvrhy"
+
+
+/* menu */
+  "men_addc" = "Pøidat pøedmìt"
+  "men_adde" = "Pøidat do rozvrhu"
+  "men_cl" = "Seznam pøedmìtù"
+  "men_ab" = "O programu"
+  "men_opt" = "Nastavení"
+  "men_sets" = "Volby"
+  "men_ex" = "Zkou¹ky"
+  "men_beam" = "Pøenést rozvrh" 
+
+
+/* alerts */
+  "al_ok" = "OK"
+  "al_rominc1" = "Nekompatibilní systém"
+  "al_rominc2" = "Pro spu¹tìní této aplikace je vy¾adován minimálnì PalmOS verze 3.51"
+  "al_noc1" = "Chyba: ®ádný pøedmìt"
+  "al_noc2" = "Nejprve je nutné vytvoøit pøedmìt pro pøidání do rozvrhu"
+  "al_noc3" = "OK"
+  "al_nr1" = "Chyba: Uèebna nezadána"
+  "al_nr2" = "Je nutné zadat oznaèení uèebny."
+  "al_nomem1" = "Nedostatek pamìti"
+  "al_nomem2" = "Není mo¾né vyhradit po¾adovanou pamì»."
+  "al_del1" = "Skuteènì vymazat ?"
+  "al_del2" = "Vymazat vybraný záznam (^1 [^2], ^3)?"
+  "al_dely" = "Ano"
+  "al_deln" = "Ne"
+  "al_ebb1" = "Zaèátek pøed koncem"
+  "al_ebb2" = "Konec výuky byl nastaven pøed jejím zaèátkem. Tohle asi nepùjde ..."
+  "al_invend1" = "Chybný èas"
+  "al_invend2" = "Èas musí být zadán mezi 8:00 ráno a 20:00 veèer !"
+  "al_delc1" = "Skuteènì vymazat ?"
+  "al_delc2" = "Skuteènì vymazat vybrané pøedmìty (^1) a v¹echny jejich výskyty v rozvrhu ?^2^3"
+  "al_delcy" = "Ano"
+  "al_delcn" = "Ne"
+  "al_ni1" = "®ádný záznam nevybrán"
+  "al_ni2" = "Je nutné zvolit záznam v rozvrhu pro jeho editaci/smazání."
+  "al_ecn1" = "Jméno nezadáno"
+  "al_ecn2" = "Je nutné zadat jméno pøedmìtu !"
+  "al_ect1" = "Vyuèující nezadán"
+  "al_ect2" = "Je nutné zadat jméno vyuèujícího pøedmìtu !"
+  "al_unt1" = "Èas nezadán"
+  "al_unt2" = "Ka¾dý záznam musí obsahovat informaci o èase."
+  "al_old1" = "Stará databáze"
+  "al_old2" = "Databáze byla vytvoøena star¹í verzí programu a mù¾e být pøevedena. Má se pøevést nyní ?"
+  "al_old3" = "Ano"
+  "al_old4" = "Ne"
+  "al_ctd1" = "Chybné hodnoty"
+  "al_ctd2" = "Je nutné zadat jak oznaèení, tak zkratku !"
+  "al_ct_del1" = "Skuteènì vymazat ?"
+  "al_ct_del2" = "Vymazat typ výuky ^1 [^2]?^3"
+  "al_ex_del1" = "Skuteènì vymazat ?"
+  "al_ex_del2" = "Skuteènì smazat zkou¹ky z ^1 ve ^2 v ^3?"
+  "al_timecol1" = "Kolize èasù"
+  "al_timecol2" = "Zadaný èas koliduje s ji¾ existujícím záznamem v rozvrhu."
+  "al_beamdbfail1" = "Chyba databáze"
+  "al_beamdbfail2" = "Nelze otevøít databázi. Pøed pøíjmem dat prosím spus»te UniMatrix pro zinicializování databáze."
+  "al_beamnocat1" = "Nedostatek pamìti"
+  "al_beamnocat2" = "Byl dosa¾en maximální poèet kategorií. Sma¾te nìkterou starou kategorii a zkuste znovu" 
+
+
+/* about */
+  "ab_title" = "O aplikaci"
+  "ab_d1" = "Software pro plánování"
+  "ab_d2" = "ka¾dodenního ¾ivota studenta."
+  "ab_get" = "Nejnovìj¹í verze na"
+
+
+/* beam */
+  "b_title" = "Zvolte rozvrh"
+  "b_d1" = "Prosím zvolte rozvrh do"
+  "b_d2" = "kterého bude pøijatý pøedmìt"
+  "b_d3" = "ulo¾en."
+  "b_sem" = "Rozvrh :"
+  "bs_d1" = "Vytvoøí nový rozvrh"
+  "bs_d2" = "do kterého budou pøijaté"
+  "bs_d3" = "záznamy ulo¾eny." 
+
+
+/* course list */
+  "cl_title" = "Seznam pøedmìtù"
+  "cl_desc" = "V¹echny pøedmìty v tomto rozvrhu:"
+
+
+/* course details (add and edit) */
+  "cd_title" = "Editace pøedmìtu"
+  "cd_name" = "Jméno"
+  "cd_type" = "Typ"
+  "cd_teacher" = "Vyuèující"
+  "cd_email" = "Email"
+  "cd_website" = "www"
+  "cd_phone" = "Telefon"
+
+
+/* event details (add and edit */
+  "ed_title" = "Editace záznamu"
+  "ed_course" = "Pøedmìt"
+  "ed_day" = "Den"
+  "ed_time" = "Èas"
+  "ed_title" = "Výbìr barvy"
+  "ed_color" = "Barva"
+  "ed_room" = "Uèebna"
+  "ed_mo" = "Pondìlí"
+  "ed_tu" = "Úterý"
+  "ed_we" = "Støeda"
+  "ed_th" = "Ètvrtek"
+  "ed_fr" = "Pátek"
+  "ed_sa" = "Sobota"
+  "ed_r" = "R"
+  "ed_g" = "G"
+  "ed_b" = "B"
+
+
+/* settings */
+  "sets_title" = "Volby"
+  "sets_day" = "Sobota je pracovním dnem"
+  "sets_showtype" = "Zobrazí zkratky pro záznamy"
+  "sets_showtime" = "Zobrazí èasovou linii pro aktuální èas"
+
+/* gadget */
+  "gad_mo" = "Po"
+  "gad_tu" = "Út"
+  "gad_we" = "St"
+  "gad_th" = "Èt"
+  "gad_fr" = "Pá"
+  "gad_sa" = "So"
+
+
+/* Course types */
+  "ct_title" = "Typ výuky"
+  "ct_desc" = "Vyberte pøedmìt pro editaci:"
+  "ct_edct" = "Upravit typy"
+  /* Course type defaults for database initialization */
+  "ct_lec" = "Výuka"
+  "ct_ex" = "Cvièení"
+  "ct_bex" = "Pøehled"
+  "ct_sem" = "Semináø"
+  "ct_psem" = "Prosemináø"
+  "ct_rep" = "Oprava"
+  "ct_unk" = "Neznámý"
+  /* The short names may be only 3 chars in length! */
+  "ct_sh_lec" = "V"
+  "ct_sh_ex" = "C"
+  "ct_sh_bex" = "P"
+  "ct_sh_sem" = "S"
+  "ct_sh_psem" = "PS"
+  "ct_sh_rep" = "O"
+  "ct_sh_unk" = "?"
+
+
+/* Course type details */
+  "ctdet_title" = "Pøedmìt detailnì"
+  "ctdet_name" = "Jméno"
+  "ctdet_short" = "Zkratka"
+
+
+/* Exam list and exam details */
+  "ex_title" = "Zkou¹ky"
+  "exd_title" = "Detaily zkou¹ky"
+  "exd_course" = "Pøedmìt"
+  "exd_date" = "Datum"
+  "exd_time" = "Èas"
+  "exd_length" = "Délka"
+
+
+end

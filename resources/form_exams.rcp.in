@@ -1,0 +1,58 @@
+/* $Id: form_exams.rcp.in,v 1.1 2003/02/06 21:27:23 tim Exp $
+ *
+ * Exams forms
+ */
+
+#include "UniMatrix.h"
+
+##TRANSLATION##
+
+form id FORM_exams at (0 0 160 160)
+menuid MENU_main
+begin
+  title "ex_title"
+  list "" id LIST_ex_cat at (90 2 70 auto) visibleitems 5 nonusable
+  popuplist id LIST_ex_cat_trigger LIST_ex_cat
+  popuptrigger "" id LIST_ex_cat_trigger at (140 0 auto auto) font 0 usable rightanchor
+  table id TABLE_exams at (0 20 160 120) rows 10 columns 5 columnwidths 12 78 34 24 5
+  button "" id BUTTON_ex_back at (1 146 11 11) noframe graphical bitmapid BITMAP_back selectedbitmapid BITMAP_back_clicked
+  button "" id BUTTON_ex_add at (prevright+12 prevtop 11 11) noframe graphical bitmapid BITMAP_add selectedbitmapid BITMAP_add_clicked
+  button "" id BUTTON_ex_edit at (prevright+4 prevtop 11 11) noframe graphical bitmapid BITMAP_edit selectedbitmapid BITMAP_edit_clicked
+  button "" id BUTTON_ex_del at (prevright+4 prevtop 11 11) noframe graphical bitmapid BITMAP_del selectedbitmapid BITMAP_del_clicked
+  button "" id BUTTON_ex_beam at (prevright+4 prevtop 11 11) noframe graphical bitmapid BITMAP_beam selectedbitmapid BITMAP_beam_clicked
+
+  /* Up buttons */
+  repeatbutton "\x01" id REPEAT_ex_up at (140 prevtop-3 13 8) noframe font 5 nonusable
+  repeatbutton "\x03" id REPEAT_ex_up_dis at (prevleft prevtop prevwidth prevheight) noframe font 5 disabled
+
+  /* down buttons */
+  repeatbutton "\x02" id REPEAT_ex_down at (prevleft prevbottom-1 prevwidth prevheight) noframe font 5 nonusable
+  repeatbutton "\x04" id REPEAT_ex_down_dis at (prevleft prevtop prevwidth prevheight) noframe font 5 disabled
+
+end
+
+form id FORM_exam_details at (2 56 156 102)
+modal
+begin
+  title "exd_title"
+
+  label "exd_course" autoid at (5 17)
+  label "exd_date" autoid at (prevleft prevbottom+5)
+  label "exd_time" autoid at (prevleft prevbottom+5)
+  label "ed_room" autoid at (prevleft prevbottom+5)
+
+  list "" id LIST_exd_course at (40 17 105 auto) visibleitems 5 nonusable
+  popuplist id LIST_exd_course_trigger LIST_exd_course
+  popuptrigger "" id LIST_exd_course_trigger at (40 17 auto auto) font 0 usable leftanchor
+
+  selectortrigger "N/A" id SELECTOR_exd_date at (prevleft prevbottom+5 auto auto)
+  selectortrigger "N/A" id SELECTOR_exd_time at (prevleft prevbottom+5 auto auto)
+
+  field id FIELD_exd_room at (prevleft prevbottom+5 60 auto) underlined autoshift maxchars 16
+
+  button "" id BUTTON_exd_cancel at (105 prevbottom+8 11 11) noframe graphical bitmapid BITMAP_cancel selectedbitmapid BITMAP_cancel_clicked
+  button "" id BUTTON_exd_ok at (prevright+3 prevtop 11 11) noframe graphical bitmapid BITMAP_ok selectedbitmapid BITMAP_ok_clicked
+
+  graffitistateindicator at (144 prevtop+1)
+
+end

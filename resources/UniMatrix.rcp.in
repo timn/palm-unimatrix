@@ -1,0 +1,13 @@
+/* $Id: UniMatrix.rcp.in,v 1.1 2003/02/06 21:27:23 tim Exp $
+ *
+ * UniMatrix main file
+ */
+
+#include "UniMatrix.h"
+
+application id APP_ID "##APPID##"
+applicationiconname id APP_NAMEID "##APPNAME##"
+version id 1 "##VERSION##"
+
+iconfamily "images/icon_sw.bmp" "" "" "images/icon_256c.bmp"
+smalliconfamily "images/icon_small_sw.bmp" "" "" "images/icon_small_256c.bmp"

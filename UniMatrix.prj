@@ -1,0 +1,187 @@
+# Anjuta Version 1.0.1 
+Compatibility Level: 1 
+
+<PROJECT_DESCRIPTION_START>
+
+<PROJECT_DESCRIPTION_END>
+<CONFIG_PROGS_START>
+<CONFIG_PROGS_END>
+<CONFIG_LIBS_START>
+<CONFIG_LIBS_END>
+<CONFIG_HEADERS_START>
+<CONFIG_HEADERS_END>
+<CONFIG_CHARACTERISTICS_START>
+<CONFIG_CHARACTERISTICS_END>
+<CONFIG_LIB_FUNCS_START>
+<CONFIG_LIB_FUNCS_END>
+<CONFIG_ADDITIONAL_START>
+<CONFIG_ADDITIONAL_END>
+<CONFIG_FILES_START>
+<CONFIG_FILES_END>
+<MAKEFILE_AM_START>
+<MAKEFILE_AM_END>
+
+props.file.type=project
+
+anjuta.version=1.0.1
+anjuta.compatibility.level=1
+
+project.name=UniMatrix
+project.type=GENERIC
+project.target.type=EXECUTABLE
+project.version=0.7
+project.author=Tim Niemueller
+project.source.target=unknown
+project.has.gettext=0
+project.programming.language=C
+project.excluded.modules=	intl
+
+project.config.extra.modules.before=
+project.config.extra.modules.after=
+project.config.blocked=1
+project.config.disable.overwriting=1 1 1 1 1 1 1 1 1 
+
+project.menu.entry=UniMatrix Version 0.7
+project.menu.group=Application
+project.menu.comment=UniMatrix Version 0.7
+project.menu.icon=
+project.menu.need.terminal=0
+
+project.configure.options=
+anjuta.program.arguments=
+preferences.indent.automatic=1
+preferences.use.tabs=0
+preferences.indent.opening=0
+preferences.indent.closing=0
+preferences.tabsize=2
+preferences.indent.size=2
+preferences.autoformat.style=GNU coding style
+preferences.autoformat.custom.style= -i8 -sc -bli0 -bl0 -cbi0 -ss
+preferences.autoformat.disable=0
+
+module.include.name=.
+module.include.type=
+module.include.expanded=1
+module.include.files=\
+	database.h\
+	gadget.h\
+	exams.h\
+	UniMatrix.h\
+	delete.h\
+	clist.h\
+	edit.h\
+	beam.h\
+	prefs.h\
+	ctype.h\
+	tnglue.h
+
+module.source.name=.
+module.source.type=
+module.source.expanded=1
+module.source.files=\
+	exams.c\
+	database.c\
+	gadget.c\
+	UniMatrix.c\
+	delete.c\
+	clist.c\
+	edit.c\
+	beam.c\
+	prefs.c\
+	ctype.c\
+	tnglue.c
+
+module.pixmap.name=.
+module.pixmap.type=
+module.pixmap.expanded=0
+module.pixmap.files=\
+	images/icon_256c.bmp\
+	images/icon_sw.bmp\
+	images/edit.bmp\
+	images/delete.bmp\
+	images/delete_clicked.bmp\
+	images/edit_clicked.bmp\
+	images/next.bmp\
+	images/next_clicked.bmp\
+	images/beam.bmp\
+	images/beam_clicked.bmp\
+	images/icon_small_256c.bmp\
+	images/icon_small_sw.bmp\
+	images/next2.bmp\
+	images/add.bmp\
+	images/add_clicked.bmp\
+	images/back.bmp\
+	images/back_clicked.bmp\
+	images/ok.bmp\
+	images/ok_clicked.bmp\
+	images/cancel.bmp\
+	images/cancel_clicked.bmp
+
+module.data.name=.
+module.data.type=
+module.data.expanded=0
+module.data.files=\
+	resources/gadget.rcp.in\
+	resources/UniMatrix.rcp.in\
+	resources/common.rcp.in\
+	resources/form_beam.rcp.in\
+	resources/form_about.rcp.in\
+	resources/form_coursedet.rcp.in\
+	resources/form_courselist.rcp.in\
+	resources/form_coursetypes.rcp.in\
+	resources/form_eventdet.rcp.in\
+	resources/form_exams.rcp.in\
+	resources/form_main.rcp.in\
+	resources/form_settings.rcp.in\
+	resources/translation.de\
+	resources/translation.en\
+	resources/translation.fr\
+	resources/translation.es\
+	resources/translation.gr\
+	resources/translation.pt\
+	resources/translation.si_cp1250\
+	resources/translation.si_latin1\
+	resources/translation.si_latin2\
+	webpage/index.php\
+	languages\
+	resources/translation.nl\
+	resources/translation.cz_cp1250\
+	resources/translation.cz_iso8859-2\
+	webpage/faq.php\
+	UniMatrix.mk\
+	resources/translation.pl_iso8859-1\
+	resources/translation.pl_iso8859-2
+
+module.help.name=.
+module.help.type=
+module.help.expanded=0
+module.help.files=
+
+module.doc.name=.
+module.doc.type=
+module.doc.expanded=1
+module.doc.files=\
+	docs/INSTALL\
+	docs/README\
+	docs/CHANGES
+
+module.po.expanded=0
+module.po.files=
+
+compiler.options.supports=
+compiler.options.include.paths=\
+	.\
+	..
+compiler.options.library.paths=
+compiler.options.libraries=
+compiler.options.libraries.selected=
+compiler.options.defines=\
+	HAVE_CONFIG_H
+compiler.options.warning.buttons=0 0 1 1 0 1 0 0 0 0 0 0 0 1 0 0 
+compiler.options.optimize.buttons=0 0 1 0 
+compiler.options.other.buttons=0 0 
+compiler.options.other.c.flags=
+compiler.options.other.l.flags=
+compiler.options.other.l.libs=
+project.source.paths=
+

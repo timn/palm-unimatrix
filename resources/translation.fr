@@ -1,0 +1,185 @@
+/* $Id: translation.fr,v 1.1 2003/02/06 21:27:23 tim Exp $ */
+
+translation "french"
+begin
+
+
+/* about translator only name is displayed */
+  "translator" = "Antoine"
+  "trans_mail" = "websearch@wanadoo.fr"
+  "trans_hdev" = "Unknown"
+  "trans_palm" = "Unknown"
+  "trans_trby" = "Traduit en français par:"
+
+
+/* common */
+  "com_cur" = "Courant"
+  "com_man" = "Liste"
+
+
+/* menu */
+  "men_addc" = "Ajouter matière"
+  "men_adde" = "Ajouter événement"
+  "men_cl" = "Liste des matières"
+  "men_ab" = "A propos..."
+  "men_opt" = "Options"
+  "men_sets" = "Paramètres"
+  "men_ex" = "Examens"
+  "men_beam" = "Transmettre semestre"
+
+
+/* alerts */
+  "al_ok" = "OK"
+  "al_rominc1" = "Système incompatible"
+  "al_rominc2" = "PalmOS 3.5 ou supérieur indispensable pour cette application."
+  "al_noc1" = "Erreur : pas de matière"
+  "al_noc2" = "Vous devez créer d'abord une matière ou ajouter un événement."
+  "al_noc3" = "OK"
+  "al_nr1" = "Erreur : pas de salle"
+  "al_nr2" = "Vous devez indiquer une salle."
+  "al_nomem1" = "Mémoire insuffisante"
+  "al_nomem2" = "Allocation mémoire impossible."
+  "al_del1" = "Confirmer la suppression ?"
+  "al_del2" = "Supprimer l'entrée sélectionnée (^1 [^2], ^3)?"
+  "al_dely" = "Oui"
+  "al_deln" = "Non"
+  "al_ebb1" = "Fin avant début"
+  "al_ebb2" = "Impossible : l'heure de fin est avant l'heure de début."
+  "al_invend1" = "Heure non valide"
+  "al_invend2" = "L'heure doit être comprise entre 08:00 et 20:00 !"
+  "al_delc1" = "Confirmer la suppression ?"
+  "al_delc2" = "Confirmer la suppression de la matière sélectionnée (^1) et de tous les événements associés ?^2^3"
+  "al_delcy" = "Oui"
+  "al_delcn" = "Non"
+  "al_ni1" = "Aucune entrée sélectionnée."
+  "al_ni2" = "Vous devez sélectionner l'entrée à éditer ou à supprimer."
+  "al_ecn1" = "Pas de nom"
+  "al_ecn2" = "Vous devez entrer un nom dans le champ 'Matière' !"
+  "al_ect1" = "Pas de professeur"
+  "al_ect2" = "Vous devez entrer un nom dans le champ 'Prof.' !"
+  "al_unt1" = "Pas d'heure"
+  "al_unt2" = "Chaque événement doit avoir une heure."
+  "al_old1" = "Ancienne base de données"
+  "al_old2" = "Cette base de données a été créée avec une ancienne version d'UniMatrix. Voulez-vous la convertir maintenant ?"
+  "al_old3" = "Oui"
+  "al_old4" = "Non"
+  "al_ctd1" = "Valeurs non valides"
+  "al_ctd2" = "Vous devez indiquer vos nom et prénom !"
+  "al_ct_del1" = "Confirmer la suppression ?"
+  "al_ct_del2" = "Suppression de la matière de type ^1 [^2]?^3"
+  "al_ex_del1" = "Confirmer la suppression ?"
+  "al_ex_del2" = "Supprimer l'examen de ^1 du ^2 à ^3 ?"
+  "al_timecol1" = "Conflit horaire"
+  "al_timecol2" = "L'heure indiquée est en conflit avec un événement déjà existant."
+  "al_beamdbfail1" = "Erreur de donnees"
+  "al_beamdbfail2" = "Impossible d'ouvrir la base de données. Pour initialiser la base, redémarrez UniMatrix avant de recevoir la transmission"
+  "al_beamnocat1" = "Manque de mémoire"
+  "al_beamnocat2" = "Vous avez déjà atteint le maximum de catégories. Supprimez une catégorie existante et réessayez"
+
+
+/* about */
+  "ab_title" = "A propos d'UniMatrix"
+  "ab_d1" = "Programme pour planifier votre"
+  "ab_d2" = "semaine de travail à l'université"
+  "ab_get" = "Téléchargez la dernière version sur"
+
+
+/* beam */
+  "b_title" = "Choisir le semestre"
+  "b_d1" = "SVP, indiquez le semestre dans lequel"
+  "b_d2" = "la matière que vous allez placer"
+  "b_d3" = "sera sauvegardée."
+  "bs_d1" = "Vous allez créer un nouveau semestre"
+  "bs_d2" = "dans lequel les nouvelles données"
+  "bs_d3" = "seront enregistrées."
+  "b_sem" = "Semestre:"
+
+
+/* course list */
+  "cl_title" = "Liste des matières"
+  "cl_desc" = "Toutes les matières de ce semestre:"
+
+
+/* course details (add and edit) */
+  "cd_title" = "Editer matière"
+  "cd_name" = "Nom"
+  "cd_type" = "Type"
+  "cd_teacher" = "Prof."
+  "cd_email" = "E-mail"
+  "cd_website" = "Site web"
+  "cd_phone" = "Tél."
+
+
+/* event details (add and edit */
+  "ed_title" = "Editer événement"
+  "ed_course" = "Matière"
+  "ed_day" = "Jour"
+  "ed_time" = "Heure"
+  "ed_title" = "Choisir heure"
+  "ed_color" = "Couleur"
+  "ed_room" = "Salle"
+  "ed_mo" = "Lundi"
+  "ed_tu" = "Mardi"
+  "ed_we" = "Mercredi"
+  "ed_th" = "Jeudi"
+  "ed_fr" = "Vendredi"
+  "ed_sa" = "Samedi"
+  "ed_r" = "R"
+  "ed_g" = "V"
+  "ed_b" = "B"
+
+
+/* settings */
+  "sets_title" = "Paramètres"
+  "sets_day" = "Samedi = jour de travail ?"
+  "sets_showtype" = "Afficher abrégés événements"
+  "sets_showtime" = "Afficher ligne heure courante"
+
+
+/* gadget */
+  "gad_mo" = "Lun"
+  "gad_tu" = "Mar"
+  "gad_we" = "Mer"
+  "gad_th" = "Jeu"
+  "gad_fr" = "Ven"
+  "gad_sa" = "Sam"
+
+
+/* Course types */
+  "ct_title" = "Type de matière"
+  "ct_desc" = "Choisissez la matière à éditer"
+  "ct_edct" = "Editer les types..."
+  /* Course type defaults for database initialization */
+  "ct_lec" = "Cours"
+  "ct_ex" = "Conférence"
+  "ct_bex" = "Exercice"
+  "ct_sem" = "Travaux pratiques"
+  "ct_psem" = "Travaux dirigés"
+  "ct_rep" = "Révision"
+  "ct_unk" = "Inconnu"
+  /* The short names may be only 3 chars in length! */
+  "ct_sh_lec" = "C"
+  "ct_sh_ex" = "Cf"
+  "ct_sh_bex" = "Ex"
+  "ct_sh_sem" = "TP"
+  "ct_sh_psem" = "TD"
+  "ct_sh_rep" = "Rév"
+  "ct_sh_unk" = "?"
+
+
+/* Course type details */
+  "ctdet_title" = "Détails de matière"
+  "ctdet_name" = "Nom"
+  "ctdet_short" = "Abrégé"
+
+
+/* Exam list and exam details */
+  "ex_title" = "Examens"
+  "exd_title" = "Détails d'examen"
+  "exd_course" = "Matière"
+  "exd_date" = "Date"
+  "exd_time" = "Heure"
+  "exd_length" = "Durée"
+
+
+end
