@@ -6,16 +6,16 @@ RunInTerminal=true
 ShowLocals=true
 
 [filenumbers]
-0=17
-1=179
-2=409
-3=18
-4=51
-5=20
-6=161
-7=46
-8=177
-9=3
+0=193
+1=13
+2=4145
+3=47
+4=13
+5=333
+6=86
+7=1
+8=83
+9=526
 10=3
 11=3
 12=3
@@ -55,19 +55,36 @@ ShowLocals=true
 21=
 22=
 
+[File View]
+filter.file.unmatch=*.so *.o *.a *.la
+filter.file.ignore.hidden=0
+filter.dir.ignore.hidden=0
+
+[filelist]
+0=/daten/palm/unimatrix/notes.c
+1=/daten/palm/unimatrix/notes.h
+2=/daten/palm/dev/Examples/Datebook/Src/DateDay.c
+3=/daten/palm/unimatrix/gadget.h
+4=/daten/palm/unimatrix/gadget.c
+5=/daten/palm/unimatrix/UniMatrix.c
+6=/daten/palm/dev/Examples/Datebook/Src/Datebook.c
+7=/daten/palm/unimatrix/database.c
+8=/daten/palm/unimatrix/database.h
+9=/daten/palm/unimatrix/edit.c
+
 [replace_text]
 0=TNDrawCharsToFitWidth
 1=cats
 
 [find_text]
-0=CourseTypeGetShortByCourseID
-1=NewCID
-2=CourseTypeGetShort
-3=cr.id
-4=DatabaseSort
-5=gPrefs
-6=caches[
-7=GadgetDrawTimeline
+0=NoteDelete
+1=NoteViewSave
+2=NoteViewLoad
+3=recordH
+4=NoteViewInit
+5=11
+6=note
+7=CourseTypeGetShortByCourseID
 
 [find_in_files]
 0=menuEvent

@@ -1,4 +1,4 @@
-/* $Id: exams.c,v 1.2 2003/03/13 14:56:47 tim Exp $
+/* $Id: exams.c,v 1.3 2003/04/18 23:34:59 tim Exp $
  *
  * Exams functions
  * Created: 2002-09-21
@@ -13,6 +13,7 @@
 #include "delete.h"
 #include "tnglue.h"
 #include "beam.h"
+#include "notes.h"
 
 // "Shared global" globals
 extern Char gCategoryName[dmCategoryLength];
@@ -68,6 +69,14 @@ static void TableDrawData(void *table, Int16 row, Int16 column, RectangleType *b
 
     MemHandleUnlock(m);
     MemHandleFree(m);
+  } else if (column == EXCOL_NOTE) {
+    if (ex->note) {
+      Char noteSymb[2] = { GADGET_NOTESYMBOL, 0 };
+      FontID oldFont = FntSetFont(symbolFont);
+  
+      TNDrawCharsToFitWidth(noteSymb, bounds);
+      FntSetFont(oldFont);
+    }
   } else if (column == EXCOL_DATE) {
     Char dateTemp[dateStringLength];
     DateToAscii(ex->date.month, ex->date.day, ex->date.year+MAC_SHIT_YEAR_CONSTANT, PrefGetPreference(prefDateFormat), dateTemp);
@@ -101,6 +110,7 @@ static void ExamsTableInit(void) {
   for (i=0; i < TblGetNumberOfRows(table); ++i) {
     TblSetItemStyle(table, i, EXCOL_DONE, checkboxTableItem);
     TblSetItemStyle(table, i, EXCOL_COURSE, customTableItem);
+    TblSetItemStyle(table, i, EXCOL_NOTE, customTableItem);
     TblSetItemStyle(table, i, EXCOL_DATE, customTableItem);
     TblSetItemStyle(table, i, EXCOL_TIME, customTableItem);
     TblSetItemStyle(table, i, EXCOL_SELI, customTableItem);
@@ -108,11 +118,13 @@ static void ExamsTableInit(void) {
 
   TblSetColumnSpacing(table, EXCOL_DONE, 2);
   TblSetColumnSpacing(table, EXCOL_COURSE, 1);
+  TblSetColumnSpacing(table, EXCOL_NOTE, 3);
   TblSetColumnSpacing(table, EXCOL_DATE, 1);
   TblSetColumnSpacing(table, EXCOL_TIME, 3);
 
   TblSetColumnUsable(table, EXCOL_DONE, true);
   TblSetColumnUsable(table, EXCOL_COURSE, true);
+  TblSetColumnUsable(table, EXCOL_NOTE, true);
   TblSetColumnUsable(table, EXCOL_DATE, true);
   TblSetColumnUsable(table, EXCOL_TIME, true);
   TblSetColumnUsable(table, EXCOL_SELI, true);
@@ -122,6 +134,7 @@ static void ExamsTableInit(void) {
   }
 
   TblSetCustomDrawProcedure(table, EXCOL_COURSE, TableDrawData);
+  TblSetCustomDrawProcedure(table, EXCOL_NOTE, TableDrawData);
   TblSetCustomDrawProcedure(table, EXCOL_DATE, TableDrawData);
   TblSetCustomDrawProcedure(table, EXCOL_TIME, TableDrawData);
   TblSetCustomDrawProcedure(table, EXCOL_SELI, TableDrawSelection);
@@ -156,10 +169,12 @@ static void ExamsTableInit(void) {
     CtlShowControl(GetObjectPtr(BUTTON_ex_edit));
     CtlShowControl(GetObjectPtr(BUTTON_ex_del));
     CtlShowControl(GetObjectPtr(BUTTON_ex_beam));
+    CtlShowControl(GetObjectPtr(BUTTON_ex_note));
   } else {
     CtlHideControl(GetObjectPtr(BUTTON_ex_edit));
     CtlHideControl(GetObjectPtr(BUTTON_ex_del));
     CtlHideControl(GetObjectPtr(BUTTON_ex_beam));
+    CtlHideControl(GetObjectPtr(BUTTON_ex_note));
   }
 
   // decide and (show/hide) whether to have enabled or disabled down button
@@ -274,6 +289,19 @@ Boolean ExamsFormHandleEvent(EventPtr event) {
         FrmPopupForm(FORM_exam_details);
         break;
 
+      case BUTTON_ex_note:
+      {
+        UInt16 index=0;
+
+        handled=true;
+
+        gExamsLastSelRowUID=TblGetRowData(GetObjectPtr(TABLE_exams), gExamsSelRow);
+        DmFindRecordByID(DatabaseGetRefN(DB_MAIN), gExamsLastSelRowUID, &index);
+        NoteSet(index, FORM_exams);
+        FrmGotoForm(NewNoteView);
+        break;
+      }
+
       case BUTTON_ex_del:
         handled=true;
         gExamsLastSelRowUID=TblGetRowData(GetObjectPtr(TABLE_exams), gExamsSelRow);
@@ -320,8 +348,66 @@ Boolean ExamsFormHandleEvent(EventPtr event) {
 
     if (event->data.tblEnter.column == EXCOL_DONE) {
       handled=false;
-    } else {
+    } else if (event->data.tblEnter.column == EXCOL_NOTE) {
+      MemHandle m;
+      Boolean hasNote=false;
 
+      gExamsSelRow=event->data.tblEnter.row;
+      for (i=0; i < TblGetNumberOfRows(event->data.tblEnter.pTable); ++i) {
+        RectangleType r;
+        TblGetItemBounds(event->data.tblEnter.pTable, i, EXCOL_SELI, &r);
+        TableDrawSelection(event->data.tblEnter.pTable, i, event->data.tblEnter.column, &r);
+      }
+
+      
+      m = DmQueryRecord(DatabaseGetRefN(DB_MAIN), TblGetRowID(event->data.tblEnter.pTable, event->data.tblEnter.row));
+      if (m) {
+        ExamDBRecord *ex = (ExamDBRecord *)MemHandleLock(m);
+        if (ex->note) hasNote = true;
+        else          hasNote = false;
+        MemHandleUnlock(m);
+      }
+
+      if (hasNote) {
+        Coord newPointX, newPointY;
+        Boolean isPenDown=false, drawn=false;
+        RectangleType fieldBounds;
+        IndexedColorType curForeColor, curBackColor, curTextColor;
+        Char noteSymb[2] = { GADGET_NOTESYMBOL, 0 };
+        FontID oldFont;
+  
+  
+        EvtGetPen(&newPointX, &newPointY, &isPenDown);
+        TblGetItemBounds(event->data.tblEnter.pTable, event->data.tblEnter.row, EXCOL_NOTE, &fieldBounds);
+  
+        oldFont = FntSetFont(symbolFont);
+        while (isPenDown){
+          if (! drawn && RctPtInRectangle(newPointX, newPointY, &fieldBounds)) {
+            curForeColor = WinSetForeColor(UIColorGetTableEntryIndex(UIObjectSelectedForeground));
+            curBackColor = WinSetBackColor(UIColorGetTableEntryIndex(UIObjectSelectedFill));
+            curTextColor = WinSetTextColor(UIColorGetTableEntryIndex(UIObjectSelectedForeground));
+            TNDrawCharsToFitWidth(noteSymb, &fieldBounds);
+            WinSetForeColor(curForeColor);
+            WinSetForeColor(curBackColor);
+            WinSetForeColor(curTextColor);
+            drawn = true;
+          } else if (drawn && ! RctPtInRectangle(newPointX, newPointY, &fieldBounds)) {
+            curForeColor = WinSetForeColor(UIColorGetTableEntryIndex(UIObjectForeground));
+            curBackColor = WinSetBackColor(UIColorGetTableEntryIndex(UIObjectFill));
+            curTextColor = WinSetTextColor(UIColorGetTableEntryIndex(UIObjectForeground));
+            TNDrawCharsToFitWidth(noteSymb, &fieldBounds);
+            WinSetForeColor(curForeColor);
+            WinSetForeColor(curBackColor);
+            WinSetForeColor(curTextColor);
+            drawn = false;
+          }
+          EvtGetPen(&newPointX, &newPointY, &isPenDown);
+        }
+        FntSetFont(oldFont);
+      } else {
+        handled = true;
+      }
+    } else {
       gExamsSelRow=event->data.tblEnter.row;
       for (i=0; i < TblGetNumberOfRows(event->data.tblEnter.pTable); ++i) {
         RectangleType r;
@@ -355,6 +441,22 @@ Boolean ExamsFormHandleEvent(EventPtr event) {
 
       MemHandleUnlock(mex);
       
+    } else if (event->data.tblEnter.column == EXCOL_NOTE) {
+      MemHandle m;
+      Boolean hasNote=false;
+
+      m = DmQueryRecord(DatabaseGetRefN(DB_MAIN), TblGetRowID(event->data.tblEnter.pTable, event->data.tblEnter.row));
+      if (m) {
+        ExamDBRecord *ex = (ExamDBRecord *)MemHandleLock(m);
+        if (ex->note) hasNote = true;
+        else          hasNote = false;
+        MemHandleUnlock(m);
+      }
+
+      if (hasNote) {
+        NoteSet(TblGetRowID(event->data.tblEnter.pTable, event->data.tblEnter.row), FORM_exams);
+        FrmGotoForm(NewNoteView);
+      }
     }
     handled=true;
   } else if (event->eType == ctlRepeatEvent) {
@@ -397,12 +499,13 @@ Boolean ExamsFormHandleEvent(EventPtr event) {
     // redraws the form if needed
     gExamsOffset=0;
     ExamsTableInit();
-    // FrmDrawForm(frm);
+    FrmDrawForm(frm);
     handled = false;
   } else if (event->eType == frmCloseEvent) {
     // this is done if form is closed
     // TblEraseTable(GetObjectPtr(TABLE_exams));
     // ExamsFormFree();
+    FrmEraseForm(frm);
   }
 
   return (handled);
@@ -567,11 +670,13 @@ static Boolean ExamDetailsFormSave(void) {
     return false;
   } else {
     UInt16 attr=0;
-    ExamDBRecord ex;
-    MemPtr ep;
+    ExamDBRecord ex, *ep;
+
+    ep = (ExamDBRecord *)MemHandleLock(newExam);
 
     ex.type=TYPE_EXAM;
     ex.course=gExamDetailsItemIDs[LstGetSelection(course)];
+    ex.note = (gExamsLastSelRowUID == 0) ? 0 : ep->note;
     ex.date.year = gExamDetailsDate.year;
     ex.date.month = gExamDetailsDate.month;
     ex.date.day = gExamDetailsDate.day;
@@ -582,7 +687,6 @@ static Boolean ExamDetailsFormSave(void) {
     ex.flags = 0x0000;
     StrNCopy(ex.room, room, sizeof(ex.room));
 
-    ep = MemHandleLock(newExam);
     DmWrite(ep, 0, &ex, sizeof(ExamDBRecord));
     MemHandleUnlock(newExam);
     DmReleaseRecord(DatabaseGetRef(), index, false);

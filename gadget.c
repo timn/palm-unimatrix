@@ -1,7 +1,7 @@
-/* $Id: gadget.c,v 1.4 2003/04/15 16:09:12 tim Exp $
- *
- * THE heart of UniMatrix. This is the center piece of code in UniMatrix
- */
+/* $Id: gadget.c,v 1.5 2003/04/18 23:34:59 tim Exp $
+*
+* THE heart of UniMatrix. This is the center piece of code in UniMatrix
+*/
 
 #include "UniMatrix.h"
 #include "gadget.h"
@@ -10,12 +10,13 @@
 #include "clist.h"
 #include "prefs.h"
 #include "cache.h"
+#include "notes.h"
 
 extern UniMatrixPrefs gPrefs;
 
 FormPtr gForm=NULL;
 UInt16 gGadgetID=0, gHintGadgetID=0;
-UInt16 gCourseIndex=0, gTimeIndex=0, gTimeDrawnIndex=0;
+UInt16 gCourseIndex=0, gTimeIndex=0, gTimeDrawnIndex=0, gHintNote=0;
 Boolean gHintDrawn=false, gGadgetCompleteRedraw=true;
 UInt8 gGadgetCurMinHour=GADGET_MIN_HOUR, gGadgetCurMaxHour=GADGET_MAX_HOUR,
       gGadgetDaysNum=GADGET_DEFAULT_NUMDAYS, gGadgetDaysWidth=GADGET_TOTAL_DRAWWIDTH/GADGET_DEFAULT_NUMDAYS,
@@ -438,12 +439,13 @@ void GadgetDrawTime(TimeType begin, TimeType end, UInt8 day, RGBColorType *color
 *
 * Description: Draw the hintbox with the hint
 *****************************************************************************/
-void GadgetDrawHint(const char *toptext, const char *bottext) {
+void GadgetDrawHint(const char *toptext, const char *bottext, UInt16 note) {
   RectangleType bounds;
   UInt16 gadgetIndex;
   RectangleType rect, textbox_top, textbox_bot;
   FontID oldFont;
   ControlType *ctl;
+  Char noteSymb[2] = { GADGET_NOTESYMBOL, 0 };
   // Not needed any longer, the hint now has its own Gadget
   // UInt16 top = GADGET_TOP + (GADGET_STRINGS_NUM-1) * GADGET_STRINGS_OFFSET + 5;  // 6 - const = VALUE BELOW
 
@@ -460,6 +462,7 @@ void GadgetDrawHint(const char *toptext, const char *bottext) {
                   bounds.extent.x-3, bounds.extent.y - 3); // -4 for bottom border
 
   // Erase Gadget area
+  WinSetForeColor(UIColorGetTableEntryIndex(UIObjectFrame));
   WinDrawRectangleFrame(popupFrame, &rect);
 
   RctSetRectangle(&textbox_top, rect.topLeft.x+2, rect.topLeft.y,
@@ -467,11 +470,23 @@ void GadgetDrawHint(const char *toptext, const char *bottext) {
   RctSetRectangle(&textbox_bot, textbox_top.topLeft.x, textbox_top.topLeft.y+textbox_top.extent.y+1,
                                 textbox_top.extent.x, textbox_top.extent.y);
 
-
   oldFont=FntSetFont(boldFont);
   TNDrawCharsToFitWidth(toptext, &textbox_top);
   FntSetFont(oldFont);
   TNDrawCharsToFitWidth(bottext, &textbox_bot);
+
+
+  gHintNote = note;
+  if (note) {
+    // This time has a note
+    oldFont = FntSetFont(symbolFont);
+    RctSetRectangle(&rect, rect.topLeft.x+rect.extent.x-8,
+                           rect.topLeft.y+rect.extent.y-12,
+                           FntLineWidth(noteSymb, 1), FntLineHeight());
+  
+    TNDrawCharsToFitWidth(noteSymb, &rect);
+    FntSetFont(oldFont);
+  }
 
   ctl=GetObjectPtr(BUTTON_edit);
   CtlShowControl(ctl);
@@ -633,7 +648,7 @@ void GadgetDrawHintCurrent(void) {
         TNSetForeColorRGB(&prevColor, NULL);
 
        // WinInvertRectangleFrame(simpleFrame, &rect);
-        GadgetDrawHint(tmp, bot);
+        GadgetDrawHint(tmp, bot, tc->note);
 
         MemPtrFree((MemPtr) tmp);
         MemPtrFree((MemPtr) bot);
@@ -770,6 +785,22 @@ Boolean GadgetHandler(FormGadgetTypeInCallback *gadgetP, UInt16 cmd, void *param
 }
 
 
+Boolean GadgetHintHandler(FormGadgetTypeInCallback *gadgetP, UInt16 cmd, void *paramP) {
+  Boolean handled = false; 
+  EventType *event = (EventType *)paramP;
+
+  if (cmd == formGadgetDrawCmd) {
+    GadgetDrawHintCurrent();
+  } else if (cmd == formGadgetHandleEventCmd) {
+    if (event->eType == frmGadgetEnterEvent) { 
+      // penDown in gadget's bounds.
+      GadgetHintTap((FormGadgetType *)gadgetP, event);
+      handled = true;
+    }
+  }
+  return handled;
+}
+
 
 /*****************************************************************************
 * Function: GadgetDrawStep
@@ -777,7 +808,7 @@ Boolean GadgetHandler(FormGadgetTypeInCallback *gadgetP, UInt16 cmd, void *param
 * Description: Helper function for GadgetTap. Highlights next of previous
 *              event on current screen
 *****************************************************************************/
-static void GadgetDrawStep(WinDirectionType direction) {
+void GadgetDrawStep(WinDirectionType direction) {
   MemHandle m;
   UInt16 index=gTimeIndex, wantCourse=0, courseIndex=0;
   Boolean found=false, endLoop=false;
@@ -792,7 +823,7 @@ static void GadgetDrawStep(WinDirectionType direction) {
    */
 
   
-  if ( (direction == winDown) && (index > 0) ) {
+  if ( (direction == winUp) && (index > 0) ) {
     while( !endLoop && (DmSeekRecordInCategory(DatabaseGetRefN(DB_MAIN), &index, 1, dmSeekBackward, DatabaseGetCat()) == errNone)) {
       Char *s;
       m = DmQueryRecord(DatabaseGetRefN(DB_MAIN), index);
@@ -811,7 +842,7 @@ static void GadgetDrawStep(WinDirectionType direction) {
       }
       MemHandleUnlock(m);
     }
-  } else if (direction == winUp) {
+  } else if (direction == winDown) {
     index += 1;
     while( !endLoop && ((m = DmQueryNextInCategory(DatabaseGetRef(), &index, DatabaseGetCat())) != NULL)) {
       Char *s=MemHandleLock(m);
@@ -833,16 +864,10 @@ static void GadgetDrawStep(WinDirectionType direction) {
       MemHandleUnlock(m);
     }
   }
-  if (found) {
-    if (CourseGetIndex(wantCourse, &courseIndex)) {
-      GadgetSetHintCourseIndex(courseIndex);
-      GadgetSetHintTimeIndex(index);
-      GadgetDrawHintCurrent();
-    } else {
-      SndPlaySystemSound(sndError);
-    }
-  } else {
-    SndPlaySystemSound(sndError);
+  if (found && CourseGetIndex(wantCourse, &courseIndex)) {
+    GadgetSetHintCourseIndex(courseIndex);
+    GadgetSetHintTimeIndex(index);
+    GadgetDrawHintCurrent();
   }
 }
 
@@ -905,12 +930,12 @@ void GadgetTap(FormGadgetType *pGadget, EventType *event) {
     if (RctPtInRectangle(startPointX, startPointY, &bottomRight) &&
         RctPtInRectangle(newPointX, newPointY, &topRight) ) {
       // Stroke Command: BACK
-      GadgetDrawStep(winDown);
+      GadgetDrawStep(winUp);
       return;
     } else if (RctPtInRectangle(startPointX, startPointY, &topRight) &&
                RctPtInRectangle(newPointX, newPointY, &bottomRight) ) {
       // Stroke Command: NEXT
-      GadgetDrawStep(winUp);
+      GadgetDrawStep(winDown);
       return;
     }
 
@@ -964,6 +989,79 @@ void GadgetTap(FormGadgetType *pGadget, EventType *event) {
   } // else outside gadget bounds -> do nothing
 
 }
+
+
+/*****************************************************************************
+* Function: GadgetHintTap
+*
+* Description: Handles penDown events (taps) on the hint gadget
+*****************************************************************************/
+void GadgetHintTap(FormGadgetType *pGadget, EventType *event) {
+  //you may find it useful to track if they
+  //lift the pen still within the boundaries of the gadget
+  Boolean isPenDown = true;
+  Int16 newPointX, newPointY, startPointX, startPointY;
+  UInt16 index;
+  RectangleType bounds, rect;
+  Char noteSymb[2] = { GADGET_NOTESYMBOL, 0 };
+  FontID oldFont;
+  Boolean drawn=false;
+  IndexedColorType curForeColor, curBackColor, curTextColor;
+
+  // This is just needed since we do not want to access internal structure
+  // data directly in FormGadgetType (need rect field below)
+  index = TNGetObjectIndexFromPtr(FrmGetActiveForm(), pGadget);
+  FrmGetObjectBounds(FrmGetActiveForm(), index, &bounds);
+
+  oldFont = FntSetFont(symbolFont);
+  RctSetRectangle(&rect,
+                  bounds.topLeft.x+1,  // +1 for border
+                  bounds.topLeft.y+1, // Put VALUE BELOW here.... +top+1 removed because of own Gadget
+                  bounds.extent.x-3, bounds.extent.y - 3); // -4 for bottom border
+  RctSetRectangle(&rect, rect.topLeft.x+rect.extent.x-8,
+                         rect.topLeft.y+rect.extent.y-12,
+                         FntLineWidth(noteSymb, 1), FntLineHeight());
+
+
+  //track the pen down event
+  EvtGetPen(&newPointX, &newPointY, &isPenDown);
+  startPointX = newPointX;
+  startPointY = newPointY;
+  while (isPenDown){
+    EvtGetPen(&newPointX, &newPointY, &isPenDown);
+
+    if (gHintNote) {
+      if (! drawn && RctPtInRectangle(newPointX, newPointY, &rect)) {
+        curForeColor = WinSetForeColor(UIColorGetTableEntryIndex(UIObjectSelectedForeground));
+        curBackColor = WinSetBackColor(UIColorGetTableEntryIndex(UIObjectSelectedFill));
+        curTextColor = WinSetTextColor(UIColorGetTableEntryIndex(UIObjectSelectedForeground));
+        TNDrawCharsToFitWidth(noteSymb, &rect);
+        WinSetForeColor(curForeColor);
+        WinSetForeColor(curBackColor);
+        WinSetForeColor(curTextColor);
+        drawn = true;
+      } else if (drawn && ! RctPtInRectangle(newPointX, newPointY, &rect)) {
+        curForeColor = WinSetForeColor(UIColorGetTableEntryIndex(UIObjectForeground));
+        curBackColor = WinSetBackColor(UIColorGetTableEntryIndex(UIObjectFill));
+        curTextColor = WinSetTextColor(UIColorGetTableEntryIndex(UIObjectForeground));
+        TNDrawCharsToFitWidth(noteSymb, &rect);
+        WinSetForeColor(curForeColor);
+        WinSetForeColor(curBackColor);
+        WinSetForeColor(curTextColor);
+        drawn = false;
+      }
+    }
+
+  }
+
+  FntSetFont(oldFont);
+
+  if (gHintNote && RctPtInRectangle(newPointX, newPointY, &rect)) {
+    NoteSet(GadgetGetHintTimeIndex(), FORM_main);
+    FrmPopupForm(NewNoteView);
+  } // else outside gadget bounds -> do nothing
+}
+
 
 
 /*****************************************************************************

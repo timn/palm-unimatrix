@@ -1,4 +1,4 @@
-/* $Id: edit.c,v 1.2 2003/03/13 14:56:47 tim Exp $
+/* $Id: edit.c,v 1.3 2003/04/18 23:34:59 tim Exp $
  *
  * Code for editing times, events, courses
  */
@@ -12,6 +12,8 @@
 #include "clist.h"
 #include "ctype.h"
 #include "tnglue.h"
+#include "cache.h"
+#include "notes.h"
 
 // Convert a date in a DateType structure to a signed int.
 #define TimeToInt(time) (*(Int16 *) &time)
@@ -188,6 +190,7 @@ static Boolean EditCourseSave(FormType *frm) {
     }
 
     DatabaseSort();
+    CacheReset();
   }
 
   return true;
@@ -367,7 +370,6 @@ static void EditTimeFormInit(FormType *frm) {
     LstSetSelection(day, 0);
     CtlSetLabel(dayt, LstGetSelectionText(day, 0));
 
-
   } else {
     // We edit a record
 
@@ -448,7 +450,6 @@ static void EditTimeFormInit(FormType *frm) {
 
 
 
-
 static Boolean EditTimeSave(FormType *frm) {
   ListType *lst, *day;
   ControlType *ctl, *dayt;
@@ -464,6 +465,7 @@ static Boolean EditTimeSave(FormType *frm) {
   g = FrmGetObjectPtr(frm, FrmGetObjectIndex(frm, FIELD_ed_g));
   b = FrmGetObjectPtr(frm, FrmGetObjectIndex(frm, FIELD_ed_b));
   room = FrmGetObjectPtr(frm, FrmGetObjectIndex(frm, FIELD_ed_room));
+
 
   if (EditTimeCheckCollision(gEditTimeBegin, gEditTimeEnd, LstGetSelection(day), ((gEditTimeIsAdd) ? 0 : GadgetGetHintTimeIndex()), !gEditTimeIsAdd)) {
     FrmAlert(ALERT_timeCollision);
@@ -484,6 +486,7 @@ static Boolean EditTimeSave(FormType *frm) {
       // Prepare record here since we want to use it with DmFindSortPosition(..)
       tt.type=TYPE_TIME;
       tt.course=gEditTimeItemIDs[LstGetSelection(lst)];
+      tt.note = 0;
       tt.day = LstGetSelection(day);
       tt.begin.hours = gEditTimeBegin.hours;
       tt.begin.minutes = gEditTimeBegin.minutes;
@@ -509,6 +512,10 @@ static Boolean EditTimeSave(FormType *frm) {
         mt = DmGetRecord(DatabaseGetRefN(DB_MAIN), index);
       }
       t = (TimeDBRecord *)MemHandleLock(mt);
+
+      if (! gEditTimeIsAdd) {
+        tt.note = t->note;
+      }
 
       DmWrite(t, 0, &tt, sizeof(TimeDBRecord));
       // Highlight new record.. Current course index+1 since courses get shifted by one because we sort
@@ -726,6 +733,11 @@ Boolean EditTimeFormHandleEvent(EventPtr event) {
         handled=true;
         break;
 
+      case BUTTON_ed_note:
+        NoteSet(GadgetGetHintTimeIndex(), FORM_evt_det);
+        FrmPopupForm(NewNoteView);
+        break;
+
       case BUTTON_ed_color:
         EditTimePickColor(frm);
         handled=true;
@@ -742,13 +754,13 @@ Boolean EditTimeFormHandleEvent(EventPtr event) {
   } else if (event->eType == frmUpdateEvent) {
       // redraws the form if needed
       frm = FrmGetActiveForm();
-      FrmDrawForm (frm);
+      FrmDrawForm(frm);
       handled = true;
     } else if (event->eType == frmOpenEvent) {
       // initializes and draws the form at program launch
       frm = FrmGetActiveForm();
       EditTimeFormInit(frm);
-      FrmDrawForm (frm);
+      FrmDrawForm(frm);
       if (gEditTimeIsAdd) {
         CtlHideControl(GetObjectPtr(BUTTON_ed_beam));
         CtlHideControl(GetObjectPtr(BUTTON_ed_del));

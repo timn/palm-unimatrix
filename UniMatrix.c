@@ -1,4 +1,4 @@
-/* $Id: UniMatrix.c,v 1.2 2003/03/13 14:56:47 tim Exp $
+/* $Id: UniMatrix.c,v 1.3 2003/04/18 23:34:59 tim Exp $
  *
  * UniMatrix main, event handling
  * Created: July 2002
@@ -16,10 +16,17 @@
 #include "ctype.h"
 #include "exams.h"
 #include "cache.h"
+#include "notes.h"
 
 Char gCategoryName[dmCategoryLength];
 UInt16 gMenuCurrentForm=FORM_main;
 UniMatrixPrefs gPrefs;
+UInt32 gMainRepeat=false;
+
+// backup of key parameters
+UInt16 gKeyP1,gKeyP2,gKeyP3;
+Boolean gKeyP4;
+
 
 /***********************************************************************
  * FUNCTION:    GetObjectPtr
@@ -268,12 +275,28 @@ static Boolean MainFormHandleEvent (EventPtr event){
         // Up or down keys pressed
         switch (event->data.keyDown.chr) {
           case vchrPageUp:
-            GadgetSwitchScreen();
+            if (event->data.keyDown.modifiers & autoRepeatKeyMask) {
+              if (! gMainRepeat) {
+                GadgetSwitchScreen();
+                gMainRepeat = true;
+              }
+            } else {
+              GadgetDrawStep(winUp);
+              gMainRepeat = false;
+            }
             handled=true;
             break;
-          
+
           case vchrPageDown:
-            GadgetSwitchScreen();
+            if (event->data.keyDown.modifiers & autoRepeatKeyMask) {
+              if (! gMainRepeat) {
+                GadgetSwitchScreen();
+                gMainRepeat = true;
+              }
+            } else {
+              GadgetDrawStep(winDown);
+              gMainRepeat = false;
+            }
             handled=true;
             break;
 
@@ -294,17 +317,22 @@ static Boolean MainFormHandleEvent (EventPtr event){
     } else if (event->eType == frmUpdateEvent) {
       // redraws the form if needed
       frm = FrmGetActiveForm();
-      FrmDrawForm (frm);
+      FrmDrawForm(frm);
+      // GadgetDrawHintNext();
       handled = true;
     } else if (event->eType == frmOpenEvent) {
       ControlType *ctl;
       LocalID dbID;
       UInt16 cardNo;
+      Boolean newKeyP4=false;
+      UInt16 newKeyP2=0xFFFF;
+
       // initializes and draws the form at program launch
       frm = FrmGetActiveForm();
 
       GadgetSet(frm, GADGET_main, GADGET_hint);
       FrmSetGadgetHandler(frm, FrmGetObjectIndex(frm, GADGET_main), GadgetHandler);
+      FrmSetGadgetHandler(frm, FrmGetObjectIndex(frm, GADGET_hint), GadgetHintHandler);
 
       FrmDrawForm(frm);
       GadgetDrawHintNext();
@@ -316,6 +344,9 @@ static Boolean MainFormHandleEvent (EventPtr event){
       DmOpenDatabaseInfo(DatabaseGetRefN(DB_MAIN), &dbID, NULL, NULL, &cardNo, NULL);
       SysNotifyRegister(cardNo, dbID, sysNotifyLateWakeupEvent, HandleNotification, sysNotifyNormalPriority, NULL);
 
+    	KeyRates(false,&gKeyP1, &gKeyP2, &gKeyP3, &gKeyP4);
+	    KeyRates(true, &gKeyP1, &newKeyP2, &gKeyP3, &newKeyP4);
+
       handled = true;
     } else if (event->eType == frmCloseEvent) {
       // this is done if program is closed
@@ -323,6 +354,8 @@ static Boolean MainFormHandleEvent (EventPtr event){
       UInt16 cardNo;
       DmOpenDatabaseInfo(DatabaseGetRefN(DB_MAIN), &dbID, NULL, NULL, &cardNo, NULL);
       SysNotifyUnregister(cardNo, dbID, sysNotifyLateWakeupEvent, sysNotifyNormalPriority);
+      // Restore original key rates
+	    KeyRates(true, &gKeyP1, &gKeyP2, &gKeyP3, &gKeyP4);
     }
 
   return (handled);
@@ -351,35 +384,24 @@ static Boolean AppHandleEvent( EventPtr eventP) {
 				  FrmSetEventHandler(frmP, MainFormHandleEvent);
 				  break;
 
-  			case FORM_courselist:
-		  		FrmSetEventHandler(frmP, CourseListHandleEvent);
-				  break;
+  			case FORM_courselist: FrmSetEventHandler(frmP, CourseListHandleEvent); break;
 
-        case FORM_evt_det:
-          FrmSetEventHandler(frmP, EditTimeFormHandleEvent);
-          break;
+        case FORM_evt_det:    FrmSetEventHandler(frmP, EditTimeFormHandleEvent); break;
 
-        case FORM_course_det:
-          FrmSetEventHandler(frmP, EditCourseFormHandleEvent);
-          break;
+        case FORM_course_det: FrmSetEventHandler(frmP, EditCourseFormHandleEvent); break;
 
-        case FORM_settings:
-          FrmSetEventHandler(frmP, SettingsFormHandleEvent);
-          break;
+        case FORM_settings:   FrmSetEventHandler(frmP, SettingsFormHandleEvent); break;
 
-        case FORM_coursetypes:
-          FrmSetEventHandler(frmP, CourseTypeFormHandleEvent);
-          break;
+        case FORM_coursetypes: FrmSetEventHandler(frmP, CourseTypeFormHandleEvent); break;
 
-        case FORM_exams:
-          FrmSetEventHandler(frmP, ExamsFormHandleEvent);
-          break;
+        case FORM_exams:      FrmSetEventHandler(frmP, ExamsFormHandleEvent); break;
 
-        case FORM_exam_details:
-          FrmSetEventHandler(frmP, ExamDetailsFormHandleEvent);
-          break;
+        case FORM_exam_details: FrmSetEventHandler(frmP, ExamDetailsFormHandleEvent); break;
+        
+        case NewNoteView:     FrmSetEventHandler(frmP, NoteViewHandleEvent); break;
 
-  				ErrNonFatalDisplay("Invalid Form Load Event");
+        default:
+   				ErrNonFatalDisplay("Invalid Form Load Event");
 		  		break;
 			}
 		  break;
@@ -446,7 +468,10 @@ UInt32 PilotMain(UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlags){
     if (error) {
 			// PalmOS before 3.5 will continuously relaunch this app unless we switch to
 			// another safe one.
-      FrmCustomAlert(ALERT_debug, "Please reports this bug! Give your Palm device and PalmOS version, this BadBug(TM) should not happen...", "", "");
+      if (error != dmErrCorruptDatabase) {
+        FrmCustomAlert(ALERT_debug, "Please reports this bug! Give your Palm device and PalmOS version, this BadBug(TM) should not happen.", "", "");
+      }
+      StopApplication();
 			AppLaunchWithCommand(sysFileCDefaultApp, sysAppLaunchCmdNormalLaunch, NULL);
       return error;
     }
@@ -505,6 +530,7 @@ UInt32 PilotMain(UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlags){
       cats = DatabaseGetRefN(DB_MAIN);
       dogs = DatabaseGetRefN(DB_DATA);
       error = BeamReceive(cats, dogs, (ExgSocketPtr) cmdPBP);
+      CacheReset();
       FrmGotoForm(FORM_main);
 
     } else {

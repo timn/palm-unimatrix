@@ -1,4 +1,4 @@
-/* $Id: database.c,v 1.2 2003/03/13 14:56:47 tim Exp $
+/* $Id: database.c,v 1.3 2003/04/18 23:34:59 tim Exp $
  *
  * Database handling, another central piece in UniMatrix
  */
@@ -75,17 +75,8 @@ Err OpenDatabase(void) {
     version = appInfo->version;
     MemPtrUnlock(appInfo);
     if (version < DATABASE_VERSION) {
-      switch (version) {
-        case 1:
-          if (FrmAlert(ALERT_oldDB) == 0)  err = DatabaseConvert(version);
-          else   err = dmErrCorruptDatabase;
-          break;
-        case 2:
-          DatabaseSort();
-        break;
-      }
+      if ((err = DatabaseConvert(version)) != errNone)  return err;
     }
-    // We will keep that for 0.7 until everybody converted, remove befor 1.0
   }
 
   return err;
@@ -161,7 +152,9 @@ Err DatabaseConvert(UInt16 oldVersion) {
   MemPtr p;
   UniAppInfoType *appInfoOld, *appInfoNew;
 
-  if (! gDatabase[DB_MAIN])  return dmErrNoOpenDatabase;
+  if (! gDatabase[DB_MAIN])       return dmErrNoOpenDatabase;
+  if (FrmAlert(ALERT_oldDB) != 0) return dmErrCorruptDatabase;
+
 
   old = gDatabase[DB_MAIN];
   DmOpenDatabaseInfo(old, &oldID, NULL, NULL, NULL, NULL);
@@ -241,6 +234,114 @@ Err DatabaseConvert(UInt16 oldVersion) {
 
         MemHandleUnlock(oh);
       }      
+
+        DmCloseDatabase(old);
+        DmInsertionSort(new, DatabaseCompare, 0);
+        gDatabase[DB_MAIN]=new;
+
+        DmDeleteDatabase(DATABASE_CARD, oldID);
+        DmSetDatabaseInfo(DATABASE_CARD, newID, newName, NULL, NULL, NULL, NULL, 
+                          NULL, NULL, NULL, NULL, NULL, NULL);
+
+        appInfoOld = (UniAppInfoType *)MemLocalIDToLockedPtr(DmGetAppInfoID(old), DATABASE_CARD);
+        oldID = newID;
+
+        CreateDatabase(DATABASE_TEMPNAME, &newID);
+        new = DmOpenDatabase(DATABASE_CARD, newID, dmModeReadWrite);
+        appInfoNew = (UniAppInfoType *)MemLocalIDToLockedPtr(DmGetAppInfoID(new), DATABASE_CARD);
+
+        DmWrite(appInfoNew, 0, appInfoOld, sizeof(UniAppInfoType));
+        DmWrite(appInfoNew, offsetof(UniAppInfoType, version), &DBversion, sizeof(DBversion));
+        MemPtrUnlock(appInfoOld);
+        MemPtrUnlock(appInfoNew);
+      
+    case 2:   DmInsertionSort(old, DatabaseCompare, 0);
+
+    case 3:
+      // This introduced notes, need to set all not IDs for exams and events to 0
+
+      numRecords=DmNumRecords(old);
+      for (i=0; i < numRecords; ++i) {
+        atP=i;
+        oh = DmQueryRecord(old, i);
+
+        DmRecordInfo(old, i, &attr, NULL, NULL);
+        cat = attr & dmRecAttrCategoryMask;
+
+        s = (Char *)MemHandleLock(oh);
+        if (s[0] == TYPE_TIME) {
+          // Convert...
+          TimeDBRecord_v3 *ot;
+          TimeDBRecord    *nt;
+
+          nh = DmNewRecord(new, &atP, sizeof(TimeDBRecord));
+          if (nh) {
+            ot = (TimeDBRecord_v3 *)s;
+            p = (TimeDBRecord *)MemHandleLock(nh);
+            nt = (TimeDBRecord *)MemPtrNew(sizeof(TimeDBRecord));
+            MemSet(nt, sizeof(TimeDBRecord), 0);
+            nt->type = ot->type;
+            nt->day = ot->day;
+            nt->course = ot->course;
+            nt->note = 0; // This must be changed for higher version convert
+            nt->begin.hours = ot->begin.hours;
+            nt->begin.minutes = ot->begin.minutes;
+            nt->end.hours = ot->end.hours;
+            nt->end.minutes = ot->end.minutes;
+            nt->color[0] = ot->color[0];
+            nt->color[1] = ot->color[1];
+            nt->color[2] = ot->color[2];
+            StrNCopy(nt->room, ot->room, 17);
+            DmWrite(p, 0, nt, sizeof(TimeDBRecord));
+
+            MemPtrFree((MemPtr)nt);
+            MemHandleUnlock(nh);
+          }
+          DmReleaseRecord(new, atP, false);
+        } else if (s[0] == TYPE_EXAM) {
+          ExamDBRecord_v3 *oe;
+          ExamDBRecord    *ne;
+
+          nh = DmNewRecord(new, &atP, sizeof(ExamDBRecord));
+          if (nh) {
+            oe = (ExamDBRecord_v3 *)s;
+            p = (ExamDBRecord *)MemHandleLock(nh);
+            ne = (ExamDBRecord *)MemPtrNew(sizeof(ExamDBRecord));
+            MemSet(ne, sizeof(ExamDBRecord), 0);
+            ne->type = oe->type;
+            ne->id = oe->id;
+            ne->course = oe->course;
+            ne->note = 0;
+            ne->flags = oe->flags;
+            ne->date.year = oe->date.year;
+            ne->date.month = oe->date.month;
+            ne->date.day = oe->date.day;
+            ne->begin.hours = oe->begin.hours;
+            ne->begin.minutes = oe->begin.minutes;
+            ne->end.hours = oe->end.hours;
+            ne->end.minutes = oe->end.minutes;
+            StrNCopy(ne->room, oe->room, 17);
+            DmWrite(p, 0, ne, sizeof(ExamDBRecord));
+
+            MemPtrFree((MemPtr)ne);
+            MemHandleUnlock(nh);
+          }
+          DmReleaseRecord(new, atP, false);
+        } else {
+          // Just copy to new record
+          nh = DmNewRecord(new, &atP, MemHandleSize(oh));
+          DmWrite(MemHandleLock(nh), 0, s, MemHandleSize(oh));
+          MemHandleUnlock(nh);
+          DmReleaseRecord(new, atP, false);
+        }
+
+        DmRecordInfo(new, atP, &attr, NULL, NULL);
+        attr |= cat;
+        DmSetRecordInfo(new, atP, &attr, NULL);
+
+        MemHandleUnlock(oh);
+      }      
+
 
       break;
     default:

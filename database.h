@@ -1,4 +1,4 @@
-/* $Id: database.h,v 1.2 2003/03/13 14:56:47 tim Exp $
+/* $Id: database.h,v 1.3 2003/04/18 23:34:59 tim Exp $
  *
  * Database stuff header file
  */
@@ -30,7 +30,7 @@
 #define DATABASE_TEMPNAME "UniMatrixDB_TEMP"
 
 #define DATABASE_CARD 0
-#define DATABASE_VERSION 3
+#define DATABASE_VERSION 4
 
 #define DATABASE_NUM 2
 #define DB_MAIN 0
@@ -41,20 +41,21 @@
 #define TYPE_COURSE 1
 #define TYPE_TIME 2
 #define TYPE_EXAM 3
+#define TYPE_NOTE 4
 #define TYPE_CTYP 32
 
 #define offsetof(s,m) ((UInt16)&(((s *)0)->m))
 
 
 typedef struct {
-   AppInfoType appInfo;
-   UInt16 version;
+   AppInfoType  appInfo;
+   UInt16       version;
 } UniAppInfoType;
 
 typedef struct {
-  UInt8 type;
-  UInt8 ctype;
-  UInt16 id;
+  UInt8       type;
+  UInt8       ctype;
+  UInt16      id;
   const Char *name;
   const Char *teacherName;
   const Char *teacherEmail;
@@ -63,34 +64,36 @@ typedef struct {
 } CourseDBRecord;
 
 typedef struct {
-  UInt8 type;
-  UInt8 day;
-  UInt16 course;
-  TimeType begin;
-  TimeType end;
-  UInt8 color[3];
-  Char room[17];
+  UInt8     type;
+  UInt8     day;
+  UInt16    course;
+  UInt16    note;
+  TimeType  begin;
+  TimeType  end;
+  UInt8     color[3];
+  Char      room[17];
 } TimeDBRecord;
 
 
 typedef struct {
-  UInt8 type;
-  UInt8 ctype;
-  UInt16 id;
-  Char name[1];
+  UInt8   type;
+  UInt8   ctype;
+  UInt16  id;
+  Char    name[1];
 } PackedCourseDBRecord;
 
 typedef struct {
   UInt8 type;
   UInt8 id;
-  Char shortName[4];
-  Char name[21];  // We take the overhead...
+  Char  shortName[4];
+  Char  name[21];  // We take the overhead...
 } CourseTypeDBRecord;
 
 typedef struct {
   UInt8 type;
   UInt8 id;
   UInt16 course;
+  UInt16 note;
   UInt16 flags;
   DateType date;
   TimeType begin;
@@ -98,6 +101,12 @@ typedef struct {
   Char room[17]; // BIG baby :-)
 } ExamDBRecord;
 
+typedef struct {
+  UInt8 type;
+  UInt8 reserved;
+  UInt16 id;
+  Char   note[1];
+} NoteDBRecord;
 
 extern Err  OpenDatabase(void) THIRD_SECTION;
 extern void CloseDatabase(void) THIRD_SECTION;
@@ -130,6 +139,28 @@ typedef struct {
   UInt8 color[3];
   Char room[9];
 } TimeDBRecord_v1;
+
+typedef struct {
+  UInt8 type;
+  UInt8 day;
+  UInt16 course;
+  TimeType begin;
+  TimeType end;
+  UInt8 color[3];
+  Char room[17];
+} TimeDBRecord_v3;
+
+
+typedef struct {
+  UInt8 type;
+  UInt8 id;
+  UInt16 course;
+  UInt16 flags;
+  DateType date;
+  TimeType begin;
+  TimeType end;
+  Char room[17]; // BIG baby :-)
+} ExamDBRecord_v3;
 
 
 #endif /* __DATABASE_H_ */

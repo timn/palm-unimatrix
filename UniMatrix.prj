@@ -75,7 +75,8 @@ module.include.files=\
 	ctype.h\
 	tnglue.h\
 	resources.h\
-	cache.h
+	cache.h\
+	notes.h
 
 module.source.name=.
 module.source.type=
@@ -92,7 +93,8 @@ module.source.files=\
 	prefs.c\
 	ctype.c\
 	tnglue.c\
-	cache.c
+	cache.c\
+	notes.c
 
 module.pixmap.name=.
 module.pixmap.type=
@@ -153,7 +155,8 @@ module.data.files=\
 	webpage/faq.php\
 	UniMatrix.mk\
 	resources/translation.pl_iso8859-1\
-	resources/translation.pl_iso8859-2
+	resources/translation.pl_iso8859-2\
+	resources/translation.it
 
 module.help.name=.
 module.help.type=

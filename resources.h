@@ -1,4 +1,4 @@
-/* $Id: resources.h,v 1.2 2003/03/13 14:56:47 tim Exp $
+/* $Id: resources.h,v 1.3 2003/04/18 23:34:59 tim Exp $
  *
  * ID's for use in ressource definitions
  *
@@ -73,6 +73,7 @@
 #define BUTTON_ed_beam 1094
 #define BUTTON_ed_color 1095
 #define STRING_ed_title 1096
+#define BUTTON_ed_note 1097
 
 #define FORM_beam_cat 1110
 #define BUTTON_beam_cat_ok 1111
@@ -114,6 +115,7 @@
 #define REPEAT_ex_down 1161
 #define REPEAT_ex_up_dis 1162
 #define REPEAT_ex_down_dis 1163
+#define BUTTON_ex_note 1164
 
 #define FORM_exam_details 1170
 #define LIST_exd_course 1171
@@ -180,7 +182,6 @@
 #define ALERT_beamdbfail 4019
 #define ALERT_beamnocatleft 4020
 
-
 #define BITMAP_edit 5002
 #define BITMAP_del 5003
 #define BITMAP_del_clicked 5004
@@ -197,7 +198,8 @@
 #define BITMAP_ok_clicked 5015
 #define BITMAP_cancel 5016
 #define BITMAP_cancel_clicked 5017
-
+#define BITMAP_note 5018
+#define BITMAP_note_clicked 5019
 
 #define GADGET_STRINGS_MO 8111
 #define GADGET_STRINGS_DI 8112

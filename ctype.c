@@ -1,4 +1,4 @@
-/* $Id: ctype.c,v 1.2 2003/03/13 14:56:47 tim Exp $
+/* $Id: ctype.c,v 1.3 2003/04/18 23:34:59 tim Exp $
  *
  * Course Type related stuff
  * Created: 2002-08-31
@@ -423,6 +423,7 @@ static void CourseTypeAdd(void) {
         DmReleaseRecord(DatabaseGetRefN(DB_DATA), newIndex, false);
       }
     }
+    CacheReset();
   }
 
 

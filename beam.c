@@ -1,4 +1,4 @@
-/* $Id: beam.c,v 1.2 2003/03/13 14:56:47 tim Exp $
+/* $Id: beam.c,v 1.3 2003/04/18 23:34:59 tim Exp $
  *
  * Beam functions
  * Created: 2002-05-02
@@ -10,6 +10,7 @@
 #include "ctype.h"
 #include "clist.h"
 #include "prefs.h"
+#include "notes.h"
 
 
 extern UniMatrixPrefs gPrefs;
@@ -68,6 +69,16 @@ static void BeamCourseByIndex(ExgSocketType *s, UInt16 courseIndex) {
     if (b[0] == TYPE_TIME) {
       TimeDBRecord *t=(TimeDBRecord *)b;
       if (t->course == courseID) {
+        if (t->note) {
+          // We have a note
+          UInt16 noteIndex=0;
+          if (NoteGetIndex(t->note, &noteIndex)) {
+            MemHandle noteHandle = DmQueryRecord(DatabaseGetRefN(DB_MAIN), noteIndex);
+            numBytes = MemHandleSize(noteHandle);
+            err = BeamBytes(s, &numBytes, sizeof(numBytes));
+            err = BeamBytes(s, MemHandleLock(noteHandle), numBytes);
+          }
+        }
         numBytes=MemHandleSize(m);
         err = BeamBytes(s, &numBytes, sizeof(numBytes));
         err = BeamBytes(s, b, numBytes);
@@ -162,7 +173,7 @@ void BeamSemester(UInt16 category) {
  * Receive Functions
  ***********************************************************************/
 static Err BeamReadRecordIntoDB(DmOpenRef cats, DmOpenRef dogs, ExgSocketPtr socketPtr, UInt32 numBytes,
-                                UInt16 category, UInt16 *courseID, UInt8 *courseType) {
+                                UInt16 category, UInt16 *courseID, UInt8 *courseType, UInt16 *noteID) {
   char *buffer=NULL;
   Err  err=0;
   UInt32 bytesReceived=0, numBytesToRead=numBytes;
@@ -217,6 +228,7 @@ static Err BeamReadRecordIntoDB(DmOpenRef cats, DmOpenRef dogs, ExgSocketPtr soc
     pc->id = CourseNewID(cats, category);
     pc->ctype = *courseType;
     *courseID=pc->id;
+    *noteID = 0; //Reset note ID
 
     // Test, if we have already a course named like the wanted course
     // name is first field so we can just access it and do not need to unpack the course
@@ -236,6 +248,7 @@ static Err BeamReadRecordIntoDB(DmOpenRef cats, DmOpenRef dogs, ExgSocketPtr soc
   } else if (t[0] == TYPE_TIME) {
     TimeDBRecord *tr = (TimeDBRecord *)t;
     tr->course = *courseID;
+    tr->note = *noteID;
     // Check if this course already exists
     while(doAlloc && ((m = DmQueryNextInCategory(cats, &searchIndex, category)) != NULL)) {
       Char *b=MemHandleLock(m);
@@ -253,6 +266,7 @@ static Err BeamReadRecordIntoDB(DmOpenRef cats, DmOpenRef dogs, ExgSocketPtr soc
   } else if (t[0] == TYPE_EXAM) {
     ExamDBRecord *ex = (ExamDBRecord *)t;
     ex->course = *courseID;
+    ex->note = *noteID;
     // Check if this exam already exists
     while(doAlloc && ((m = DmQueryNextInCategory(cats, &searchIndex, category)) != NULL)) {
       Char *b=MemHandleLock(m);
@@ -266,6 +280,10 @@ static Err BeamReadRecordIntoDB(DmOpenRef cats, DmOpenRef dogs, ExgSocketPtr soc
       searchIndex += 1;
       MemHandleUnlock(m);
     }
+  } else if (t[0] == TYPE_NOTE) {
+    NoteDBRecord *note = (NoteDBRecord *)t;
+    *noteID = NoteGetNewID(cats, category);
+    note->id = *noteID;
   }
 
   // Store record
@@ -341,7 +359,7 @@ void BeamCourseByCID(UInt16 cid) {
 Err BeamReceive(DmOpenRef cats, DmOpenRef dogs, ExgSocketPtr socketPtr) {
   Err err=0;
   UInt8 beamType=0, courseType=0;
-  UInt16 numBytes=0, courseID=0;
+  UInt16 numBytes=0, courseID=0, noteID=0;
   UInt16 category=0;
   Boolean doReceive=false;
 
@@ -447,7 +465,7 @@ Err BeamReceive(DmOpenRef cats, DmOpenRef dogs, ExgSocketPtr socketPtr) {
 
       if (doReceive) {
         while (!err && (ExgReceive(socketPtr, &numBytes, sizeof(numBytes), &err) > 0)) {
-          err = BeamReadRecordIntoDB(cats, dogs, socketPtr, numBytes, category, &courseID, &courseType);
+          err = BeamReadRecordIntoDB(cats, dogs, socketPtr, numBytes, category, &courseID, &courseType, &noteID);
         }
       }
     }

@@ -1,7 +1,10 @@
-/* $Id: gadget.h,v 1.2 2003/03/13 14:56:47 tim Exp $
+/* $Id: gadget.h,v 1.3 2003/04/18 23:34:59 tim Exp $
  *
  * The headers for th heart of UniMatrix
  */
+
+#ifndef GADGET_H
+#define GADGET_H
 
 #include "database.h"
 
@@ -28,6 +31,8 @@
 #define GADGET_MIN_HOUR 8
 #define GADGET_MAX_PIXELHEIGHT 96
 
+#define GADGET_NOTESYMBOL 11
+
 // Local definition for timeline drawtype
 typedef enum GadgetTimelineDrawType {
   gtDraw, gtErase
@@ -40,9 +45,11 @@ extern void GadgetDrawTime(TimeType begin, TimeType end, UInt8 day, RGBColorType
 extern void GadgetRedraw(void) THIRD_SECTION;
 extern void GadgetDrawEvents(void) THIRD_SECTION;
 extern void GadgetDrawTimeline(GadgetTimelineDrawType drawType) THIRD_SECTION;
-extern void GadgetDrawHint(const char *toptext, const char *bottext) THIRD_SECTION;
+extern void GadgetDrawHint(const char *toptext, const char *bottext, UInt16 note) THIRD_SECTION;
 extern Boolean GadgetHandler(FormGadgetTypeInCallback *gadgetP, UInt16 cmd, void *paramP) THIRD_SECTION;
+extern Boolean GadgetHintHandler(FormGadgetTypeInCallback *gadgetP, UInt16 cmd, void *paramP) THIRD_SECTION;
 extern void GadgetTap(FormGadgetType *pGadget, EventType *event) THIRD_SECTION;
+extern void GadgetHintTap(FormGadgetType *pGadget, EventType *event) THIRD_SECTION;
 extern UInt16 GadgetGetHintTimeIndex(void) THIRD_SECTION;
 extern void GadgetDrawHintCurrent(void) THIRD_SECTION;
 extern void GadgetDrawHintNext(void) THIRD_SECTION;
@@ -55,3 +62,6 @@ extern void GadgetSetNumDays(UInt8 numDays) THIRD_SECTION;
 extern void GadgetSetHintTimeIndex(UInt16 newTimeInd) THIRD_SECTION;
 extern UInt16 GadgetGetHintCourseIndex(void) THIRD_SECTION;
 extern void GadgetSetHintCourseIndex(UInt16 newCourseInd) THIRD_SECTION;
+extern void GadgetDrawStep(WinDirectionType direction);
+
+#endif // GADGET_H
