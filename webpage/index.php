@@ -1,6 +1,6 @@
 <?php
 
-/* $Id: index.php,v 1.1 2003/02/06 21:27:23 tim Exp $ */
+/* $Id: index.php,v 1.2 2003/03/16 22:33:57 tim Exp $ */
 
 $title="niemueller.de - palm software - UniMatrix";
 $meta_desc="A software to manage your daily university business.";
@@ -83,6 +83,9 @@ UniMatrix is available in multiple languages. Supported languages are right now 
 If you want to help and translate UniMatrix to another language please
 <a href="mailto:tim@niemueller.de?Subject=Translate UniMatrix">contact</a> me and I will
 send you the language file.
+
+
+<?include("$DOCUMENT_ROOT/software/palm/sponsoring.inc.php");?>
 
 
 <h5>FAQ - Frequently Asked Questions</h5>
