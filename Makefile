@@ -100,8 +100,10 @@ package: clean all
 	rm -rf $(PROGNAME)-$(VERSION)-$(SHORTLANGUAGE)
 
 upload: dist
+	echo -e "<?php\n$$version=\"$(VERSION)\";\n?>" > webpage/version.inc.php
 	scp -r $(PROGNAME)-$(VERSION)_dist $(SSH_USER)@$(SSH_HOST):$(SSH_PATH)
-	scp -r webpage/* docs/CHANGES $(SSH_USER)@$(SSH_HOST):$(SSH_PATH)
+	scp -r webpage/*.inc.php docs/CHANGES $(SSH_USER)@$(SSH_HOST):$(SSH_PATH)
+	rm webpage/version.inc.php
 
 status:
 	cvs status | grep File | grep -v Up-to-date
