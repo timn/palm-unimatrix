@@ -1,4 +1,4 @@
-/* $Id: alarm.c,v 1.8 2003/10/15 21:43:22 tim Exp $
+/* $Id: alarm.c,v 1.9 2003/11/20 22:55:20 tim Exp $
  *
  * Support for exam alarms
  * Created: 2003/04/19
@@ -307,14 +307,15 @@ static void AlarmSetTrigger(UInt32 alarmTime, UInt32 ref) {
 * RETURNS:      nothing
 *****************************************************************************/
 void AlarmReset(DmOpenRef cats) {
-	DmSearchStateType searchInfo;
   UInt16 cardNo;
   LocalID dbID;
   UniMatrixPrefs prefs;
 
+  if (TNPalmOSVersion() < ALARM_REQVER) return;
+
   PrefLoadPrefs(&prefs);
-  
-	DmGetNextDatabaseByTypeCreator (true, &searchInfo, sysFileTApplication, APP_CREATOR, true, &cardNo, &dbID);
+
+	SysCurAppDatabase(&cardNo, &dbID);
   AlmSetAlarm(cardNo, dbID, 0, 0, false);
 
   if (prefs.alarmInfo.useAlarm) {
