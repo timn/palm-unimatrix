@@ -1,4 +1,4 @@
-/* $Id: gadget.c,v 1.3 2003/03/13 14:56:47 tim Exp $
+/* $Id: gadget.c,v 1.4 2003/04/15 16:09:12 tim Exp $
  *
  * THE heart of UniMatrix. This is the center piece of code in UniMatrix
  */
@@ -101,8 +101,8 @@ static Boolean GadgetEventIsVisible(TimeDBRecord *t) {
         return true;
       }
     } else { // GADGET_SCREEN_NIGHT
-      if ( (t->begin.hours < 8) || ((t->begin.hours >= 20) && (t->begin.minutes > 5)) ||
-           (t->end.hours < 8) || ((t->end.hours >= 20) && (t->end.minutes > 5)) ) {
+      if ( (t->begin.hours < 8) || (t->begin.hours >= 20) ||
+           (t->end.hours < 8) || (t->end.hours >= 20) ) {
         // We are currently displaying the day and begin or end are at day
         return true;
       }
