@@ -1,4 +1,4 @@
-/* $Id: translation.pt,v 1.1 2003/02/06 21:27:23 tim Exp $ */
+/* $Id: translation.pt,v 1.2 2003/05/21 18:24:00 tim Exp $ */
 
 
 translation "portugues"
@@ -26,6 +26,7 @@ begin
   "men_sets" = "Propriedades"
   "men_ex" = "Provas"
   "men_beam" = "Beam Sem."
+  "men_alarm" = "Alarme..."
 
 
 /* alerts */
@@ -43,8 +44,6 @@ begin
   "al_del2" = "Deletar os seguintes registros (^1 [^2], ^3)?"
   "al_dely" = "Sim"
   "al_deln" = "Não"
-  "al_ebb1" = "Fim antes do Início"
-  "al_ebb2" = "A hora de fim está menor que a de início. Isso parece impossível."
   "al_invend1" = "Hora Inválida"
   "al_invend2" = "Hora deve estar entre 08:00 r 20:00!"
   "al_delc1" = "Realmente Deletar?"
@@ -134,6 +133,9 @@ begin
   "sets_day" = "Sábado é dia letivo"
   "sets_showtype" = "Mostra eventos com tamanho reduzido"
   "sets_showtime" = "Mostra linha do tempo agora"
+  "sets_showshort" = "Mostrar nomes curtos para eventos"
+  "sets_muteevents" = "Mudo durante evento"
+  "sets_muteexams" = "Mudo durante prova"
 
 
 /* gadget */
@@ -180,6 +182,31 @@ begin
   "exd_date" = "Data"
   "exd_time" = "Hora"
   "exd_length" = "Tamanho"
+
+
+/* Alarm related entries */
+  "alarm_today" = "Hoje"
+  "alarm_title" = "Alarme"
+  "alarm_use" = "Alarme para provas"
+  "alarm_time" = "Despertar antes:"
+  "alarm_mins" = "Minutos"
+  "alarm_hours" = "Horas"
+  "alarm_days" = "Dias"
+  "alarm_remind" = "Me lembre:"
+  "alarm_repeat" = "Tocar a cada:"
+  "alarm_rem_1" = "Uma"
+  "alarm_rem_2" = "Duas"
+  "alarm_rem_3" = "3 vezes"
+  "alarm_rem_5" = "5 vezes"
+  "alarm_rem_10" = "10 vezes"
+  "alarm_rep_1" = "Minuto"
+  "alarm_rep_5" = "5 Minutos"
+  "alarm_rep_10" = "10 Minutos"
+  "alarm_rep_30" = "30 Minutos"
+  "alarm_exam" = "Exame:"
+  /* ^0 = dia da semana, ^1 = string da data */
+  "alarm_date_template" = "^0, ^1"
+  "alarm_sound" = "Som do Alarme"
 
 
 end

@@ -1,4 +1,4 @@
-/* $Id: alarm.c,v 1.5 2003/04/29 23:03:48 tim Exp $
+/* $Id: alarm.c,v 1.6 2003/05/21 18:24:05 tim Exp $
  *
  * Support for exam alarms
  * Created: 2003/04/19
@@ -225,8 +225,8 @@ static UInt32 AlarmFindNext(DmOpenRef cats, UniMatrixPrefs *prefs, UInt32 startA
 
   if (foundTimeBegin != ALARM_NOTFOUND) {
     TimSecondsToDateTime(foundTimeBegin + *alarmOffset, &tempDate);
-    StrPrintF(temp, "Set alarm for %u:%u:%u", tempDate.hour, tempDate.minute, tempDate.second);
-    FrmCustomAlert(ALERT_debug, temp, "", "");
+    //StrPrintF(temp, "Set alarm for %u:%u:%u", tempDate.hour, tempDate.minute, tempDate.second);
+    //FrmCustomAlert(ALERT_debug, temp, "", "");
   }
   
   return (foundTimeBegin + *alarmOffset);

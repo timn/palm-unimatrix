@@ -1,4 +1,4 @@
-/* $Id: translation.en,v 1.3 2003/03/11 16:10:55 tim Exp $ */
+/* $Id: translation.en,v 1.4 2003/05/21 18:24:00 tim Exp $ */
 
 translation "english"
 begin
@@ -18,14 +18,15 @@ begin
 
 
 /* menu */
-  "men_addc" = "Add Course"
-  "men_adde" = "Add Event"
-  "men_cl" = "Course list"
+  "men_addc" = "Add Course..."
+  "men_adde" = "Add Event..."
+  "men_cl" = "Course list..."
   "men_ab" = "About"
   "men_opt" = "Options"
-  "men_sets" = "Settings"
-  "men_ex" = "Exams"
+  "men_sets" = "Settings..."
+  "men_ex" = "Exams..."
   "men_beam" = "Beam Sem."
+  "men_alarm" = "Alarm..."
 
 
 /* alerts */
@@ -133,6 +134,8 @@ begin
   "sets_showtype" = "Show short types for events"
   "sets_showtime" = "Show timeline for current time"
   "sets_showshort" = "Show short names for events"
+  "sets_muteevents" = "Mute during event"
+  "sets_muteexams" = "Mute during exam"
 
 
 /* gadget */
@@ -179,6 +182,31 @@ begin
   "exd_date" = "Date"
   "exd_time" = "Time"
   "exd_length" = "Length"
+
+
+/* Alarm related entries */
+  "alarm_today" = "Today"
+  "alarm_title" = "Alarm"
+  "alarm_use" = "Alarm for exams"
+  "alarm_time" = "Ring early:"
+  "alarm_mins" = "Minutes"
+  "alarm_hours" = "Hours"
+  "alarm_days" = "Days"
+  "alarm_remind" = "Remind Me:"
+  "alarm_repeat" = "Play every:"
+  "alarm_rem_1" = "Once"
+  "alarm_rem_2" = "Twice"
+  "alarm_rem_3" = "3 Times"
+  "alarm_rem_5" = "5 Times"
+  "alarm_rem_10" = "10 Times"
+  "alarm_rep_1" = "Minute"
+  "alarm_rep_5" = "5 Minutes"
+  "alarm_rep_10" = "10 Minutes"
+  "alarm_rep_30" = "30 Minutes"
+  "alarm_exam" = "Exam:"
+  /* ^0 = day of week, ^1 = date string */
+  "alarm_date_template" = "^0, ^1"
+  "alarm_sound" = "Alarm Sound"
 
 
 end

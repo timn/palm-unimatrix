@@ -1,7 +1,8 @@
-/* $Id: translation.de,v 1.4 2003/04/27 12:16:06 tim Exp $ */
+/* $Id: translation.de,v 1.5 2003/05/21 18:24:00 tim Exp $ */
 
 translation "german"
 begin
+
 
 /* about translation */
   "translator" = "Tim Niemueller"
@@ -43,8 +44,6 @@ begin
   "al_del2" = "Soll der gerade selektierte Eintrag (^1 [^2], ^3) wirklich gelöscht werden?"
   "al_dely" = "Ja"
   "al_deln" = "Nein"
-  "al_ebb1" = "Ende vor Beginn"
-  "al_ebb2" = "Die Endzeit ist vor dem Beginn der Veranstaltung. Dies scheint unmöglich."
   "al_invend1" = "Ungültige Zeit"
   "al_invend2" = "Die Zeiten müssen zwischen 8:00 und 20:00 liegen!"
   "al_delc1" = "Wirklich löschen?"
@@ -102,8 +101,6 @@ begin
 
 /* course details (add and edit) */
   "cd_title" = "Kurs bearbeiten"
-  "cd_cancel" = "Abbrechen"
-  "cd_ok" = "OK"
   "cd_name" = "Name"
   "cd_type" = "Typ"
   "cd_teacher" = "Referent"

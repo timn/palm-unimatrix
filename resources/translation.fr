@@ -1,4 +1,4 @@
-/* $Id: translation.fr,v 1.1 2003/02/06 21:27:23 tim Exp $ */
+/* $Id: translation.fr,v 1.2 2003/05/21 18:24:00 tim Exp $ */
 
 translation "french"
 begin
@@ -26,6 +26,7 @@ begin
   "men_sets" = "Paramètres"
   "men_ex" = "Examens"
   "men_beam" = "Transmettre semestre"
+  "men_alarm" = "Alarme..."
 
 
 /* alerts */
@@ -43,8 +44,6 @@ begin
   "al_del2" = "Supprimer l'entrée sélectionnée (^1 [^2], ^3)?"
   "al_dely" = "Oui"
   "al_deln" = "Non"
-  "al_ebb1" = "Fin avant début"
-  "al_ebb2" = "Impossible : l'heure de fin est avant l'heure de début."
   "al_invend1" = "Heure non valide"
   "al_invend2" = "L'heure doit être comprise entre 08:00 et 20:00 !"
   "al_delc1" = "Confirmer la suppression ?"
@@ -134,6 +133,9 @@ begin
   "sets_day" = "Samedi = jour de travail ?"
   "sets_showtype" = "Afficher abrégés événements"
   "sets_showtime" = "Afficher ligne heure courante"
+  "sets_showshort" = "Afficher noms courts pour ivint"
+  "sets_muteevents" = "Silence pendant ivint"
+  "sets_muteexams" = "Silence pendant examen"
 
 
 /* gadget */
@@ -180,6 +182,31 @@ begin
   "exd_date" = "Date"
   "exd_time" = "Heure"
   "exd_length" = "Durée"
+
+
+/* Alarm related entries */
+  "alarm_today" = "Aujourd'hui"
+  "alarm_title" = "Alarme"
+  "alarm_use" = "Alarme pour examens"
+  "alarm_time" = "Alarme avant:"
+  "alarm_mins" = "minutes"
+  "alarm_hours" = "heures"
+  "alarm_days" = "jours"
+  "alarm_remind" = "Me rappeler:"
+  "alarm_repeat" = "Ripiter:"
+  "alarm_rem_1" = "1 fois"
+  "alarm_rem_2" = "2 fois"
+  "alarm_rem_3" = "3 fois"
+  "alarm_rem_5" = "5 fois"
+  "alarm_rem_10" = "10 fois"
+  "alarm_rep_1" = "minute"
+  "alarm_rep_5" = "5 minutes"
+  "alarm_rep_10" = "10 minutes"
+  "alarm_rep_30" = "30 minutes"
+  "alarm_exam" = "Examen:"
+  /* ^0 = day of week, ^1 = date string */
+  "alarm_date_template" = "^0, ^1"
+  "alarm_sound" = "Son alarme"
 
 
 end

@@ -1,4 +1,4 @@
-/* $Id: translation.nl,v 1.1 2003/02/06 21:27:23 tim Exp $ */
+/* $Id: translation.nl,v 1.2 2003/05/21 18:24:00 tim Exp $ */
 
 translation "dutch"
 begin
@@ -26,6 +26,7 @@ begin
   "men_sets" = "Instellingen"
   "men_ex" = "Examens"
   "men_beam" = "Beam Sem."
+  "men_alarm" = "Alarm..."
 
 
 /* alerts */
@@ -43,8 +44,6 @@ begin
   "al_del2" = "Geselecteerde invoer verwijderen (^1 [^2], ^3)?"
   "al_dely" = "Ja"
   "al_deln" = "Nee"
-  "al_ebb1" = "Einde voor begin"
-  "al_ebb2" = "De eindtijd is voor het begin van de gebeurtenis. Dit is niet mogelijk."
   "al_invend1" = "Ongeldige tijd"
   "al_invend2" = "De tijden moeten tussen 08:00 en 20:00 liggen!"
   "al_delc1" = "Verwijderen?"
@@ -92,7 +91,6 @@ begin
   "bs_d1" = "Dit zal een nieuw semester aanmaken"
   "bs_d2" = "waarin de ontvangen gegevens zullen"
   "bs_d3" = "worden opgeslagen."
-  "b_ok" = "OK"
   "b_sem" = "Semester:"
 
 
@@ -135,6 +133,9 @@ begin
   "sets_day" = "Zaterdag is een werkdag"
   "sets_showtype" = "Geef korte types voor gebeutenissen weer"
   "sets_showtime" = "Geef tijdlijn voor huidige tijd weer"
+  "sets_showshort" = "Korte naam voor gebeurtenis weergeven"
+  "sets_muteevents" = "Geluid uit tijdens gebeurtenis"
+  "sets_muteexams" = "Geluid uit tijdens examen"
 
 
 /* gadget */
@@ -181,6 +182,31 @@ begin
   "exd_date" = "Datum"
   "exd_time" = "Tijd"
   "exd_length" = "Duur"
+
+
+/* Alarm related entries */
+  "alarm_today" = "Vandaag"
+  "alarm_title" = "Alarm"
+  "alarm_use" = "Alarm voor examens"
+  "alarm_time" = "Vervroegd klinken:"
+  "alarm_mins" = "Minuten"
+  "alarm_hours" = "Uren"
+  "alarm_days" = "Dagen"
+  "alarm_remind" = "Herinner mij:"
+  "alarm_repeat" = "Afsplelen elke:"
+  "alarm_rem_1" = "Eenmalig"
+  "alarm_rem_2" = "2 keer"
+  "alarm_rem_3" = "3 keer"
+  "alarm_rem_5" = "5 keer"
+  "alarm_rem_10" = "10 keer"
+  "alarm_rep_1" = "Minuut"
+  "alarm_rep_5" = "5 minuten"
+  "alarm_rep_10" = "10 minuten"
+  "alarm_rep_30" = "30 minuten"
+  "alarm_exam" = "Examen:"
+  /* ^0 = day of week, ^1 = date string */
+  "alarm_date_template" = "^0, ^1"
+  "alarm_sound" = "Alarm geluid"
 
 
 end
