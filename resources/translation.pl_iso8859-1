@@ -1,4 +1,4 @@
-/* $Id: translation.pl_iso8859-1,v 1.1 2003/02/06 21:27:23 tim Exp $ */
+/* $Id: translation.pl_iso8859-1,v 1.2 2003/05/22 20:31:59 tim Exp $ */
 
 translation "polish_iso8859-1"
 begin
@@ -26,6 +26,7 @@ begin
   "men_sets" = "Ustawienia"
   "men_ex" = "Egzaminy"
   "men_beam" = "Wyslij sem."
+  "men_alarm" = "Alarm..."
 
 
 /* alerts */
@@ -43,8 +44,6 @@ begin
   "al_del2" = "Skasowac wpis (^1 [^2], ^3)?"
   "al_dely" = "Tak"
   "al_deln" = "Nie"
-  "al_ebb1" = "Blad godzin"
-  "al_ebb2" = "Koniec zajec musi nastepowac po rozpoczeciu, nie odwrotnie."
   "al_invend1" = "Blad godzin"
   "al_invend2" = "Czas musi zawierac sie miedzy 08:00 a 20:00!"
   "al_delc1" = "Naprawde skasowac?"
@@ -92,7 +91,6 @@ begin
   "bs_d1" = "Utworzysz nowy semestr"
   "bs_d2" = "w ktorym zostana zapisane"
   "bs_d3" = "otrzymane dane."
-  "b_ok" = "OK"
   "b_sem" = "Semestry:"
 
 
@@ -135,6 +133,9 @@ begin
   "sets_day" = "Sobota dniem roboczym"
   "sets_showtype" = "Pokaz typy zajec"
   "sets_showtime" = "Pokaz linie czasu"
+  "sets_showshort" = "Pokaz krotkie nazwy zdarzen"
+  "sets_muteevents" = "Milcz podczas zdarzen"
+  "sets_muteexams" = "Milcz podczas egzaminu"
 
 
 /* gadget */
@@ -181,6 +182,31 @@ begin
   "exd_date" = "Data"
   "exd_time" = "Godzina"
   "exd_length" = "Dlugosc"
+
+
+/* Alarm related entries */
+  "alarm_today" = "Dzis"
+  "alarm_title" = "Alarm"
+  "alarm_use" = "Alarm do egzaminow"
+  "alarm_time" = "Dzwon wczesniej:"
+  "alarm_mins" = "Minuty"
+  "alarm_hours" = "Godziny"
+  "alarm_days" = "Dni"
+  "alarm_remind" = "Przypomnij:"
+  "alarm_repeat" = "Graj co:"
+  "alarm_rem_1" = "Raz"
+  "alarm_rem_2" = "Dwa razy"
+  "alarm_rem_3" = "3 razy"
+  "alarm_rem_5" = "5 razy"
+  "alarm_rem_10" = "10 razy"
+  "alarm_rep_1" = "Minuta"
+  "alarm_rep_5" = "5 Minut"
+  "alarm_rep_10" = "10 Minut"
+  "alarm_rep_30" = "30 Minut"
+  "alarm_exam" = "Egzamin:"
+  /* ^0 = day of week, ^1 = date string */
+  "alarm_date_template" = "^0, ^1"
+  "alarm_sound" = "Dzwiek alarmu"
 
 
 end
