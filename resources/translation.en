@@ -1,4 +1,4 @@
-/* $Id: translation.en,v 1.1 2003/02/06 21:27:23 tim Exp $ */
+/* $Id: translation.en,v 1.2 2003/02/13 13:22:18 tim Exp $ */
 
 translation "english"
 begin
@@ -64,7 +64,7 @@ begin
   "al_old3" = "Yes"
   "al_old4" = "No"
   "al_ctd1" = "Invalid values"
-  "al_ctd2" = "Your must give both name and short name!"
+  "al_ctd2" = "You must give both name and short name!"
   "al_ct_del1" = "Really delete?"
   "al_ct_del2" = "Delete course type ^1 [^2]?^3"
   "al_ex_del1" = "Really delete?"
