@@ -1,4 +1,4 @@
-/* $Id: alarm.h,v 1.2 2003/04/25 23:24:38 tim Exp $
+/* $Id: alarm.h,v 1.3 2003/04/29 23:03:48 tim Exp $
  *
  * Support for exam alarms
  * Created: 2003/04/19
@@ -30,6 +30,6 @@ typedef struct {
 extern void AlarmReset(DmOpenRef cats);
 extern void AlarmTriggered(DmOpenRef cats, SysAlarmTriggeredParamType *cmdPBP);
 extern Boolean AttentionBottleNeckProc(DmOpenRef cats, AttnLaunchCodeArgsType *paramP);
-extern Boolean AlarmFormHandleEvent(EventPtr event);
+extern Boolean AlarmFormHandleEvent(EventPtr event) SECOND_SECTION;
 
 #endif /* ALARM_H */

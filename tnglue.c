@@ -1,4 +1,4 @@
-/* $Id: tnglue.c,v 1.4 2003/04/27 12:16:14 tim Exp $
+/* $Id: tnglue.c,v 1.5 2003/04/29 23:03:48 tim Exp $
  *
  * tnglue. See tnglue.h for more info
  * Created: 2002-07-11
@@ -123,6 +123,41 @@ UInt32 TNPalmOSVersion(void) {
 
   return romVersion;
 }
+
+
+MemHandle TNDmQueryPrevInCategory(DmOpenRef db, UInt16 *index, UInt16 category) {
+  UInt8 attrMask, attrCmp;
+  UInt16 tmpIndex = 0;
+  UInt16 count=0;
+  UInt16 attr=0;
+
+  // Form the mask for comparing the attributes of each record
+  if (category == dmAllCategories) {
+    attrMask =  dmRecAttrDelete;
+    attrCmp = 0;
+  } else {
+    attrMask =  dmRecAttrCategoryMask | dmRecAttrDelete;
+    attrCmp = category;
+  }
+
+
+  count = DmNumRecords(db);
+  tmpIndex = *index +1; // +1 cause we decrement at beginning of loop
+  while ( (tmpIndex > 0) && (tmpIndex <= count) ) {
+    tmpIndex -= 1;
+    DmRecordInfo(db, tmpIndex, &attr, NULL, NULL);
+    if ((attr & attrMask) == attrCmp) {
+      MemHandle m;
+      m = DmQueryRecord(db, tmpIndex);
+
+      *index = tmpIndex;
+      return m;
+    }
+  }
+
+  return NULL;
+}
+
 
 // Function description template
 /*****************************************************************************

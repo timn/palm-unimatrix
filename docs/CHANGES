@@ -5,10 +5,23 @@
 
 === v0.9
 
+* Tue Apr 29 2003 Tim Niemueller <tim@niemueller.de>
+- Added AlarmReset and thus needed PrefSavePrefs calls to DatabaseSetCat
+  Really need to clean that up somehow...
+- Restructured AlarmFindNext, check foundTimeBegin == thisTimeBegin is done
+  if there is a collision. This makes alarms better when there is room (maybe
+  plenty) between the last collision time and the alarm time
+
+* Mon Apr 28 2003 Tim Niemueller <tim@niemueller.de>
+- Rewrote AlarmFindNext to have the feature that makes sure, that the Palm does
+  not ring in any case while another exam is running
+- Added comments all over alarm.c
+
 * Sun Apr 27 2003 Tim Niemueller <tim@niemueller.de>
 - Added resource entries for coming mute features, no code yet
 - Added support for choosing and playing sounds. This takes about 350 freakin'
   lines of code...
+- Restructered alarm form
 
 * Fri Apr 25 2003 Tim Niemueller <tim@niemueller.de>
 - Wrote AlarmFindNext
@@ -275,4 +288,4 @@
 
 
 
-$Id: CHANGES,v 1.9 2003/04/27 12:16:06 tim Exp $
+$Id: CHANGES,v 1.10 2003/04/29 23:03:46 tim Exp $

@@ -1,4 +1,4 @@
-/* $Id: tnglue.h,v 1.3 2003/04/25 23:24:38 tim Exp $
+/* $Id: tnglue.h,v 1.4 2003/04/29 23:03:48 tim Exp $
  *
  * tnglue.h: Glue code to add some functions missing in 3.5 but present in 4.0+
  *
@@ -29,3 +29,4 @@ extern void TNSetTextColorRGB(RGBColorType *new, RGBColorType *old);
 extern void TNDrawCharsToFitWidth(const char *s, RectanglePtr r);
 extern UInt16 TNGetObjectIndexFromPtr(FormType *form, void *formObj);
 extern UInt32 TNPalmOSVersion(void);
+extern MemHandle TNDmQueryPrevInCategory(DmOpenRef db, UInt16 *index, UInt16 category);

@@ -1,4 +1,4 @@
-/* $Id: alarm.c,v 1.4 2003/04/27 16:38:49 tim Exp $
+/* $Id: alarm.c,v 1.5 2003/04/29 23:03:48 tim Exp $
  *
  * Support for exam alarms
  * Created: 2003/04/19
@@ -57,20 +57,25 @@ static UInt32 AlarmAdvanceSeconds(UniMatrixPrefs *prefs) {
 
 
 /*****************************************************************************
-* FUNCTION:     
+* FUNCTION:     AlarmFindNext
 *
-* DESCRIPTION:  
+* DESCRIPTION:  Finds the time the next alarm must be set to
 *
-* PARAMETERS:   
-* RETURNS:      
+* PARAMETERS:   database reference to the categorized db, preferences struct ptr
+*               time where to start searching, pointer to offset value (needed
+*               for the feature that makes sure, that the palm does not ring for
+*               an exam while another exam is running...)
+* RETURNS:      time of next alarm in number of seconds since the epoch
 *****************************************************************************/
-static UInt32 AlarmFindNext(DmOpenRef cats, UniMatrixPrefs *prefs, UInt32 startAt) {
+static UInt32 AlarmFindNext(DmOpenRef cats, UniMatrixPrefs *prefs, UInt32 startAt, UInt32 *alarmOffset) {
   MemHandle m;
   UInt16 index=0;
-  UInt32 firstTime=0xFFFFFFFF;
+  UInt32 foundTimeBegin=0xFFFFFFFF, foundTimeEnd=0;
   UInt32 nowAndAdv = startAt + AlarmAdvanceSeconds(prefs);
+  Char temp[50];
+  DateTimeType tempDate;
 
-  while ((firstTime == ALARM_NOTFOUND) && ((m = DmQueryNextInCategory(cats, &index, prefs->curCat)) != NULL)) {
+  while ((m = DmQueryNextInCategory(cats, &index, prefs->curCat)) != NULL) {
     ExamDBRecord *ex;
 
     ex = MemHandleLock(m);
@@ -86,18 +91,155 @@ static UInt32 AlarmFindNext(DmOpenRef cats, UniMatrixPrefs *prefs, UInt32 startA
       dateTime.second = 0;
       thisTime = TimDateTimeToSeconds(&dateTime);
 
-      if (thisTime > nowAndAdv) {
-        firstTime = thisTime;
+      if (thisTime >= nowAndAdv) {
+        foundTimeBegin = thisTime;
+        dateTime.hour = ex->end.hours;
+        dateTime.minute = ex->end.minutes;
+        foundTimeEnd = TimDateTimeToSeconds(&dateTime);
+        MemHandleUnlock(m);
+        break;
       }
+
     }
     MemHandleUnlock(m);
     index += 1;
   }
 
-return firstTime;
+  if (foundTimeBegin != ALARM_NOTFOUND) {
+    UInt32 ringTime = foundTimeBegin - AlarmAdvanceSeconds(prefs);
+    UInt32 lastTimeEnd=0xFFFFFFFF;
+
+    index -= 1;
+    *alarmOffset = 0;
+
+    while ((m = TNDmQueryPrevInCategory(cats, &index, prefs->curCat)) != NULL) {
+      ExamDBRecord *ex;
+
+      ex = MemHandleLock(m);
+      if (ex->type == TYPE_EXAM) {
+        DateTimeType dateTime;
+        UInt32 thisTimeBegin=0, thisTimeEnd=0;
+
+        dateTime.year = ex->date.year + MAC_SHIT_YEAR_CONSTANT;
+        dateTime.month = ex->date.month;
+        dateTime.day = ex->date.day;
+        dateTime.hour = ex->begin.hours;
+        dateTime.minute = ex->begin.minutes;
+        dateTime.second = 0;
+        thisTimeBegin = TimDateTimeToSeconds(&dateTime);
+
+        dateTime.hour = ex->end.hours;
+        dateTime.minute = ex->end.minutes;
+        thisTimeEnd = TimDateTimeToSeconds(&dateTime);
+
+        if ((ringTime >= thisTimeBegin) && (ringTime <= thisTimeEnd)) {
+          // We have a collision... We ring em after the exam
+          *alarmOffset = (thisTimeEnd - ringTime) + (5 * minutesInSeconds);
+          lastTimeEnd = thisTimeEnd;
+          MemHandleUnlock(m);
+          break;
+        }
+
+      }
+      index -= 1;
+      MemHandleUnlock(m);
+    }
+
+    if (*alarmOffset > 0) {
+      // We have an offset, now check if the time with the offset does collide
+      // if so try to resolv the collision by moving the alarm further.
+
+      index += 1;
+      while ((m = DmQueryNextInCategory(cats, &index, prefs->curCat)) != NULL) {
+        ExamDBRecord *ex;
+
+        ringTime = foundTimeBegin - AlarmAdvanceSeconds(prefs) + *alarmOffset;
+
+        ex = MemHandleLock(m);
+        if (ex->type == TYPE_EXAM) {
+          DateTimeType dateTime;
+          UInt32 thisTimeBegin=0, thisTimeEnd=0;
+
+          dateTime.year = ex->date.year + MAC_SHIT_YEAR_CONSTANT;
+          dateTime.month = ex->date.month;
+          dateTime.day = ex->date.day;
+          dateTime.hour = ex->begin.hours;
+          dateTime.minute = ex->begin.minutes;
+          dateTime.second = 0;
+          thisTimeBegin = TimDateTimeToSeconds(&dateTime);
+
+          dateTime.hour = ex->end.hours;
+          dateTime.minute = ex->end.minutes;
+          thisTimeEnd = TimDateTimeToSeconds(&dateTime);
+   
+          // StrPrintF(temp, "%lu <= %lu <= %lu ? (LastEnd: %lu)", thisTimeBegin, ringTime, thisTimeEnd, lastTimeEnd);
+          // FrmCustomAlert(ALERT_debug, temp, "", "");
+
+
+          if ((ringTime >= thisTimeBegin) && (ringTime <= thisTimeEnd)) {
+            // We have a collision... We ring em after the exam
+
+            if (thisTimeBegin == foundTimeBegin) {
+              // we do not want to ring for an exam after it in any case!
+              // So we ring right at the beginning of the exam. That should be OK...
+              if (lastTimeEnd != ALARM_NOTFOUND) {
+                if (lastTimeEnd < thisTimeBegin) {
+                  // Ring two minutes before the exam. That is quaranteed to be
+                  // after the previous exam since we have only 5 min steps for times
+                  *alarmOffset = AlarmAdvanceSeconds(prefs) - (2 * minutesInSeconds);
+                  FrmCustomAlert(ALERT_debug, "Ringing two mins before exam", "", "");
+                } else {
+                  *alarmOffset = AlarmAdvanceSeconds(prefs);
+                  FrmCustomAlert(ALERT_debug, "Ringing at begin of exam 1", "", "");
+                }
+              } else {
+                *alarmOffset = AlarmAdvanceSeconds(prefs);
+                FrmCustomAlert(ALERT_debug, "Ringing at begin of exam 2", "", "");
+              }
+              MemHandleUnlock(m);
+              break;
+
+            } else if ((lastTimeEnd != ALARM_NOTFOUND) && (lastTimeEnd != thisTimeBegin) ) {
+              // There are NOT two exams following RIGHT after another
+              // so there is some room to place the alarm...
+              *alarmOffset -= (UInt32)((thisTimeBegin - lastTimeEnd) / 2);
+              FrmCustomAlert(ALERT_debug, "Collision completely solved", "", "");
+              MemHandleUnlock(m);
+              break;
+            } else {
+              *alarmOffset +=  (thisTimeEnd - ringTime) + (5 * minutesInSeconds);
+              FrmCustomAlert(ALERT_debug, "Damnit. Collision needs eventually more solving", "", "");
+            }
+          } else {
+            // We can only have collisions with "next" exam, not with the one after that
+            MemHandleUnlock(m);
+            break;
+          }
+        }
+        MemHandleUnlock(m);
+        index += 1;
+      }
+    }
+  }
+  if (foundTimeBegin != ALARM_NOTFOUND)  foundTimeBegin -= AlarmAdvanceSeconds(prefs);
+
+  if (foundTimeBegin != ALARM_NOTFOUND) {
+    TimSecondsToDateTime(foundTimeBegin + *alarmOffset, &tempDate);
+    StrPrintF(temp, "Set alarm for %u:%u:%u", tempDate.hour, tempDate.minute, tempDate.second);
+    FrmCustomAlert(ALERT_debug, temp, "", "");
+  }
+  
+  return (foundTimeBegin + *alarmOffset);
 }
 
-
+/*****************************************************************************
+* FUNCTION:     AlarmPostTriggered
+*
+* DESCRIPTION:  Posts exams matching the given time to the attention manager
+*
+* PARAMETERS:   open cats db, prefs, time for which we should show events
+* RETURNS:      nothing
+*****************************************************************************/
 static void AlarmPostTriggered(DmOpenRef cats, UniMatrixPrefs *prefs, UInt32 alarmTime) {
   UInt16 index=0, cardNo=0;
   UInt32 examAlarm=0;
@@ -136,18 +278,36 @@ static void AlarmPostTriggered(DmOpenRef cats, UniMatrixPrefs *prefs, UInt32 ala
   }
 }
 
+/*****************************************************************************
+* FUNCTION:     AlarmSetTrigger
+*
+* DESCRIPTION:  Sets alarm to given time with given reference value
+*
+* PARAMETERS:   time the alarm should ring, ref value, offset in UniMatrix
+* RETURNS:      nothing
+*****************************************************************************/
 static void AlarmSetTrigger(UInt32 alarmTime, UInt32 ref) {
-	DmSearchStateType searchInfo;
-  UInt16 cardNo;
-  LocalID dbID;
+  if (alarmTime != ALARM_NOTFOUND) {
+    DmSearchStateType searchInfo;
+    UInt16 cardNo;
+    LocalID dbID;
 
-	DmGetNextDatabaseByTypeCreator (true, &searchInfo, sysFileTApplication, APP_CREATOR, true, &cardNo, &dbID);
+  	DmGetNextDatabaseByTypeCreator (true, &searchInfo, sysFileTApplication, APP_CREATOR, true, &cardNo, &dbID);
 
-  AlmSetAlarm(cardNo, dbID, ref, alarmTime, false);
+    AlmSetAlarm(cardNo, dbID, ref, alarmTime, false);
+  }
 }
 
+
+/*****************************************************************************
+* FUNCTION:     AlarmReset
+*
+* DESCRIPTION:  deletes currently set alarm and (if applicable) sets new alarm
+*
+* PARAMETERS:   open cats db
+* RETURNS:      nothing
+*****************************************************************************/
 void AlarmReset(DmOpenRef cats) {
-  UInt32 nextAlarm=0;
 	DmSearchStateType searchInfo;
   UInt16 cardNo;
   LocalID dbID;
@@ -159,23 +319,32 @@ void AlarmReset(DmOpenRef cats) {
   AlmSetAlarm(cardNo, dbID, 0, 0, false);
 
   if (prefs.alarmInfo.useAlarm) {
-    nextAlarm = AlarmFindNext(cats, &prefs, TimGetSeconds());
-    nextAlarm -= AlarmAdvanceSeconds(&prefs);
-
-    if (nextAlarm)  AlmSetAlarm(cardNo, dbID, nextAlarm, nextAlarm, false);
+    UInt32 nextAlarm=0, nextOffset=0;
+    nextAlarm = AlarmFindNext(cats, &prefs, TimGetSeconds(), &nextOffset);
+    if (nextAlarm != ALARM_NOTFOUND)  AlmSetAlarm(cardNo, dbID, nextOffset, nextAlarm, false);
   }
 }
 
+
+/*****************************************************************************
+* FUNCTION:     AlarmTriggered
+*
+* DESCRIPTION:  Gets called when an alarm is triggered, does everything needed
+*               to handle alarmtriggered cmd
+*
+* PARAMETERS:   open cats db, pointer to cmd struct
+* RETURNS:      nothing
+*****************************************************************************/
 void AlarmTriggered(DmOpenRef cats, SysAlarmTriggeredParamType *cmdPBP) {
-  UInt32						alarmTime;
+  UInt32						alarmTime, nextAlarm, nextOffset=0;
   UniMatrixPrefs    prefs;
 
   // all triggered alarms are sent to attention manager for display so there is
   // no need for alarm manager to send the sysAppLaunchCmdDisplayAlarm launchcode
   cmdPBP->purgeAlarm = true;
-  
+
   // Establish the time for which alarms need to be retrieved.
-  alarmTime= cmdPBP->alarmSeconds;
+  alarmTime= cmdPBP->alarmSeconds - cmdPBP->ref;
 
   PrefLoadPrefs(&prefs);
 
@@ -183,10 +352,22 @@ void AlarmTriggered(DmOpenRef cats, SysAlarmTriggeredParamType *cmdPBP) {
   AlarmPostTriggered(cats, &prefs, alarmTime);
 
   // Set the alarm trigger for the time of the next alarm to ring.
-  AlarmSetTrigger(AlarmFindNext(cats, &prefs, alarmTime + minutesInSeconds), 0);
-  
+  nextAlarm = AlarmFindNext(cats, &prefs, alarmTime + minutesInSeconds, &nextOffset);
+  AlarmSetTrigger(nextAlarm, nextOffset);
+
 }
 
+
+/*****************************************************************************
+* FUNCTION:     AlarmDraw
+*
+* DESCRIPTION:  Function that handles drawing when called by Attention Manager
+*
+* PARAMETERS:   open cats db, prefs, uniqueID of record that should be drawn,
+*               Attention manager cmd struct ptr, switch whether to draw the
+*               detailed description (true) or the list view (false)
+* RETURNS:      nothing
+*****************************************************************************/
 static void AlarmDraw(DmOpenRef cats, UniMatrixPrefs *prefs, UInt32 uniqueID, AttnCommandArgsType *paramsP, Boolean drawDetail) {
   MemHandle resH;
   MemPtr resP;
@@ -374,6 +555,14 @@ static void AlarmDraw(DmOpenRef cats, UniMatrixPrefs *prefs, UInt32 uniqueID, At
 }
 
 
+/*****************************************************************************
+* FUNCTION:     AlarmPlaySound
+*
+* DESCRIPTION:  Plays Sound identified by its unique ID
+*
+* PARAMETERS:   unique ID of the MIDI
+* RETURNS:      nothing
+*****************************************************************************/
 static void AlarmPlaySound(UInt32 uniqueRecID) {
   Err                 err;
   MemHandle	          midiH;          // handle of MIDI record
@@ -426,6 +615,14 @@ static void AlarmPlaySound(UInt32 uniqueRecID) {
 }
 
 
+/*****************************************************************************
+* FUNCTION:     AlarmGoto
+*
+* DESCRIPTION:  Restarts app and goes to the wanted exam
+*
+* PARAMETERS:   unique ID of the exam we rang for
+* RETURNS:      nothing
+*****************************************************************************/
 static void AlarmGoto(UInt32 uniqueID) {
 	DmSearchStateType searchInfo;
   UInt16 cardNo;
@@ -445,6 +642,14 @@ static void AlarmGoto(UInt32 uniqueID) {
 }
 
 
+/*****************************************************************************
+* FUNCTION:     AttentionBottleNeckProc
+*
+* DESCRIPTION:  Function called for attention manager requests
+*
+* PARAMETERS:   open cats db, attention manager args struct ptr
+* RETURNS:      true on success (always :-)
+*****************************************************************************/
 Boolean AttentionBottleNeckProc(DmOpenRef cats, AttnLaunchCodeArgsType *paramP) {
 //	AttnCommandArgsType * argsP = paramP->commandArgsP;
   UniMatrixPrefs prefs;
@@ -524,6 +729,15 @@ Boolean AttentionBottleNeckProc(DmOpenRef cats, AttnLaunchCodeArgsType *paramP) 
 /******************************************
  * MIDI List stuff
  ******************************************/
+/*****************************************************************************
+* FUNCTION:     MidiPickListCreate
+*
+* DESCRIPTION:  Creates the list with MIDI names
+*
+* PARAMETERS:   pointer to a ListType form element, callback function for
+*               drawing the list
+* RETURNS:      nothing
+*****************************************************************************/
 static void MidiPickListCreate(ListPtr listP, ListDrawDataFuncPtr funcP) {
   SndMidiListItemType*	midiListP;
   UInt16		i;
@@ -584,6 +798,15 @@ static void MidiPickListCreate(ListPtr listP, ListDrawDataFuncPtr funcP) {
 }
 
 
+/*****************************************************************************
+* FUNCTION:     SetSoundLabel
+*
+* DESCRIPTION:  Sets the trigger label (hard coded, not parameterized) with
+*               selected sound name
+*
+* PARAMETERS:   Pointer to the alarm prefs form, label to set the trigger to
+* RETURNS:      nothing
+*****************************************************************************/
 static void SetSoundLabel(FormPtr formP, const char* labelP) {
 	ControlPtr	triggerP;
 	UInt16			triggerIdx;
@@ -603,6 +826,14 @@ static void SetSoundLabel(FormPtr formP, const char* labelP) {
 }
 
 
+/*****************************************************************************
+* FUNCTION:     MidiPickListDrawItem
+*
+* DESCRIPTION:  callback to draw sound names in the sound list
+*
+* PARAMETERS:   number of item to draw, rectangle to draw in, unused param
+* RETURNS:      nothing
+*****************************************************************************/
 static void MidiPickListDrawItem (Int16 itemNum, RectanglePtr bounds, Char **unusedP) {
   Char *	itemTextP;
   Int16		itemTextLen;
@@ -646,6 +877,14 @@ static void MidiPickListDrawItem (Int16 itemNum, RectanglePtr bounds, Char **unu
 }
 
 
+/*****************************************************************************
+* FUNCTION:     MidiPickListFree
+*
+* DESCRIPTION:  Frees memory associated to sound list
+*
+* PARAMETERS:   nothing
+* RETURNS:      nothing
+*****************************************************************************/
 static void MidiPickListFree(void) {
   if ( gMidiListH )	{
     MemHandleFree(gMidiListH);
@@ -655,6 +894,14 @@ static void MidiPickListFree(void) {
 }
 
 
+/*****************************************************************************
+* FUNCTION:     AlarmFormInit
+*
+* DESCRIPTION:  Initializes the alarm prefs form
+*
+* PARAMETERS:   form ptr to the alarm prefs form
+* RETURNS:      nothing
+*****************************************************************************/
 static void AlarmFormInit(FormType *frm) {
   ControlType *ctl;
   ListType *lst;
@@ -757,6 +1004,16 @@ static void AlarmFormInit(FormType *frm) {
 
 }
 
+
+/*****************************************************************************
+* FUNCTION:     AlarmFormSave
+*
+* DESCRIPTION:  Saves settings of the alarm prefs form
+*
+* PARAMETERS:   form ptr to the alarm prefs form
+* RETURNS:      true if saving was successful (nothing that can prevent that
+*               right now checked)
+*****************************************************************************/
 static Boolean AlarmFormSave(FormType *frm) {
   ControlType *ctl;
   ListType *lst;
@@ -819,6 +1076,14 @@ static Boolean AlarmFormSave(FormType *frm) {
 }
 
 
+/*****************************************************************************
+* FUNCTION:     AlarmFormFree
+*
+* DESCRIPTION:  Frees memory related to form items
+*
+* PARAMETERS:   nothing
+* RETURNS:      nothing
+*****************************************************************************/
 static void AlarmFormFree(void) {
   // Free the MIDI pick list
   MidiPickListFree();
@@ -831,6 +1096,14 @@ static void AlarmFormFree(void) {
 }
 
 
+/*****************************************************************************
+* FUNCTION:     AlarmFormHandleEvent
+*
+* DESCRIPTION:  Handles events for the alarm prefs form
+*
+* PARAMETERS:   ptr to the event info struct
+* RETURNS:      true if event handled completely and successfully
+*****************************************************************************/
 Boolean AlarmFormHandleEvent(EventPtr event) {
   Boolean handled = false;
   FormType *frm=FrmGetActiveForm();

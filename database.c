@@ -1,4 +1,4 @@
-/* $Id: database.c,v 1.4 2003/04/25 23:24:38 tim Exp $
+/* $Id: database.c,v 1.5 2003/04/29 23:03:48 tim Exp $
  *
  * Database handling, another central piece in UniMatrix
  */
@@ -6,9 +6,12 @@
 #include "database.h"
 #include "ctype.h"
 #include "cache.h"
+#include "alarm.h"
+#include "prefs.h"
 
 DmOpenRef gDatabase[DATABASE_NUM]={NULL, NULL};
 UInt16    gCategory=0;
+extern    UniMatrixPrefs gPrefs;
 
 /*****************************************************************************
 * Function:  OpenDatabase
@@ -426,7 +429,10 @@ UInt16 DatabaseGetCat(void) {
 *****************************************************************************/
 void DatabaseSetCat(UInt16 newcat) {
   gCategory=newcat;
+  gPrefs.curCat = newcat;
+  PrefSavePrefs(&gPrefs);
   CacheReset();
+  AlarmReset(gDatabase[DB_MAIN]);
 }
 
 
