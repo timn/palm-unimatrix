@@ -1,4 +1,4 @@
-/* $Id: alarm.c,v 1.3 2003/04/27 12:16:14 tim Exp $
+/* $Id: alarm.c,v 1.4 2003/04/27 16:38:49 tim Exp $
  *
  * Support for exam alarms
  * Created: 2003/04/19
@@ -33,6 +33,15 @@ static MemHandle	gMidiListH;
 static UInt16	gMidiCount;
 
 
+/*****************************************************************************
+* FUNCTION:     AlarmAdvanceSeconds
+*
+* DESCRIPTION:  Returns the number of seconds that an alert should ring in
+*               as set in the alarm preferences
+*
+* PARAMETERS:   prefs - Pointer to UniMatrixPrefs struct
+* RETURNS:      number of seconds the alarm should ring early
+*****************************************************************************/
 static UInt32 AlarmAdvanceSeconds(UniMatrixPrefs *prefs) {
   UInt32 factor = 60;
 
@@ -46,6 +55,15 @@ static UInt32 AlarmAdvanceSeconds(UniMatrixPrefs *prefs) {
   return (prefs->alarmInfo.advance * factor);
 }
 
+
+/*****************************************************************************
+* FUNCTION:     
+*
+* DESCRIPTION:  
+*
+* PARAMETERS:   
+* RETURNS:      
+*****************************************************************************/
 static UInt32 AlarmFindNext(DmOpenRef cats, UniMatrixPrefs *prefs, UInt32 startAt) {
   MemHandle m;
   UInt16 index=0;
@@ -551,8 +569,8 @@ static void MidiPickListCreate(ListPtr listP, ListDrawDataFuncPtr funcP) {
 
   // Unlock MIDI sound list
   MemPtrUnlock(midiListP);
-  // Set list width to max width + left margin
-  listP->bounds.extent.x = maxListWidth + 2;
+  // Set list width to max width + left margin + right margin
+  listP->bounds.extent.x = maxListWidth + 4;
   // Get pref dialog window extent
   FrmGetFormBounds(FrmGetActiveForm(), &r);
   // Make sure width is not more than window extent
