@@ -1,4 +1,4 @@
-/* $Id: cache.c,v 1.1 2003/03/13 14:56:47 tim Exp $
+/* $Id: cache.c,v 1.2 2003/10/15 21:40:57 tim Exp $
  *
  * Cache functions for ID -> String Caches
  * Created: 2003-03-03
@@ -119,13 +119,16 @@ CacheID CacheRegister(CacheNumIFunc *numIF, CacheLoadFunc *loadF, CacheFreeFunc 
   newCache->numIFunc = numIF;
   newCache->numItems = numIF(newCacheID);
 
-  mIDs=MemHandleNew(newCache->numItems* sizeof(UInt16));
-  mValues=MemHandleNew(newCache->numItems * sizeof (Char *));
+  // If numItems is zero then zero bytes would be allocated, this results
+  // in a null handle an causes BadBugs(TM). So care about it and
+  // enforce a minimum of one entry!
+  mIDs=MemHandleNew(((newCache->numItems > 0) ? newCache->numItems : 1) * sizeof(UInt16));
+  mValues=MemHandleNew(((newCache->numItems > 0) ? newCache->numItems : 1) * sizeof (Char *));
 
   newCache->ids=mIDs;
   newCache->values = mValues;
 
-if (newCache->loadFunc != NULL) {
+  if (newCache->loadFunc != NULL) {
     newCache->loadFunc(newCacheID, (UInt16 *)MemHandleLock(newCache->ids), (Char **)MemHandleLock(newCache->values), newCache->numItems);
   }
   MemHandleUnlock(newCache->ids);
@@ -137,7 +140,7 @@ if (newCache->loadFunc != NULL) {
 }
 
 Boolean CacheGet(CacheID cacheID, UInt16 id, MemHandle *charHandle, UInt16 maxLen) {
-  UInt16 l, r, x;
+  Int32 l, r, x;
   CacheObject **caches;
   UInt16 *ids;
   Char **values;
@@ -146,6 +149,12 @@ Boolean CacheGet(CacheID cacheID, UInt16 id, MemHandle *charHandle, UInt16 maxLe
   if (CacheValid(cacheID)) {
 
     caches = MemHandleLock(gCaches);
+    
+    if (caches[cacheID]->numItems == 0) {
+      MemHandleUnlock(gCaches);
+      return false;
+    }
+    
     ids = (UInt16 *)MemHandleLock(caches[cacheID]->ids);
     values = (Char **)MemHandleLock(caches[cacheID]->values);
 
@@ -179,7 +188,7 @@ Boolean CacheGet(CacheID cacheID, UInt16 id, MemHandle *charHandle, UInt16 maxLe
     MemHandleUnlock(caches[cacheID]->values);
     MemHandleUnlock(gCaches);
 
-  }    
+  }
 
   return rv;
 }
@@ -187,5 +196,3 @@ Boolean CacheGet(CacheID cacheID, UInt16 id, MemHandle *charHandle, UInt16 maxLe
 Boolean CacheValid(CacheID id) {
   return ((id >= 0) && (id < gCacheNum));
 }
-
-
