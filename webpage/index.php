@@ -1,6 +1,6 @@
 <?php
 
-/* $Id: index.php,v 1.5 2003/06/18 11:40:41 tim Exp $ */
+/* $Id: index.php,v 1.6 2003/06/18 15:04:44 tim Exp $ */
 
 $title="niemueller.de - palm software - UniMatrix";
 $meta_desc="A software to manage your daily university business.";
@@ -30,18 +30,9 @@ $languages=array( "de" => "German/Deutsch",
 $preversion=0;
 
 box_begin("Uni Matrix", "Last modified ".date ("F d Y H:i:s.", getlastmod()));
+echo "<br/>";
+print_heading_customimage("Uni Matrix", "Software for planning your everyday business at university", "unimatrix_big.png");
 ?>
-<br/>
-
-<table border="0" cellpadding="4">
- <tr>
-  <td rowspan="2" valign="top"><img src="unimatrix_big.png" border="0" alt="Uni Matrix"></td>
-  <td><h3>Uni Matrix</h3>
- </tr>
- <tr>
-  <td><h4>Software for planning your everyday business at university</h4></td>
- </tr>
-</table>
 
 <div class="maintext">
 <h5>Introduction</h5>

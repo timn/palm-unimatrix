@@ -1,6 +1,6 @@
 <?php
 
-/* $Id: changelog.php,v 1.1 2003/06/18 11:40:41 tim Exp $ */
+/* $Id: changelog.php,v 1.2 2003/06/18 15:04:44 tim Exp $ */
 
 $title="niemueller.de - palm software - UniMatrix - changelog";
 $meta_desc="A software to manage your daily university business.";
@@ -12,8 +12,10 @@ include("$DOCUMENT_ROOT/left.inc.php");
 $changesfile = "software/palm/unimatrix/CHANGES";
 
 box_begin("Uni Matrix - ChangeLog", "Last modified ".date ("F d Y H:i:s.", getlastmod()));
+echo "<br/>\n";
+print_heading_customimage("UniMatrix - ChangeLog", "", "unimatrix_big.png", "index.php");
 ?>
-<br/>
+
 
 <div class="maintext"><pre>
 <?php
