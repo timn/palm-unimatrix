@@ -1,0 +1,212 @@
+/* $Id: translation.ca,v 1.1 2003/09/05 13:31:40 tim Exp $ */
+
+translation "catalan"
+begin
+
+
+/* about translator only name is displayed */
+  "translator" = "Andreu Bassols"
+  "trans_mail" = "andreu@eines.info"
+  "trans_hdev" = "Palm m130"
+  "trans_palm" = "4.1"
+  "trans_trby" = "Traducció al català per:"
+
+
+/* common */
+  "com_cur" = "Actual"
+  "com_man" = "Temporades..."
+
+
+/* menu */
+  "men_addc" = "Afegir Matèria.."
+  "men_adde" = "Afegir Esdeveniment..."
+  "men_cl" = "Llistat de Matèries..."
+  "men_ab" = "Quant a..."
+  "men_opt" = "Opcions"
+  "men_sets" = "Configuració..."
+  "men_ex" = "Exàmens..."
+  "men_beam" = "Transf. Temporada"
+  "men_alarm" = "Alarma..."
+
+
+/* alerts */
+  "al_ok" = "D'acord"
+  "al_rominc1" = "Sistema incompatible"
+  "al_rominc2" = "Aquest programa requereix una versió del sistema 3.5 o millor."
+  "al_noc1" = "Error: No hi ha cap Matèria"
+  "al_noc2" = "Per a afegir un esdeveniment, primer has de crear una matèria."
+  "al_noc3" = "D'acord"
+  "al_nr1" = "Error: No has especificat l'Aula"
+  "al_nr2" = "Primer has d'especificar una Aula."
+  "al_nomem1" = "Memòria insuficient"
+  "al_nomem2" = "No es s'ha pogut assignar memòria."
+  "al_del1" = "Esborrar realment?"
+  "al_del2" = "Esborrar l'opció seleccionada (^1 [^2], ^3)?"
+  "al_dely" = "Sí"
+  "al_deln" = "No"
+  "al_invend1" = "Hora invàlida"
+  "al_invend2" = "Les hores han d'estar entre les 08:00 i les 20:00!"
+  "al_delc1" = "Esborrar realment?"
+  "al_delc2" = "Esborrar la matèria seleccionada (^1) i els esdeveniments corresponents?^2^3"
+  "al_delcy" = "Sí"
+  "al_delcn" = "No"
+  "al_ni1" = "No hi ha cap opció seleccionada"
+  "al_ni2" = "Has de seleccionar l'opció que vulguis editar o esborrar."
+  "al_ecn1" = "Sense nom"
+  "al_ecn2" = "Has d'especificar un nom per la matèria!"
+  "al_ect1" = "Sense professor"
+  "al_ect2" = "Has d'especificar un nom per al professor!"
+  "al_unt1" = "Sense hora"
+  "al_unt2" = "Els esdeveniments han de tindre hores."
+  "al_old1" = "Base de dades antiga"
+  "al_old2" = "La base de dades ha estat creada amb una versió antiga d'UniMarix, tot i que pot ser convertida. La puc convertir ara?"
+  "al_old3" = "Sí"
+  "al_old4" = "No"
+  "al_ctd1" = "Valors incorrectes"
+  "al_ctd2" = "Has d'introduïr el nom i el nom curt!"
+  "al_ct_del1" = "Esborrar realment?"
+  "al_ct_del2" = "Esborrar la matèria del tipus ^1 [^2]?^3"
+  "al_ex_del1" = "Esborrar realment?"
+  "al_ex_del2" = "Esborrar realment l'exàmen del ^1 a ^2 a les ^3?"
+  "al_timecol1" = "Les hores se solapen!"
+  "al_timecol2" = "Les hores entrades se solapen amb un esdeveniment ja entrat."
+  "al_beamdbfail1" = "Error en la base de dades"
+  "al_beamdbfail2" = "No es pot obrir la base de dades. Obri l'UniMatrix després de rebre una transmissió per a inicialitzar-la."
+  "al_beamnocat1" = "Memòria insuficient"
+  "al_beamnocat2" = "Ja hi ha el màxim de categories possible. Esborra'n alguna d'antiga i torna-ho a intentar."
+
+
+/* about */
+  "ab_title" = "Quant a UniMatrix"
+  "ab_d1" = "Per a organitzar-te les classes,"
+  "ab_d2" = "matèries i exàmens a la universitat"
+  "ab_get" = "Aconsegueix la darrera versió a"
+
+
+/* beam */
+  "b_title" = "Selecciona la Temporada"
+  "b_d1" = "Per favor, selecciona la Temporada on"
+  "b_d2" = "la matèria rebuda s'hi desarà"
+  "b_d3" = ""
+  "bs_d1" = "Això crearà una Temporada nova"
+  "bs_d2" = "on les dades rebudes"
+  "bs_d3" = "s'hi desaran."
+  "b_sem" = "Temporada:"
+
+
+/* course list */
+  "cl_title" = "Llistat de matèries"
+  "cl_desc" = "Matèries en aquesta temporada:"
+
+
+/* course details (add and edit) */
+  "cd_title" = "Afegir Matèria"
+  "cd_name" = "Nom"
+  "cd_type" = "Tipus"
+  "cd_teacher" = "Profe."
+  "cd_email" = "Correu-e"
+  "cd_website" = "Web"
+  "cd_phone" = "Telèfon"
+
+
+/* event details (add and edit */
+  "ed_title" = "Editar esdeveniment"
+  "ed_course" = "Matèria"
+  "ed_day" = "Dia"
+  "ed_time" = "Hora"
+  "ed_title" = "Selecciona l'hora"
+  "ed_color" = "Color"
+  "ed_room" = "Aula"
+  "ed_mo" = "Dilluns"
+  "ed_tu" = "Dimarts"
+  "ed_we" = "Dimecres"
+  "ed_th" = "Dijous"
+  "ed_fr" = "Divendres"
+  "ed_sa" = "Dissabte"
+  "ed_r" = "R"
+  "ed_g" = "G"
+  "ed_b" = "B"
+
+
+/* settings */
+  "sets_title" = "Configuració"
+  "sets_day" = "Dissabte és dia laborable"
+  "sets_showtype" = "Mostrar tipus curts als esdev."
+  "sets_showtime" = "Mostrar línia per l'hora actual"
+  "sets_showshort" = "Mostrar noms curts als esdev."
+  "sets_muteevents" = "Sense so durant un esdeveniment"
+  "sets_muteexams" = "Sense so durant un exàmen"
+
+
+/* gadget */
+  "gad_mo" = "Dll"
+  "gad_tu" = "Dim"
+  "gad_we" = "Dic"
+  "gad_th" = "Dij"
+  "gad_fr" = "Div"
+  "gad_sa" = "Dsb"
+
+
+/* Course types */
+  "ct_title" = "Tipus de matèries"
+  "ct_desc" = "Escull el tipus de matèria per a editar"
+  "ct_edct" = "Editar tipus..."
+  /* Course type defaults for database initialization */
+  "ct_lec" = "Lectura"
+  "ct_ex" = "Pràctiques"
+  "ct_bex" = "Exercicis"
+  "ct_sem" = "Lletres"
+  "ct_psem" = "Números"
+  "ct_rep" = "Revisió"
+  "ct_unk" = "Altres"
+  /* The short names may be only 3 chars in length! */
+  "ct_sh_lec" = "Lec"
+  "ct_sh_ex" = "P"
+  "ct_sh_bex" = "E"
+  "ct_sh_sem" = "Ll"
+  "ct_sh_psem" = "Num"
+  "ct_sh_rep" = "Rev"
+  "ct_sh_unk" = "?"
+
+
+/* Course type details */
+  "ctdet_title" = "Detalls del tipus de matèria"
+  "ctdet_name" = "Nom"
+  "ctdet_short" = "Abreujat"
+
+
+/* Exam list and exam details */
+  "ex_title" = "Exàmens"
+  "exd_title" = "Detalls de l'exàmen"
+  "exd_course" = "Matèria"
+  "exd_date" = "Data"
+  "exd_time" = "Hora"
+  "exd_length" = "Duració"
+
+
+/* Alarm related entries */
+  "alarm_today" = "Avui"
+  "alarm_title" = "Alarma"
+  "alarm_use" = "Alarma d'exàmens"
+  "alarm_time" = "Sonar abans de:"
+  "alarm_mins" = "Minuts"
+  "alarm_hours" = "Hores"
+  "alarm_days" = "Dies"
+  "alarm_remind" = "Recorda-m'ho:"
+  "alarm_repeat" = "Sonar cada:"
+  "alarm_rem_1" = "Un cop"
+  "alarm_rem_2" = "Dos cops"
+  "alarm_rem_3" = "3 cops"
+  "alarm_rem_5" = "5 cops"
+  "alarm_rem_10" = "10 cops"
+  "alarm_rep_1" = "Minut"
+  "alarm_rep_5" = "5 Minuts"
+  "alarm_rep_10" = "10 Minuts"
+  "alarm_rep_30" = "30 Minuts"
+  "alarm_exam" = "Exàmen:"
+  /* ^0 = day of week, ^1 = date string */
+  "alarm_date_template" = "^0, ^1"
+  "alarm_sound" = "To de l'alarma"
+
+
+end
