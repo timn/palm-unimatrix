@@ -5,6 +5,25 @@
 
 === v0.9
 
+* Sat Apr 19 2003 Tim Niemueller <tim@niemueller.de>
+- Fixed several bugs in notes code
+- Made it a modal dialog so that it can be user from edit easier
+- Hope I covered all needed "side effects" (increasing/decreasing course and
+  time index after creating/deleting a note for example)
+
+* Fri Apr 18 2003 Tim Niemueller <tim@niemueller.de>
+- Added notes support for events and exams
+- Fixed bug in GadgetDrawStep (up and down where swapped)
+- GadgetDrawStep does not beep any longer
+- Changed up and down hard button meanings:
+  - Simple clicks moves event pointer forward or backward one step
+  - Kepping it clicked for at least initDelay (KeyRates) will
+    GadgetSwitchScreen()
+- Beaming adopted notes
+
+* Tue Apr 15 2003 Tim Niemueller <tim@niemueller.de>
+- Fixed issue where times <= 1 hour with beginning of 20:00 were not shown
+
 * Sun Mar 16 2003 Tim Niemueller <tim@niemueller.de>
 - Added PHP include for sponsoring in index.php
 
@@ -27,8 +46,6 @@
 - DATABASE_VERSION changed to three. Need to do a sort for version 2.
 - Removed DatabaseGetNewCID, this functionality is now implemented as
   CourseNewID in clist.c.
-- 
-
 
 * Sun Mar 02 2003 Tim Niemueller <tim@niemueller.de>
 - Restructered prefs code, now we have one preferences struct
@@ -217,4 +234,4 @@
 
 
 
-$Id: CHANGES,v 1.6 2003/03/16 22:33:57 tim Exp $
+$Id: CHANGES,v 1.7 2003/04/18 23:27:57 tim Exp $
