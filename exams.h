@@ -1,8 +1,10 @@
-/* $Id: exams.h,v 1.1 2003/02/06 21:27:23 tim Exp $
+/* $Id: exams.h,v 1.2 2003/02/07 01:07:52 tim Exp $
  *
  * Everything you wanna know about exam code :-)
  * Created: 2002-07-11
  */
+
+
 
 #define EXCOL_DONE 0
 #define EXCOL_COURSE 1
@@ -19,5 +21,5 @@
 
 #define EX_FLAG_DONE 0x0001
 
-extern Boolean ExamsFormHandleEvent(EventPtr event);
-extern Boolean ExamDetailsFormHandleEvent(EventPtr event);
+extern Boolean ExamsFormHandleEvent(EventPtr event) SECOND_SECTION;
+extern Boolean ExamDetailsFormHandleEvent(EventPtr event) SECOND_SECTION;

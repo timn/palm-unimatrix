@@ -1,9 +1,9 @@
-/* $Id: common.rcp.in,v 1.1 2003/02/06 21:27:23 tim Exp $
+/* $Id: common.rcp.in,v 1.2 2003/02/07 01:07:52 tim Exp $
  *
  * common stuff like menus, bitmaps, alerts
  */
 
-#include "UniMatrix.h"
+#include "resources.h"
 
 bitmapfamily id BITMAP_logo "images/icon_sw.bmp" "" "" "images/icon_256c.bmp" compress
 

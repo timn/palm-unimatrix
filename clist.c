@@ -1,4 +1,4 @@
-/* $Id: clist.c,v 1.1 2003/02/06 21:27:23 tim Exp $
+/* $Id: clist.c,v 1.2 2003/02/07 01:07:52 tim Exp $
  *
  * Course List functions
  * Created: 2002-07-11
@@ -20,38 +20,55 @@ Char **gCourseList;
 extern Char gCategoryName[dmCategoryLength];
 extern UInt16 gMenuCurrentForm;
 
-void CourseGetName(UInt16 courseID, MemHandle *charHandle) {
-  Boolean found=false;
+Boolean CourseGetIndex(UInt16 courseID, UInt16 *index) {
   MemHandle m;
-  UInt16 index=0;
 
-  while(! found && ((m = DmQueryNextInCategory(DatabaseGetRefN(DB_MAIN), &index, DatabaseGetCat())) != NULL)) {
+  *index = 0;
+  
+  while ((m = DmQueryNextInCategory(DatabaseGetRefN(DB_MAIN), index, DatabaseGetCat())) != NULL) {
     Char *s=(Char *)MemHandleLock(m);
     if (s[0] == TYPE_COURSE) {
       CourseDBRecord c;
-
       UnpackCourse(&c, s);
-
       if (c.id == courseID) {
-        // Found it, put it into the string
-        Char *tmp, *shortType;
-        MemHandleResize(*charHandle, (StrLen(c.name)+CTYPE_SHORT_MAXLENGTH+CTYPE_ADD_MAXLENGTH+1));
-        tmp=MemHandleLock(*charHandle);
-
-        MemSet(tmp, MemPtrSize(tmp), 0);
-
-        shortType =(Char *)MemPtrNew(CTYPE_SHORT_MAXLENGTH+1);
-        MemSet(shortType, MemPtrSize(shortType), 0);
-        CourseTypeGetShort(shortType, c.ctype);
-
-        StrPrintF(tmp, "%s [%s]", c.name, shortType);
-        MemPtrFree(shortType);
-        MemHandleUnlock(*charHandle);
-        found = true;
+        // Found it!
+        MemHandleUnlock(m);
+        return true;
       }
     }
     MemHandleUnlock(m);
-    index += 1;
+    *index += 1;
+  }
+return false;
+}
+
+
+void CourseGetName(UInt16 courseID, MemHandle *charHandle) {
+  MemHandle m;
+  UInt16 index=0;
+
+  if (CourseGetIndex(courseID, &index)) {      
+    // Found it, put it into the string
+    CourseDBRecord c;
+    MemPtr mp;
+    Char *tmp, *shortType;
+
+    m = DmQueryRecord(DatabaseGetRefN(DB_MAIN), index);
+    mp = MemHandleLock(m);
+    UnpackCourse(&c, mp);
+    MemHandleResize(*charHandle, (StrLen(c.name)+CTYPE_SHORT_MAXLENGTH+CTYPE_ADD_MAXLENGTH+1));
+    tmp=MemHandleLock(*charHandle);
+  
+    MemSet(tmp, MemPtrSize(tmp), 0);
+  
+    shortType =(Char *)MemPtrNew(CTYPE_SHORT_MAXLENGTH+1);
+    MemSet(shortType, MemPtrSize(shortType), 0);
+    CourseTypeGetShort(shortType, c.ctype);
+  
+    StrPrintF(tmp, "%s [%s]", c.name, shortType);
+    MemPtrFree(shortType);
+    MemHandleUnlock(*charHandle);
+    MemHandleUnlock(m);
   }
 }
 
@@ -60,22 +77,18 @@ UInt8 CourseGetType(UInt16 courseID) {
   MemHandle m;
   UInt16 index=0;
 
-  while((m = DmQueryNextInCategory(DatabaseGetRefN(DB_MAIN), &index, DatabaseGetCat())) != NULL) {
-    Char *s=(Char *)MemHandleLock(m);
-    if (s[0] == TYPE_COURSE) {
-      CourseDBRecord c;
+  if (CourseGetIndex(courseID, &index)) {      
+    // Found it, put it into the string
+    CourseDBRecord c;
+    MemPtr mp;
 
-      UnpackCourse(&c, s);
-
-      if (c.id == courseID) {
-        // Found it, put it into the string
-        MemHandleUnlock(m);
-        return c.ctype;
-      }
-    }
+    m = DmQueryRecord(DatabaseGetRefN(DB_MAIN), index);
+    mp = MemHandleLock(m);
+    UnpackCourse(&c, mp);
     MemHandleUnlock(m);
-    index += 1;
+    return c.ctype;
   }
+
 return 0;
 }
 

@@ -12,7 +12,8 @@ R = ./
 include *.mk
 
 CC = m68k-palmos-gcc
-CFLAGS = -O2 -Wall
+CFLAGS = -O2 -Wall -Os
+MULTIGEN = m68k-palmos-multigen
 
 LANGUAGE ?= german
 SHORTLANGUAGE := $(shell grep "$(LANGUAGE)" languages | awk -F : '{ print $$1 }')
@@ -26,14 +27,14 @@ PFLAGS = -q -I $(R) -L $(LANGUAGE)
 PILOTRATE=115200
 PILOTXFER=/usr/bin/pilot-xfer
 
-OBJECTS=$(shell ls *.c | sed -e "s/.c$$/.o/")
+OBJECTS=$(shell ls *.c | sed -e "s/.c$$/.o/") $(PROGNAME)-sections.o
 
 RSCBINS:=$(shell ls resources/*.rcp.in | sed -e "s/rcp.in/bin/g")
 RSCBINSPRINT:=$(shell echo "$(RSCBINS)" | sed -e "s/resources\///g")
 
-$(PROGNAME).prc: $(PROGNAME) $(RSCBINS) $(PROGNAME).mk
+$(PROGNAME).prc: $(PROGNAME) $(RSCBINS) $(PROGNAME).mk $(PROGNAME).def
 	@echo -e "\n\n================================================================================\nBUILDING:\n"
-	build-prc $(PROGNAME).prc "$(PROGDESC)" $(APPID) $(PROGNAME) *.bin
+	build-prc $(PROGNAME).def "$(PROGDESC)" *.bin -o $(PROGNAME).prc
 	@echo -e "\n================================================================================\n"
 	@echo "RSC BINS: $(RSCBINSPRINT)"
 	@echo "OBJECTS : $(OBJECTS)"
@@ -44,7 +45,7 @@ $(PROGNAME).prc: $(PROGNAME) $(RSCBINS) $(PROGNAME).mk
 
 all: clean $(PROGNAME).prc
 
-$(PROGNAME): $(OBJECTS)
+$(PROGNAME): $(OBJECTS) $(PROGNAME)-sections.ld
 
 
 %.o: %.c
@@ -61,6 +62,12 @@ $(PROGNAME): $(OBJECTS)
         -e 's/##APPID##/$(APPID)/g' -e 's/##APPNAME##/$(PROGDESC)/g' \
         < $< > $@
 
+$(PROGNAME)-sections.o: $(PROGNAME)-sections.s
+	$(CC) -c $(PROGNAME)-sections.s
+
+$(PROGNAME)-sections.s $(PROGNAME)-sections.ld: $(PROGNAME).def
+	$(MULTIGEN) $(PROGNAME).def
+
 install: clean all
 	@echo -e "No going to install $(PROGDESC) on PalmOS device\n"
 	@echo -e "If you have a USB device press NOW the HotSync Button"
@@ -69,7 +76,7 @@ install: clean all
 	PILOTRATE=$(PILOTRATE) $(PILOTXFER) -i $(PROGNAME).prc
 
 clean:
-	-rm $(PROGNAME) $(PROGNAME).prc *.o *.bin
+	-rm -f $(PROGNAME) $(PROGNAME).prc *.o *.bin *.ld *.s
 
 dist:
 	mkdir -p $(PROGNAME)-$(VERSION)_dist

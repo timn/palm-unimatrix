@@ -1,9 +1,9 @@
-/* $Id: UniMatrix.rcp.in,v 1.1 2003/02/06 21:27:23 tim Exp $
+/* $Id: UniMatrix.rcp.in,v 1.2 2003/02/07 01:07:52 tim Exp $
  *
  * UniMatrix main file
  */
 
-#include "UniMatrix.h"
+#include "resources.h"
 
 application id APP_ID "##APPID##"
 applicationiconname id APP_NAMEID "##APPNAME##"

@@ -1,6 +1,6 @@
 VERSION=0.8a
 PROGNAME=UniMatrix
-PROGDESC=Uni Matrix
+PROGDESC=UniMatrix
 APPID=UMTX
 
 # If you use the upload target (we use scp)

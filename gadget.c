@@ -1,4 +1,4 @@
-/* $Id: gadget.c,v 1.1 2003/02/06 21:27:23 tim Exp $
+/* $Id: gadget.c,v 1.2 2003/02/07 01:07:52 tim Exp $
  *
  * THE heart of UniMatrix. This is the center piece of code in UniMatrix
  */
@@ -7,6 +7,7 @@
 #include "gadget.h"
 #include "tnglue.h"
 #include "ctype.h"
+#include "clist.h"
 
 FormPtr gForm=NULL;
 UInt16 gGadgetID=0, gHintGadgetID=0;
@@ -16,9 +17,6 @@ UInt8 gGadgetCurMinHour=GADGET_MIN_HOUR, gGadgetCurMaxHour=GADGET_MAX_HOUR,
       gGadgetDaysNum=GADGET_DEFAULT_NUMDAYS, gGadgetDaysWidth=GADGET_TOTAL_DRAWWIDTH/GADGET_DEFAULT_NUMDAYS,
       gGadgetCurScreen=GADGET_SCREEN_DAY, gGadgetFeature[GADGET_FEAT_NUM];
 TimeType gGadgetLastTimeline={0x00, 0x00};
-
-#define abs(x)  ((x)>0 ? (x) : -(x))
-
 
 
 /*****************************************************************************
@@ -752,6 +750,82 @@ Boolean GadgetHandler(FormGadgetTypeInCallback *gadgetP, UInt16 cmd, void *param
 
 
 /*****************************************************************************
+* Function: GadgetDrawStep
+*
+* Description: Helper function for GadgetTap. Highlights next of previous
+*              event on current screen
+*****************************************************************************/
+static void GadgetDrawStep(WinDirectionType direction) {
+  MemHandle m;
+  UInt16 index=gTimeIndex, wantCourse=0, courseIndex=0;
+  Boolean found=false, endLoop=false;
+  TimeDBRecord *t=NULL;
+
+  /* ASSUMPTION: We assume that the user does not have 2^16 events
+   * in his schedule. Otherwise this can become an endless. loop. but
+   * since I think this is a reasonable assumption I will not take any
+   * special care for this...
+   * If we loop to ID 2^16-1 we will surely find no record and terminate
+   * below (m = ... == NULL)
+   */
+
+  
+  if ( (direction == winDown) && (index > 0) ) {
+    while( !endLoop && (DmSeekRecordInCategory(DatabaseGetRefN(DB_MAIN), &index, 1, dmSeekBackward, DatabaseGetCat()) == errNone)) {
+      Char *s;
+      m = DmQueryRecord(DatabaseGetRefN(DB_MAIN), index);
+      s=MemHandleLock(m);
+      if (s[0] == TYPE_TIME) {
+        t = (TimeDBRecord *)s;
+        if ( GadgetEventIsVisible(t) ) {
+          // Found entry
+          endLoop=true;
+          found = true;
+          wantCourse = t->course;
+        }
+      } else {
+        // nothing more to search and nothing found
+        endLoop=true;
+      }
+      MemHandleUnlock(m);
+    }
+  } else if (direction == winUp) {
+    index += 1;
+    while( !endLoop && ((m = DmQueryNextInCategory(DatabaseGetRef(), &index, DatabaseGetCat())) != NULL)) {
+      Char *s=MemHandleLock(m);
+      if (s[0] == TYPE_TIME) {
+        t = (TimeDBRecord *)s;
+        if ( GadgetEventIsVisible(t) ) {
+          // Found entry
+          endLoop=true;
+          found = true;
+          wantCourse = t->course;
+        } else {
+          // previous in DB is not visible, search further
+          index += 1;
+        }
+      } else {
+        // nothing more to search and nothing found
+        endLoop=true;
+      }
+      MemHandleUnlock(m);
+    }
+  }
+  if (found) {
+    if (CourseGetIndex(wantCourse, &courseIndex)) {
+      GadgetSetHintCourseIndex(courseIndex);
+      GadgetSetHintTimeIndex(index);
+      GadgetDrawHintCurrent();
+    } else {
+      SndPlaySystemSound(sndError);
+    }
+  } else {
+    SndPlaySystemSound(sndError);
+  }
+}
+
+
+/*****************************************************************************
 * Function: GadgetTap
 *
 * Description: Handles penDown events (taps) on the gadget
@@ -760,7 +834,7 @@ void GadgetTap(FormGadgetType *pGadget, EventType *event) {
   //you may find it useful to track if they
   //lift the pen still within the boundaries of the gadget
   Boolean isPenDown = true;
-  Int16 newPointX, newPointY;
+  Int16 newPointX, newPointY, startPointX, startPointY;
   UInt16 index;
   RectangleType bounds;
 
@@ -770,19 +844,71 @@ void GadgetTap(FormGadgetType *pGadget, EventType *event) {
   FrmGetObjectBounds(FrmGetActiveForm(), index, &bounds);
 
   //track the pen down event
+  EvtGetPen(&newPointX, &newPointY, &isPenDown);
+  startPointX = newPointX;
+  startPointY = newPointY;
   while (isPenDown){
     EvtGetPen(&newPointX, &newPointY, &isPenDown);
   }
 
   if (RctPtInRectangle(newPointX, newPointY, &bounds)) {
-    // the pen up was also in the gadget
-    // Find the tapped field
+    /* the pen up was also in the gadget
+       This can mean two things:
+       1) we got a strike command
+       2) a field was tapped
+    */
     RectangleType rect;
     Boolean found=false, foundTime=false;
     MemHandle m;
     TimeDBRecord *t;
     UInt16 index=0, wantCourse=0;
     UInt8 top, height;
+
+    /* Check for stroke commands */
+    /* Check start for bottom left */
+    RctSetRectangle(&rect,
+                    bounds.topLeft.x,
+                    bounds.topLeft.y+(bounds.extent.y/2),
+                    bounds.extent.x/2,
+                    bounds.extent.y/2
+                   );
+    if (RctPtInRectangle(startPointX, startPointY, &rect)) {
+      // Now check if stroke ended in top-right corner
+      RctSetRectangle(&rect,
+                      bounds.topLeft.x+(bounds.extent.x/2),
+                      bounds.topLeft.y,
+                      bounds.extent.x/2,
+                      bounds.extent.y/2
+                     );
+      if (RctPtInRectangle(newPointX, newPointY, &rect)) {
+        // Stroke Command: NEXT
+        // FrmCustomAlert(ALERT_debug, "NEXT", "", "");
+        GadgetDrawStep(winUp);
+        return;
+      }
+    }
+
+    /* Check start for top left */
+    RctSetRectangle(&rect,
+                    bounds.topLeft.x,
+                    bounds.topLeft.y,
+                    bounds.extent.x/2,
+                    bounds.extent.y/2
+                   );
+    if (RctPtInRectangle(startPointX, startPointY, &rect)) {
+      // Now check if stroke ended in bottom-right corner
+      RctSetRectangle(&rect,
+                      bounds.topLeft.x+(bounds.extent.x/2),
+                      bounds.topLeft.y+(bounds.extent.y/2),
+                      bounds.extent.x/2,
+                      bounds.extent.y/2
+                     );
+      if (RctPtInRectangle(newPointX, newPointY, &rect)) {
+        // Stroke Command: BACK
+        GadgetDrawStep(winDown);
+        return;
+      }
+    }
 
     // Search for the clicked time
     while(! found && ((m = DmQueryNextInCategory(DatabaseGetRef(), &index, DatabaseGetCat())) != NULL)) {

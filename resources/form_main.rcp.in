@@ -1,9 +1,9 @@
-/* $Id: form_main.rcp.in,v 1.1 2003/02/06 21:27:23 tim Exp $
+/* $Id: form_main.rcp.in,v 1.2 2003/02/07 01:07:52 tim Exp $
  *
  * Main form
  */
 
-#include "UniMatrix.h"
+#include "resources.h"
 
 form id FORM_main at (0 0 160 160)
 menuid MENU_main
