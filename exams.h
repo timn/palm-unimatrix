@@ -1,4 +1,4 @@
-/* $Id: exams.h,v 1.4 2003/04/18 23:34:59 tim Exp $
+/* $Id: exams.h,v 1.5 2003/04/25 23:24:38 tim Exp $
  *
  * Everything you wanna know about exam code :-)
  * Created: 2002-07-11
@@ -16,10 +16,8 @@
 #define EX_MAX_ROWS 10
 #define EX_NUM_HANDLECOLS 3
 
-// That is just for maso-coders...
-#define MAC_SHIT_YEAR_CONSTANT 1904
-
 #define EX_FLAG_DONE 0x0001
 
+extern void ExamSetGoto(UInt32 uniqueID);
 extern Boolean ExamsFormHandleEvent(EventPtr event) SECOND_SECTION;
 extern Boolean ExamDetailsFormHandleEvent(EventPtr event) SECOND_SECTION;

@@ -1,4 +1,4 @@
-/* $Id: ctype.c,v 1.3 2003/04/18 23:34:59 tim Exp $
+/* $Id: ctype.c,v 1.4 2003/04/25 23:24:38 tim Exp $
  *
  * Course Type related stuff
  * Created: 2002-08-31
@@ -83,6 +83,7 @@ UInt8 CourseTypeListPopup(UInt16 listID, UInt16 triggerID, UInt8 selected, Char 
   MemSet(itemList[numItems], MemPtrSize(itemList[numItems]), 0);
   StrCopy(itemList[numItems], tempString);
   MemHandleUnlock(m);
+  DmReleaseResource(m);
   numItems += 1;
 
 

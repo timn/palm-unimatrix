@@ -1,4 +1,4 @@
-/* $Id: prefs.c,v 1.2 2003/03/13 14:56:47 tim Exp $
+/* $Id: prefs.c,v 1.3 2003/04/25 23:24:38 tim Exp $
  *
  * Preferences
  */
@@ -13,7 +13,7 @@ extern UniMatrixPrefs gPrefs;
 void PrefLoadPrefs(UniMatrixPrefs *prefs) {
   UInt16 prefsSize=0;
   Int16 version;
-  
+
   version = PrefGetAppPreferences(APP_CREATOR, PREFS_ID, NULL, &prefsSize, false);
   
   if (version == noPreferenceFound) {
@@ -21,7 +21,29 @@ void PrefLoadPrefs(UniMatrixPrefs *prefs) {
     prefs->numDays = 5;
   } else if (version != PREFS_VERSION) {
     // Attempt import if old was smaller
-    if (prefsSize <= sizeof(UniMatrixPrefs)) {
+    if (version == 2) {
+      MemHandle m=MemHandleNew(prefsSize);
+      MemPtr mp = MemHandleLock(m);
+      UniMatrixPrefs_v2 *oldPrefs;
+  
+      PrefGetAppPreferences(APP_CREATOR, PREFS_ID, (Char *)mp, &prefsSize, false);
+      oldPrefs = (UniMatrixPrefs_v2 *)mp;
+
+      prefs->curCat    = oldPrefs->curCat;
+      // Seems strange but is needed :-(
+      prefs->numDays = oldPrefs->numDays;
+      prefs->showTypes = oldPrefs->showTypes;
+      prefs->showTimeline = oldPrefs->showTimeline;
+      prefs->showShortNames = oldPrefs->showShortNames;
+
+      PrefSetAppPreferences(APP_CREATOR, PREFS_ID, version, NULL, 0, false);
+
+      MemHandleUnlock(m);
+      MemHandleFree(m);
+
+      PrefSavePrefs(prefs);
+
+    } else if (prefsSize <= sizeof(UniMatrixPrefs)) {
 
       MemHandle m=MemHandleNew(prefsSize);
       MemPtr mp = MemHandleLock(m);
@@ -36,6 +58,8 @@ void PrefLoadPrefs(UniMatrixPrefs *prefs) {
 
       MemHandleUnlock(m);
       MemHandleFree(m);
+
+      PrefSavePrefs(prefs);
     }
   } else {
     // Load
@@ -86,6 +110,7 @@ static Boolean SettingsSave(FormType *frm) {
   ctl=GetObjectPtr(CHECKBOX_sets_showshort);
   gPrefs.showShortNames = (CtlGetValue(ctl)) ? 1 : 0;
 
+  PrefSavePrefs(&gPrefs);
   return true;
 }
 

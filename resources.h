@@ -1,4 +1,4 @@
-/* $Id: resources.h,v 1.3 2003/04/18 23:34:59 tim Exp $
+/* $Id: resources.h,v 1.4 2003/04/25 23:24:38 tim Exp $
  *
  * ID's for use in ressource definitions
  *
@@ -149,6 +149,21 @@
 #define CTYPE_DEF_PROSEMINAR 1165
 #define CTYPE_DEF_REPETITORIUM 1166
 
+#define ALARM_STRING_today 1200
+#define FORM_alarm_sets 1201
+#define ALARM_use 1202
+#define ALARM_time 1203
+#define ALARM_unit 1204
+#define ALARM_unit_trigger 1205
+#define ALARM_remind 1206
+#define ALARM_remind_trigger 1207
+#define ALARM_repeat 1208
+#define ALARM_repeat_trigger 1209
+#define ALARM_exam 1210
+#define ALARM_date_template 1211
+#define ALARM_ok 1218
+#define ALARM_cancel 1219
+
 
 #define MENU_main 2001
 #define MENUITEM_course 2002
@@ -161,6 +176,7 @@
 #define MENUITEM_chat 2009
 #define MENUITEM_mensa 2010
 #define MENUITEM_addsep 2011
+#define MENUITEM_alarm 2012
 
 #define ALERT_ROMIncompatible 4001
 #define ALERT_debug 4002
@@ -200,6 +216,9 @@
 #define BITMAP_cancel_clicked 5017
 #define BITMAP_note 5018
 #define BITMAP_note_clicked 5019
+#define BITMAP_alarm_big_color 5020
+#define BITMAP_alarm_big_bw 5021
+#define BITMAP_alarm_small_color 5022
 
 #define GADGET_STRINGS_MO 8111
 #define GADGET_STRINGS_DI 8112

@@ -1,4 +1,4 @@
-/* $Id: database.c,v 1.3 2003/04/18 23:34:59 tim Exp $
+/* $Id: database.c,v 1.4 2003/04/25 23:24:38 tim Exp $
  *
  * Database handling, another central piece in UniMatrix
  */
@@ -77,6 +77,7 @@ Err OpenDatabase(void) {
     if (version < DATABASE_VERSION) {
       if ((err = DatabaseConvert(version)) != errNone)  return err;
     }
+    DatabaseSort();
   }
 
   return err;
@@ -530,7 +531,7 @@ Int16 DatabaseCompare(void *rec1, void *rec2, Int16 other,
   s1 = (Char *)rec1;
   s2 = (Char *)rec2;
 
-  /* record types will be sorted descending: exams -> times -> courses
+  /* record types will be sorted descending: notes -> exams -> times -> courses
    * Same types will be sorted ascending
    */
 
@@ -547,12 +548,28 @@ Int16 DatabaseCompare(void *rec1, void *rec2, Int16 other,
                                                 // we want to fail nicely
     } else if (s1[0] == TYPE_EXAM) {
       ExamDBRecord *e1=(ExamDBRecord *)rec1, *e2=(ExamDBRecord *)rec2;
-      UInt32 d1, d2;
-      d1=DateToDays(e1->date);
-      d2=DateToDays(e2->date);
-      if (d1 < d2)  return -1;
-      else if (d1 > d2)  return 1;
-      return 0;
+      UInt32 t1, t2;
+      DateTimeType d;
+
+      d.year = e1->date.year + MAC_SHIT_YEAR_CONSTANT;
+      d.month = e1->date.month;
+      d.day = e1->date.day;
+      d.hour = e1->begin.hours;
+      d.minute = e1->begin.minutes;
+      d.second = 0;
+      t1 = TimDateTimeToSeconds(&d);
+
+      d.year = e2->date.year + MAC_SHIT_YEAR_CONSTANT;
+      d.month = e2->date.month;
+      d.day = e2->date.day;
+      d.hour = e2->begin.hours;
+      d.minute = e2->begin.minutes;
+      d.second = 0;
+      t2 = TimDateTimeToSeconds(&d);
+
+      if (t1 < t2)  return -1;
+      else if (t1 > t2)  return 1;
+      else  return 0;
     } else if (s1[0] == TYPE_TIME) {
       TimeDBRecord *t1, *t2;
       t1 = (TimeDBRecord *)rec1;

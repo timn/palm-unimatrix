@@ -1,4 +1,4 @@
-/* $Id: delete.c,v 1.2 2003/03/13 14:56:47 tim Exp $
+/* $Id: delete.c,v 1.3 2003/04/25 23:24:38 tim Exp $
  *
  * All you need to delete courses and events
  */
@@ -6,6 +6,7 @@
 #include "delete.h"
 #include "ctype.h"
 #include "gadget.h"
+#include "notes.h"
 
 /*****************************************************************************
 * Function:  DeleteEntry
@@ -53,7 +54,10 @@ void DeleteEntry(void) {
 
   if (pressedButton == 0) {
     // First Button => Yes, delete
-    Err err=DmRemoveRecord(DatabaseGetRef(), GadgetGetHintTimeIndex());
+    Err err=errNone;
+    UInt16 deleteIndex = GadgetGetHintTimeIndex();
+    NoteDelete(&deleteIndex);
+    err=DmRemoveRecord(DatabaseGetRef(), deleteIndex);
     if (err) FrmCustomAlert(ALERT_debug, "Delete failed #132-a", "", "");
     // We cannot just redraw, unfortunately :-(
     GadgetSetNeedsCompleteRedraw(true);

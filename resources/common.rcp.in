@@ -1,4 +1,4 @@
-/* $Id: common.rcp.in,v 1.4 2003/04/18 23:40:33 tim Exp $
+/* $Id: common.rcp.in,v 1.5 2003/04/25 23:23:25 tim Exp $
  *
  * common stuff like menus, bitmaps, alerts
  */
@@ -31,6 +31,11 @@ bitmapcolor id BITMAP_cancel_clicked "images/cancel_clicked.bmp" compress
 bitmapcolor id BITMAP_note "images/note.bmp" compress
 bitmapcolor id BITMAP_note_clicked "images/note_clicked.bmp" compress
 
+/* Alarm bitmaps */
+bitmapcolor id BITMAP_alarm_big_color "images/alarm.big.color.bmp" compress
+bitmapcolor id BITMAP_alarm_small_color "images/alarm.small.color.bmp" compress transparent 255 0 255
+bitmap id BITMAP_alarm_big_bw "images/alarm.big.bw.bmp" compress
+
 
 /* menus */
 
@@ -50,6 +55,7 @@ begin
   pulldown "men_opt"
   begin
     menuitem "men_sets" id MENUITEM_settings "S"
+    menuitem "men_alarm" id MENUITEM_alarm
   end
 end
 

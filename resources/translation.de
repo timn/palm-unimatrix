@@ -1,4 +1,4 @@
-/* $Id: translation.de,v 1.2 2003/03/11 16:10:55 tim Exp $ */
+/* $Id: translation.de,v 1.3 2003/04/25 23:23:25 tim Exp $ */
 
 translation "german"
 begin
@@ -17,14 +17,16 @@ begin
 
 
 /* menu */
-  "men_addc" = "Kurs hinzu"
-  "men_adde" = "Zeit hinzu"
-  "men_cl" = "Kursliste"
-  "men_ex" = "Klausuren"
+  "men_addc" = "Kurs hinzu..."
+  "men_adde" = "Zeit hinzu..."
+  "men_cl" = "Kursliste..."
+  "men_ex" = "Klausuren..."
   "men_ab" = "Info"
   "men_opt" = "Optionen"
-  "men_sets" = "Einstellungen"
+  "men_sets" = "Einstellungen..."
   "men_beam" = "Sem. beamen"
+  "men_alarm" = "Alarm..."
+
 
 /* alerts */
   "al_ok" = "OK"
@@ -181,6 +183,30 @@ begin
   "exd_date" = "Datum"
   "exd_time" = "Uhrzeit"
   "exd_length" = "Dauer"
+
+
+/* Alarm related entries */
+  "alarm_today" = "Heute"
+  "alarm_title" = "Alarm"
+  "alarm_use" = "Alarm für Klausuren"
+  "alarm_time" = "Vorwarnzeit:"
+  "alarm_mins" = "Minuten"
+  "alarm_hours" = "Stunden"
+  "alarm_days" = "Tage"
+  "alarm_remind" = "Erinnern:"
+  "alarm_repeat" = "Wiedergeben alle:"
+  "alarm_rem_1" = "Einmal"
+  "alarm_rem_2" = "Zweimal"
+  "alarm_rem_3" = "Dreimal"
+  "alarm_rem_5" = "Fünfmal"
+  "alarm_rem_10" = "Zehnmal"
+  "alarm_rep_1" = "Minute"
+  "alarm_rep_5" = "5 Minuten"
+  "alarm_rep_10" = "10 Minuten"
+  "alarm_rep_30" = "30 Minuten"
+  "alarm_exam" = "Klausur:"
+  /* ^0 = day of week, ^1 = date string */
+  "alarm_date_template" = "^0, ^1"
 
 
 end

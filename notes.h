@@ -1,4 +1,4 @@
-/* $Id: notes.h,v 1.1 2003/04/18 23:34:59 tim Exp $
+/* $Id: notes.h,v 1.2 2003/04/25 23:24:38 tim Exp $
  *
  * Note support functions
  * Created: 2003/04/17
@@ -17,5 +17,6 @@ extern void NoteSet(UInt16 noteItemIndex, UInt16 returnForm);
 extern Boolean NoteViewHandleEvent (EventType *event);
 extern Boolean NoteGetIndex(UInt16 noteID, UInt16 *noteIndex);
 extern UInt16 NoteGetNewID(DmOpenRef cats, UInt16 category);
+extern void NoteDelete(UInt16 *noteItemIndex);
 
 #endif // NOTES_H

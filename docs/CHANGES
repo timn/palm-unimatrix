@@ -5,11 +5,46 @@
 
 === v0.9
 
+* Fri Apr 25 2003 Tim Niemueller <tim@niemueller.de>
+- Wrote AlarmFindNext
+- Sort now sorts exams better, makes AlarmFindNext easier :-)
+- CourseGetIndex now needs cats database handle to be able to call it at
+  interrupt level
+- DmReleaseResource calls needed all over the source
+- Exams Form has now rudimentary Goto Support
+- Added appLaunchCmdAlarmEventGoto launch code
+- Preferences are now saved to prefs db  when leaving Prefs form or alarm
+  settings form (before that it was only saved in StopApplication)
+- Uncommented muteExams and muteEvents. Not yet used but now in the prefs struct
+
+* Thu Apr 24 2003 Tim Niemueller <tim@niemueller.de>
+- More work on alarm stuff
+- Added alarm settings form
+- Added AlarmInfoType
+- Modified preferences to carry AlarmInfoType
+- Added muteExams and muteEvents. Yet commented out.
+- Update preferences structure. Now has a better outline (use :1 stuff) and it
+  has support for alarm settings.
+- Wrote import for prefs from version 2 -> 3
+
+* Tue Apr 22 2003 Tim Niemueller <tim@niemueller.de>
+- Hide notes button in event detail screen when in add mode
+- Changed FrmGotoForm to FrmPopupForm in exams for NewNoteView form. Caused
+  white screens when coming back
+- Fixed really BadBug in notes.c, set gNotesIndex=0 too early -> deleted wrong
+  note!
+- Fixed drawing issues in Table notes draw code. Added check for TblRowUsable
+  in TableDrawData
+- Added code to delete functions for events and exams so that notes are deleted
+  as well if they exist
+
 * Sat Apr 19 2003 Tim Niemueller <tim@niemueller.de>
 - Fixed several bugs in notes code
 - Made it a modal dialog so that it can be user from edit easier
 - Hope I covered all needed "side effects" (increasing/decreasing course and
   time index after creating/deleting a note for example)
+- Added alert files
+- Added TNPalmOSVersion to TNglue and made RomVersionCompatible using it
 
 * Fri Apr 18 2003 Tim Niemueller <tim@niemueller.de>
 - Added notes support for events and exams
@@ -20,6 +55,7 @@
   - Kepping it clicked for at least initDelay (KeyRates) will
     GadgetSwitchScreen()
 - Beaming adopted notes
+- Database version changed to 4 to add note fields to events and exams
 
 * Tue Apr 15 2003 Tim Niemueller <tim@niemueller.de>
 - Fixed issue where times <= 1 hour with beginning of 20:00 were not shown
@@ -234,4 +270,4 @@
 
 
 
-$Id: CHANGES,v 1.7 2003/04/18 23:27:57 tim Exp $
+$Id: CHANGES,v 1.8 2003/04/25 23:23:25 tim Exp $

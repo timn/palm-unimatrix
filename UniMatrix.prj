@@ -76,7 +76,8 @@ module.include.files=\
 	tnglue.h\
 	resources.h\
 	cache.h\
-	notes.h
+	notes.h\
+	alarm.h
 
 module.source.name=.
 module.source.type=
@@ -94,7 +95,8 @@ module.source.files=\
 	ctype.c\
 	tnglue.c\
 	cache.c\
-	notes.c
+	notes.c\
+	alarm.c
 
 module.pixmap.name=.
 module.pixmap.type=
@@ -156,7 +158,8 @@ module.data.files=\
 	UniMatrix.mk\
 	resources/translation.pl_iso8859-1\
 	resources/translation.pl_iso8859-2\
-	resources/translation.it
+	resources/translation.it\
+	resources/alarm.rcp.in
 
 module.help.name=.
 module.help.type=

@@ -1,4 +1,4 @@
-/* $Id: exams.c,v 1.3 2003/04/18 23:34:59 tim Exp $
+/* $Id: exams.c,v 1.4 2003/04/25 23:24:38 tim Exp $
  *
  * Exams functions
  * Created: 2002-09-21
@@ -14,6 +14,7 @@
 #include "tnglue.h"
 #include "beam.h"
 #include "notes.h"
+#include "alarm.h"
 
 // "Shared global" globals
 extern Char gCategoryName[dmCategoryLength];
@@ -51,6 +52,8 @@ static void TableDrawData(void *table, Int16 row, Int16 column, RectangleType *b
   MemHandle mex;
   RGBColorType fore={0x00, 0x00, 0x00, 0x00}, back={0x00, 0xFF, 0xFF, 0xFF};
 
+  if (! TblRowUsable(table, row)) return;
+  
   TNSetBackColorRGB(&back, NULL);
   TNSetForeColorRGB(&back, NULL);
   WinDrawRectangle(bounds, 0);
@@ -73,7 +76,7 @@ static void TableDrawData(void *table, Int16 row, Int16 column, RectangleType *b
     if (ex->note) {
       Char noteSymb[2] = { GADGET_NOTESYMBOL, 0 };
       FontID oldFont = FntSetFont(symbolFont);
-  
+
       TNDrawCharsToFitWidth(noteSymb, bounds);
       FntSetFont(oldFont);
     }
@@ -84,11 +87,10 @@ static void TableDrawData(void *table, Int16 row, Int16 column, RectangleType *b
   } else if (column == EXCOL_TIME) {
     Char timeTemp[timeStringLength];
     TimeToAscii(ex->begin.hours, ex->begin.minutes, PrefGetPreference(prefTimeFormat), timeTemp);
-    // StrPrintF(timeTemp, "I: %u", index);
     TNDrawCharsToFitWidth(timeTemp, bounds);
   }
 
-  
+
   if (ex->flags & EX_FLAG_DONE) {
     RGBColorType red = {0x00, 0xFF, 0x00, 0x00}, old;
     Int16 yCoord=bounds->topLeft.y+(bounds->extent.y / 2);
@@ -107,6 +109,8 @@ static void ExamsTableInit(void) {
   MemHandle m;
   UInt16 index=0;
 
+  gExamsSelRow = 0;  
+  
   for (i=0; i < TblGetNumberOfRows(table); ++i) {
     TblSetItemStyle(table, i, EXCOL_DONE, checkboxTableItem);
     TblSetItemStyle(table, i, EXCOL_COURSE, customTableItem);
@@ -153,7 +157,9 @@ static void ExamsTableInit(void) {
         TblInsertRow(table, i);
         TblSetRowID(table, i, index);
         TblSetRowData(table, i, uid);
+        if (uid == gExamsLastSelRowUID)  gExamsSelRow = i;
         TblSetRowUsable(table, i, true);
+        TblMarkRowInvalid(table, i);
         TblSetItemInt(table, i, EXCOL_DONE, done);
         i += 1;
       }
@@ -235,6 +241,7 @@ static void ExamDelete(void) {
 
   if (pressedButton == 0) {
     // OK, the user really wants us to delete the record
+    NoteDelete(&index);
     DmRemoveRecord(DatabaseGetRefN(DB_MAIN), index);
     gExamsSelRow=0;
     FrmUpdateForm(FORM_exams, frmRedrawUpdateCode);
@@ -256,6 +263,9 @@ static void ExamBeam(void) {
   BeamCourseByCID(ex->course);
 }
 
+void ExamSetGoto(UInt32 uniqueID) {
+  gExamsLastSelRowUID = uniqueID;
+}
 
 Boolean ExamsFormHandleEvent(EventPtr event) {
   FormPtr frm=FrmGetActiveForm();
@@ -298,7 +308,7 @@ Boolean ExamsFormHandleEvent(EventPtr event) {
         gExamsLastSelRowUID=TblGetRowData(GetObjectPtr(TABLE_exams), gExamsSelRow);
         DmFindRecordByID(DatabaseGetRefN(DB_MAIN), gExamsLastSelRowUID, &index);
         NoteSet(index, FORM_exams);
-        FrmGotoForm(NewNoteView);
+        FrmPopupForm(NewNoteView);
         break;
       }
 
@@ -440,7 +450,7 @@ Boolean ExamsFormHandleEvent(EventPtr event) {
       TblRedrawTable(event->data.tblSelect.pTable);
 
       MemHandleUnlock(mex);
-      
+
     } else if (event->data.tblEnter.column == EXCOL_NOTE) {
       MemHandle m;
       Boolean hasNote=false;
@@ -455,7 +465,7 @@ Boolean ExamsFormHandleEvent(EventPtr event) {
 
       if (hasNote) {
         NoteSet(TblGetRowID(event->data.tblEnter.pTable, event->data.tblEnter.row), FORM_exams);
-        FrmGotoForm(NewNoteView);
+        FrmPopupForm(NewNoteView);
       }
     }
     handled=true;
@@ -697,6 +707,7 @@ static Boolean ExamDetailsFormSave(void) {
     DatabaseSort();
   } 
 
+  AlarmReset(DatabaseGetRef());
   return true;
 }
 

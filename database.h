@@ -1,4 +1,4 @@
-/* $Id: database.h,v 1.3 2003/04/18 23:34:59 tim Exp $
+/* $Id: database.h,v 1.4 2003/04/25 23:24:38 tim Exp $
  *
  * Database stuff header file
  */
@@ -35,6 +35,9 @@
 #define DATABASE_NUM 2
 #define DB_MAIN 0
 #define DB_DATA 1
+
+// That is just for maso-coders...
+#define MAC_SHIT_YEAR_CONSTANT 1904
 
 // Types 0 < i < 32 are reserved for main DB
 // Types 32 <= i < 64 are reserved for data DB

@@ -1,4 +1,4 @@
-/* $Id: clist.c,v 1.4 2003/03/13 17:49:13 tim Exp $
+/* $Id: clist.c,v 1.5 2003/04/25 23:24:38 tim Exp $
  *
  * Course List functions
  * Created: 2002-07-11
@@ -26,12 +26,12 @@ Boolean gCached=false;
 MemHandle cacheID, cacheInd;
 UInt16 gNumItems=0;
 
-Boolean CourseGetIndex(UInt16 courseID, UInt16 *index) {
+Boolean CourseGetIndex(DmOpenRef cats, UInt16 category, UInt16 courseID, UInt16 *index) {
   MemHandle m;
 
   *index = 0;
   
-  while ((m = DmQueryNextInCategory(DatabaseGetRefN(DB_MAIN), index, DatabaseGetCat())) != NULL) {
+  while ((m = DmQueryNextInCategory(cats, index, category)) != NULL) {
     Char *s=(Char *)MemHandleLock(m);
     if (s[0] == TYPE_COURSE) {
       CourseDBRecord c;
@@ -147,7 +147,7 @@ UInt8 CourseGetType(UInt16 courseID) {
   MemHandle m;
   UInt16 index=0;
 
-  if (CourseGetIndex(courseID, &index)) {      
+  if (CourseGetIndex(DatabaseGetRefN(DB_MAIN), DatabaseGetCat(), courseID, &index)) {      
     // Found it, put it into the string
     CourseDBRecord c;
     MemPtr mp;

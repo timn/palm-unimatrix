@@ -1,4 +1,4 @@
-/* $Id: tnglue.c,v 1.2 2003/03/13 14:56:47 tim Exp $
+/* $Id: tnglue.c,v 1.3 2003/04/25 23:24:38 tim Exp $
  *
  * tnglue. See tnglue.h for more info
  * Created: 2002-07-11
@@ -113,4 +113,13 @@ UInt16 TNGetObjectIndexFromPtr(FormType *form, void *formObj) {
   }
 
   return objIndex;
+}
+
+
+UInt32 TNPalmOSVersion(void) {
+  UInt32 romVersion=0;
+
+	FtrGet(sysFtrCreator, sysFtrNumROMVersion, &romVersion);
+
+  return romVersion;
 }

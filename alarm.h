@@ -1,4 +1,4 @@
-/* $Id: alarm.h,v 1.1 2003/04/18 23:56:26 tim Exp $
+/* $Id: alarm.h,v 1.2 2003/04/25 23:24:38 tim Exp $
  *
  * Support for exam alarms
  * Created: 2003/04/19
@@ -9,5 +9,27 @@
 #define ALARM_H
 
 #include "UniMatrix.h"
+
+#define ALARM_NOTFOUND 0xFFFFFFFF
+
+
+// Alarm advance - the period of time before the appointment that the 
+// alarm should sound.
+//
+typedef enum {aauMinutes, aauHours, aauDays} AlarmUnitType;
+
+typedef struct {
+  UInt8         useAlarm             :1;
+	UInt8         advance 			       :7;  // Alarm advance (-1 = no alarm)
+	AlarmUnitType	advanceUnit;	            // minutes, hours, days
+	UInt16        repeatCount;
+	UInt16        repeatInterval;           // in minutes
+	UInt32        soundUniqueRecID;
+} AlarmInfoType;
+
+extern void AlarmReset(DmOpenRef cats);
+extern void AlarmTriggered(DmOpenRef cats, SysAlarmTriggeredParamType *cmdPBP);
+extern Boolean AttentionBottleNeckProc(DmOpenRef cats, AttnLaunchCodeArgsType *paramP);
+extern Boolean AlarmFormHandleEvent(EventPtr event);
 
 #endif /* ALARM_H */

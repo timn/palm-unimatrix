@@ -1,4 +1,4 @@
-/* $Id: edit.c,v 1.3 2003/04/18 23:34:59 tim Exp $
+/* $Id: edit.c,v 1.4 2003/04/25 23:24:38 tim Exp $
  *
  * Code for editing times, events, courses
  */
@@ -434,7 +434,7 @@ static void EditTimeFormInit(FormType *frm) {
 
     LstSetSelection(day, t->day);
     CtlSetLabel(dayt, LstGetSelectionText(day, t->day));
-
+   
     MemHandleUnlock(mt);
   }
 
@@ -750,7 +750,7 @@ Boolean EditTimeFormHandleEvent(EventPtr event) {
 
       default:
         break;
-    }   
+    }
   } else if (event->eType == frmUpdateEvent) {
       // redraws the form if needed
       frm = FrmGetActiveForm();
@@ -764,9 +764,11 @@ Boolean EditTimeFormHandleEvent(EventPtr event) {
       if (gEditTimeIsAdd) {
         CtlHideControl(GetObjectPtr(BUTTON_ed_beam));
         CtlHideControl(GetObjectPtr(BUTTON_ed_del));
+        CtlHideControl(GetObjectPtr(BUTTON_ed_note));
       } else {
         CtlShowControl(GetObjectPtr(BUTTON_ed_beam));
         CtlShowControl(GetObjectPtr(BUTTON_ed_del));
+        CtlShowControl(GetObjectPtr(BUTTON_ed_note));
       }
       handled = true;
     } else if (event->eType == frmCloseEvent) {

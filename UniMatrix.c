@@ -1,4 +1,4 @@
-/* $Id: UniMatrix.c,v 1.3 2003/04/18 23:34:59 tim Exp $
+/* $Id: UniMatrix.c,v 1.4 2003/04/25 23:24:38 tim Exp $
  *
  * UniMatrix main, event handling
  * Created: July 2002
@@ -17,6 +17,7 @@
 #include "exams.h"
 #include "cache.h"
 #include "notes.h"
+#include "alarm.h"
 
 Char gCategoryName[dmCategoryLength];
 UInt16 gMenuCurrentForm=FORM_main;
@@ -63,7 +64,10 @@ static UInt16 StartApplication (void) {
   if (err == errNone)  err = OpenDatabase();
   if (err == errNone)  DatabaseSetCat(gPrefs.curCat);
 
-  
+  // Set Alarms
+  if (err == errNone)  AlarmReset(DatabaseGetRefN(DB_MAIN));
+
+
   return (err);
 }
 
@@ -73,11 +77,8 @@ static UInt16 StartApplication (void) {
  * sysErrRomIncompatible
  ***********************************************************************/
 static Err RomVersionCompatible (UInt32 requiredVersion, UInt16 launchFlags) {
-	UInt32 romVersion;
-
 	// See if we're on in minimum required version of the ROM or later.
-	FtrGet(sysFtrCreator, sysFtrNumROMVersion, &romVersion);
-	if (romVersion < requiredVersion) {
+	if (TNPalmOSVersion() < requiredVersion) {
 		if ((launchFlags & (sysAppLaunchFlagNewGlobals | sysAppLaunchFlagUIApp)) ==
   			(sysAppLaunchFlagNewGlobals | sysAppLaunchFlagUIApp)) {
 			FrmAlert (ALERT_ROMIncompatible);
@@ -152,6 +153,11 @@ Boolean HandleMenuEvent (UInt16 command){
       handled=true;
       break;
 
+    case MENUITEM_alarm:
+      FrmPopupForm(FORM_alarm_sets);
+      handled=true;
+      break;
+
     case MENUITEM_exams:
       FrmGotoForm(FORM_exams);
       handled=true;
@@ -198,8 +204,13 @@ Boolean HandleMenuOpenEvent(EventType *event) {
     tmpSep[0]=MenuSeparatorChar;
     tmpSep[1]=0;
     MenuAddItem(MENUITEM_exams, MENUITEM_addsep, 0, tmpSep);
-}
+  }
 
+  if (TNPalmOSVersion() < 0x04000000) {
+    // No attention manager available, we do not work around that (yet?)
+    MenuHideItem(MENUITEM_alarm);
+  }
+  
   return true;
 }
 
@@ -400,6 +411,8 @@ static Boolean AppHandleEvent( EventPtr eventP) {
         
         case NewNoteView:     FrmSetEventHandler(frmP, NoteViewHandleEvent); break;
 
+        case FORM_alarm_sets:   FrmSetEventHandler(frmP, AlarmFormHandleEvent); break;
+
         default:
    				ErrNonFatalDisplay("Invalid Form Load Event");
 		  		break;
@@ -545,7 +558,94 @@ UInt32 PilotMain(UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlags){
       if (cats)  DmCloseDatabase(cats);
       if (dogs)  DmCloseDatabase(dogs);
     }
-	}
+
+  /***
+  * ALARM
+  ****/
+  } else if (cmd == sysAppLaunchCmdAlarmTriggered) {
+    // Is app active?
+    if (launchFlags & sysAppLaunchFlagSubCall) {
+      AlarmTriggered(DatabaseGetRefN(DB_MAIN), (SysAlarmTriggeredParamType *)cmdPBP);
+    } else {
+      DmOpenRef cats = DmOpenDatabaseByTypeCreator(DATABASE_TYPE, APP_CREATOR, dmModeReadWrite);
+      AlarmTriggered(cats, (SysAlarmTriggeredParamType *)cmdPBP);
+      DmCloseDatabase(cats);
+    }
+
+  /***
+  * ATTENTION
+  ****/
+  } else if (cmd == sysAppLaunchCmdAttention) {
+    // Is app active?
+    if (launchFlags & sysAppLaunchFlagSubCall) {
+      AttentionBottleNeckProc(DatabaseGetRefN(DB_MAIN), (AttnLaunchCodeArgsType *)cmdPBP);
+    } else {
+      // Another app was running when we were called
+      DmOpenRef cats = DmOpenDatabaseByTypeCreator(DATABASE_TYPE, APP_CREATOR, dmModeReadWrite);
+      AttentionBottleNeckProc(cats, (AttnLaunchCodeArgsType *)cmdPBP);
+      DmCloseDatabase(cats);
+    }
+
+  /***
+  * ATTENTION GOTO
+  ****/
+  } else if (cmd == appLaunchCmdAlarmEventGoto) {
+    error = StartApplication ();
+    if (error) {
+			// PalmOS before 3.5 will continuously relaunch this app unless we switch to
+			// another safe one.
+      if (error != dmErrCorruptDatabase) {
+        FrmCustomAlert(ALERT_debug, "Please reports this bug! Give your Palm device and PalmOS version, this BadBug(TM) should not happen.", "", "");
+      }
+      StopApplication();
+			AppLaunchWithCommand(sysFileCDefaultApp, sysAppLaunchCmdNormalLaunch, NULL);
+      return error;
+    }
+
+    ExamSetGoto(*(UInt32 *)cmdPBP);
+    FrmGotoForm(FORM_exams);
+
+		AppEventLoop ();
+		StopApplication ();
+
+
+  /***
+  * TIME CHANGE
+  ****/
+  // Launch code sent when the system time is changed.
+  } else if (cmd == sysAppLaunchCmdTimeChange) {
+    // reset the trigger for the next alarm to fire
+    if (launchFlags & sysAppLaunchFlagSubCall) {
+      AlarmReset(DatabaseGetRefN(DB_MAIN));
+      // Remove any "future" alarms from the attention manager queue
+      // (ie alarms that will trigger after the new time setting)
+      //AlarmUpdatePosted(DeviceTimeChanged);
+    } else {
+      // Another app was running when we were called
+      DmOpenRef cats = DmOpenDatabaseByTypeCreator(DATABASE_TYPE, APP_CREATOR, dmModeReadWrite);
+      AlarmReset(cats);
+      //AlarmUpdatePosted(DeviceTimeChanged);
+      DmCloseDatabase(cats);
+    }
+    
+  
+  /***
+  * RESET
+  ****/
+  // This action code is sent after the system is reset.
+  } else if (cmd == sysAppLaunchCmdSystemReset) {
+    if (! ((SysAppLaunchCmdSystemResetType*)cmdPBP)->hardReset) {
+      if (launchFlags & sysAppLaunchFlagSubCall) {
+      AlarmReset(DatabaseGetRefN(DB_MAIN));
+      } else {
+        // Another app was running when we were called
+        DmOpenRef cats = DmOpenDatabaseByTypeCreator(DATABASE_TYPE, APP_CREATOR, dmModeReadWrite);
+        AlarmReset(cats);
+        DmCloseDatabase(cats);
+      }
+    }
+
+  }
 
 	return 0;
 }

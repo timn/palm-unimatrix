@@ -1,4 +1,4 @@
-/* $Id: UniMatrix.h,v 1.3 2003/03/13 14:56:47 tim Exp $
+/* $Id: UniMatrix.h,v 1.4 2003/04/25 23:24:38 tim Exp $
  *
  */
 
@@ -18,6 +18,11 @@
 
 #define UNICHAT_APP_CREATOR 'UCHT'
 #define UNIMENSA_APP_CREATOR 'UMEN'
+
+
+typedef enum {
+	appLaunchCmdAlarmEventGoto = sysAppLaunchCmdCustomBase
+} UniMatrixCustomLaunchCodes;
 
 extern Boolean HandleMenuEvent (UInt16 command);
 extern Boolean HandleMenuOpenEvent(EventType *event);

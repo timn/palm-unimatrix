@@ -1,4 +1,4 @@
-/* $Id: gadget.c,v 1.5 2003/04/18 23:34:59 tim Exp $
+/* $Id: gadget.c,v 1.6 2003/04/25 23:24:38 tim Exp $
 *
 * THE heart of UniMatrix. This is the center piece of code in UniMatrix
 */
@@ -864,7 +864,7 @@ void GadgetDrawStep(WinDirectionType direction) {
       MemHandleUnlock(m);
     }
   }
-  if (found && CourseGetIndex(wantCourse, &courseIndex)) {
+  if (found && CourseGetIndex(DatabaseGetRef(), DatabaseGetCat(), wantCourse, &courseIndex)) {
     GadgetSetHintCourseIndex(courseIndex);
     GadgetSetHintTimeIndex(index);
     GadgetDrawHintCurrent();

@@ -1,4 +1,4 @@
-/* $Id: notes.c,v 1.1 2003/04/18 23:34:59 tim Exp $
+/* $Id: notes.c,v 1.2 2003/04/25 23:24:38 tim Exp $
  *
  * Note support functions
  * Created: 2003/04/17
@@ -127,36 +127,60 @@ UInt16 NoteGetNewID(DmOpenRef cats, UInt16 category) {
   return (highest+1);
 }
 
-
-static void NoteDelete(void) {
+static void NoteDeleteLocal(void) {
   if (gNoteID) {
-    MemHandle m;
-    Char *p;
+    // Was loaded and will be freed by Field => set FldHandle to NULL
+    FieldType *fld=GetObjectPtr(NoteField);
+    if (fld) FldSetTextHandle (fld, NULL);
+  }
+  NoteDelete(&gNoteItemIndex);
+}
 
-    if (gNoteID) {
-      // Was loaded and will be freed by Field => set FldHandle to NULL
-      FieldType *fld=GetObjectPtr(NoteField);
-  	  FldSetTextHandle (fld, NULL);
+
+// Will return true if an entry has been deleted
+void NoteDelete(UInt16 *noteItemIndex) {
+  MemHandle m;
+  Char *p;
+  UInt8 itemType=0;
+  UInt16 noteIndex=0;
+  Boolean hasNote=false;
+
+  gNoteID=0;
+
+  m = DmGetRecord(DatabaseGetRefN(DB_MAIN), *noteItemIndex);
+  p = MemHandleLock(m);
+  itemType = p[0];
+  if (itemType == TYPE_EXAM) {
+    ExamDBRecord *exam=(ExamDBRecord *)p;
+    if (exam->note) {
+      NoteGetIndex(exam->note, &noteIndex);
+      hasNote = true;
     }
+    DmWrite(p, offsetof(ExamDBRecord, note), &gNoteID, sizeof(UInt16));
+  } else if (itemType == TYPE_TIME) {
+    TimeDBRecord *event=(TimeDBRecord *)p;
+    if (event->note) {
+      NoteGetIndex(event->note, &noteIndex);
+      hasNote = true;
+    }
+    DmWrite(p, offsetof(TimeDBRecord, note), &gNoteID, sizeof(UInt16));
+  }
+  MemHandleUnlock(m);
+  DmReleaseRecord(DatabaseGetRefN(DB_MAIN), *noteItemIndex, false);
 
-    gNoteID=0;
+  if (hasNote) {
+    DmRemoveRecord(DatabaseGetRefN(DB_MAIN), noteIndex);
     gNoteIndex=0;
-
-    m = DmGetRecord(DatabaseGetRefN(DB_MAIN), gNoteItemIndex);
-    p = MemHandleLock(m);
-    if (p[0] == TYPE_EXAM) {
-      DmWrite(p, offsetof(ExamDBRecord, note), &gNoteID, sizeof(UInt16));
-    } else if (p[0] == TYPE_TIME) {
-      DmWrite(p, offsetof(TimeDBRecord, note), &gNoteID, sizeof(UInt16));
+    if (itemType < TYPE_NOTE) {
+      *noteItemIndex -= 1;
     }
-    DmReleaseRecord(DatabaseGetRefN(DB_MAIN), gNoteItemIndex, false);
-
-    DmRemoveRecord(DatabaseGetRefN(DB_MAIN), gNoteIndex);
-
     // We can simply decreasy since notes are BEFORE events and courses
     GadgetSetHintTimeIndex(GadgetGetHintTimeIndex()-1);
     GadgetSetHintCourseIndex(GadgetGetHintCourseIndex()-1);
+
   }
+
+  
 }
 
 
@@ -211,7 +235,7 @@ static void NoteViewSave(void) {
 
     // Remove the note from the record, if it is empty.
     if (empty) {
-      NoteDelete();
+      NoteDeleteLocal();
       gNoteID = 0;
     }
   }
@@ -227,7 +251,7 @@ static void NoteViewSave(void) {
     DmWrite(p, offsetof(TimeDBRecord, note), &gNoteID, sizeof(UInt16));
   } else {
     MemHandleUnlock(m);
-    NoteDelete();
+    NoteDeleteLocal();
   }
   MemHandleUnlock(m);
   DmReleaseRecord(DatabaseGetRefN(DB_MAIN), gNoteItemIndex, false);
@@ -432,7 +456,7 @@ Boolean NoteViewHandleEvent (EventType *event) {
         break;
 
       case NoteDeleteButton:
-        NoteDelete();
+        NoteDeleteLocal();
         FrmReturnToForm(gNoteReturnForm);
         FrmUpdateForm(gNoteReturnForm, frmRedrawUpdateCode);
         handled = true;
