@@ -1,6 +1,6 @@
 <?php
 
-/* $Id: faq.php,v 1.2 2003/06/18 11:40:41 tim Exp $ */
+/* $Id: faq.php,v 1.3 2003/10/31 23:36:41 tim Exp $ */
 
 $title="niemueller.de - palm software - UniMatrix - FAQ";
 $meta_desc="A software to manage your daily university business.";
@@ -8,21 +8,10 @@ $meta_keyw="Palm, PalmOS, university, planer, business, beaming, semester, verwa
 include("$DOCUMENT_ROOT/header.inc.php");
 include("$DOCUMENT_ROOT/left.inc.php");
 
-box_begin("Uni Matrix", "Last modified ".date ("F d Y H:i:s.", getlastmod()));
+heading_lastmod();
+heading("Uni Matrix", "Frequently Asked Questions - FAQ",
+        "/software/palm/unimatrix/unimatrix_big.png", "index.php"); 
 ?>
-<br/>
-
-<table border="0" cellpadding="4">
- <tr>
-  <td rowspan="2" valign="top"><a href="index.php"><img src="unimatrix_big.png" border="0" alt="Uni Matrix"></a></td>
-  <td><h3>Uni Matrix</h3>
- </tr>
- <tr>
-  <td><h4>Software for planning your everyday business at university</h4></td>
- </tr>
-</table>
-
-<br/>
 <a href="index.php">Back</a>
 
 <h5>FAQ - Frequently asked questions</h5>
@@ -72,12 +61,5 @@ ALL exams?
 <br/><br/><br/>
 <a href="index.php">Back</a>
 
-<?php
-box_end();
-
-?>
-
 <? include("$DOCUMENT_ROOT/right.inc.php"); ?>
 <? include("$DOCUMENT_ROOT/footer.inc.php"); ?>
-</body>
-</html>

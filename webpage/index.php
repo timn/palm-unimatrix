@@ -1,6 +1,6 @@
 <?php
 
-/* $Id: index.php,v 1.10 2003/10/15 21:37:49 tim Exp $ */
+/* $Id: index.php,v 1.11 2003/10/31 23:36:41 tim Exp $ */
 
 $title="niemueller.de - palm software - UniMatrix";
 $meta_desc="A software to manage your daily university business.";
@@ -30,9 +30,10 @@ $languages=array( "de" => "German/Deutsch",
 
 $preversion=0;
 
-box_begin("Uni Matrix", "Last modified ".date ("F d Y H:i:s.", getlastmod()));
-echo "<br/>";
-print_heading_customimage("Uni Matrix", "Software for planning your everyday business at university", "unimatrix_big.png");
+heading_lastmod();
+heading("Uni Matrix",
+        "Software for planning your everyday business at university",
+        "/software/palm/unimatrix/unimatrix_big.png");
 ?>
 
 <div class="maintext">
@@ -243,12 +244,5 @@ You may download the Palm install file provided as a .zip and as a .tar.gz file.
 
 </div>
 
-<?php
-box_end();
-
-?>
-
 <? include("$DOCUMENT_ROOT/right.inc.php"); ?>
 <? include("$DOCUMENT_ROOT/footer.inc.php"); ?>
-</body>
-</html>
