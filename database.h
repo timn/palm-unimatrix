@@ -1,4 +1,4 @@
-/* $Id: database.h,v 1.1 2003/02/06 21:27:23 tim Exp $
+/* $Id: database.h,v 1.2 2003/03/13 14:56:47 tim Exp $
  *
  * Database stuff header file
  */
@@ -30,7 +30,7 @@
 #define DATABASE_TEMPNAME "UniMatrixDB_TEMP"
 
 #define DATABASE_CARD 0
-#define DATABASE_VERSION 2
+#define DATABASE_VERSION 3
 
 #define DATABASE_NUM 2
 #define DB_MAIN 0
@@ -99,20 +99,15 @@ typedef struct {
 } ExamDBRecord;
 
 
-extern Err  OpenDatabase(void);
-extern void CloseDatabase(void);
-extern void CleanupDatabase(void);
-extern DmOpenRef DatabaseGetRef(void);
-extern DmOpenRef DatabaseGetRefN(UInt8 num);
-extern void DeleteDatabase(void);
-extern Err DatabaseConvert(UInt16 oldVersion);
-extern Boolean DatabaseIsOpen(void);
-extern Err CreateDatabase(const Char *dbname, LocalID *dbID);
+extern Err  OpenDatabase(void) THIRD_SECTION;
+extern void CloseDatabase(void) THIRD_SECTION;
+extern DmOpenRef DatabaseGetRef(void) THIRD_SECTION;
+extern DmOpenRef DatabaseGetRefN(UInt8 num) THIRD_SECTION;
+extern void DeleteDatabase(void) THIRD_SECTION;
+extern Err DatabaseConvert(UInt16 oldVersion) THIRD_SECTION;
+extern Err CreateDatabase(const Char *dbname, LocalID *dbID) THIRD_SECTION;
 extern UInt16 DatabaseGetCat(void);
 extern void DatabaseSetCat(UInt16 newcat);
-
-extern UInt16 CountCourses(void);
-extern UInt16 DatabaseGetNewCID(DmOpenRef cats, UInt16 category);
 
 extern void PackCourse(CourseDBRecord *course, MemHandle courseDBEntry);
 extern void UnpackCourse(CourseDBRecord *course, const MemPtr mp);

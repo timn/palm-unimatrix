@@ -1,4 +1,4 @@
-/* $Id: UniMatrix.c,v 1.1 2003/02/06 21:27:23 tim Exp $
+/* $Id: UniMatrix.c,v 1.2 2003/03/13 14:56:47 tim Exp $
  *
  * UniMatrix main, event handling
  * Created: July 2002
@@ -15,9 +15,11 @@
 #include "prefs.h"
 #include "ctype.h"
 #include "exams.h"
+#include "cache.h"
 
 Char gCategoryName[dmCategoryLength];
 UInt16 gMenuCurrentForm=FORM_main;
+UniMatrixPrefs gPrefs;
 
 /***********************************************************************
  * FUNCTION:    GetObjectPtr
@@ -41,13 +43,18 @@ static UInt16 StartApplication (void) {
 	// Initialize the random number seed;
 	SysRandom( TimGetSeconds() );
 
+  // Load prefs
+  PrefLoadPrefs(&gPrefs);
+  
   // Initialize TNglue
   err = TNGlueColorInit();
 
+  // Initialize Cache
+  CacheInit();
+
   // Open Database
-  if (err == errNone) {
-    err = OpenDatabase();
-  }
+  if (err == errNone)  err = OpenDatabase();
+  if (err == errNone)  DatabaseSetCat(gPrefs.curCat);
 
   
   return (err);
@@ -77,41 +84,6 @@ static Err RomVersionCompatible (UInt32 requiredVersion, UInt16 launchFlags) {
   }
 
   return (0);
-}
-
-/***********************************************************************
- * function for main form initialization
- * you can put your initialization stuff there
- * e.g. initial settings for controls and labels
- ***********************************************************************/
-static void MainFormInit (FormPtr frm){
-  UInt8 numDays=GADGET_DEFAULT_NUMDAYS, showTypes=0, showTimeline=0;
-  UInt16 numDaysSize=sizeof(numDays), showTypesSize=sizeof(showTypes), showTimelineSize=sizeof(showTimeline);
-  UInt16 cat=0, catSize=sizeof(cat);
-
-/*  Char tmpSep[2];
-      tmpSep[0]=MenuSeparatorChar;
-      tmpSep[1]=0;
-      MenuAddItem(6, MENUITEM_chat, 'C', "UniChat");
-      MenuAddItem(7, 0, 0, tmpSep);
-*/
-  if (PrefGetAppPreferences(APP_CREATOR, PREFS_NUMDAYS, &numDays, &numDaysSize, false) == noPreferenceFound)
-    numDays=GADGET_DEFAULT_NUMDAYS;
-  if (PrefGetAppPreferences(APP_CREATOR, PREFS_SHOWTYPES, &showTypes, &showTypesSize, false) == noPreferenceFound)
-    showTypes=0;
-  if (PrefGetAppPreferences(APP_CREATOR, PREFS_SHOWTIMELINE, &showTimeline, &showTimelineSize, false) == noPreferenceFound)
-    showTimeline=0;
-
-  if (PrefGetAppPreferences(APP_CREATOR, PREFS_CURCAT, &cat, &catSize, false) == noPreferenceFound)
-    DatabaseSetCat(0);
-  else DatabaseSetCat(cat);
-
-
-  GadgetSet(frm, GADGET_main, GADGET_hint, numDays);
-  GadgetSetFeature(GADGET_FEAT_SHOWTYPES, showTypes);
-  GadgetSetFeature(GADGET_FEAT_SHOWTIMELINE, showTimeline);
-  FrmSetGadgetHandler(frm, FrmGetObjectIndex(frm, GADGET_main), GadgetHandler);
-  
 }
 
 /***********************************************************************
@@ -330,7 +302,10 @@ static Boolean MainFormHandleEvent (EventPtr event){
       UInt16 cardNo;
       // initializes and draws the form at program launch
       frm = FrmGetActiveForm();
-      MainFormInit(frm);
+
+      GadgetSet(frm, GADGET_main, GADGET_hint);
+      FrmSetGadgetHandler(frm, FrmGetObjectIndex(frm, GADGET_main), GadgetHandler);
+
       FrmDrawForm(frm);
       GadgetDrawHintNext();
 
@@ -448,9 +423,10 @@ static void AppEventLoop(void){
  * application is finished, so we have to clean the desktop behind us
  ***********************************************************************/
 static void StopApplication (void){
-  UInt16 cat=DatabaseGetCat();
-  PrefSetAppPreferences(APP_CREATOR, PREFS_CURCAT, PREFS_VERSION, &cat, sizeof(cat), false);
+  gPrefs.curCat = DatabaseGetCat();
+  PrefSavePrefs(&gPrefs);
 	FrmCloseAllForms ();
+  CacheFree();
 	CloseDatabase();
 }
 

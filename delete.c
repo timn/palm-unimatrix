@@ -1,4 +1,4 @@
-/* $Id: delete.c,v 1.1 2003/02/06 21:27:23 tim Exp $
+/* $Id: delete.c,v 1.2 2003/03/13 14:56:47 tim Exp $
  *
  * All you need to delete courses and events
  */
@@ -13,10 +13,10 @@
 * Description:  Deletes an entry
 *****************************************************************************/
 void DeleteEntry(void) {
-  MemHandle mc, mt, mh;
+  MemHandle mc, mt, mh, type;
   TimeDBRecord *t;
   CourseDBRecord c;
-  Char *day, *bot, begin[timeStringLength], end[timeStringLength], type[CTYPE_SHORT_MAXLENGTH+1];
+  Char *day, *bot, begin[timeStringLength], end[timeStringLength];
   UInt16 pressedButton=0;
   TimeFormatType timeFormat=tfColon24h;
 
@@ -37,12 +37,15 @@ void DeleteEntry(void) {
   mh = DmGetResource(strRsc, GADGET_STRINGS_WDAYSTART+t->day);
   day = (Char *)MemHandleLock(mh);
 
-  CourseTypeGetShort(type, c.ctype);
+  type = MemHandleNew(1);
+  CourseTypeGetShort(&type, c.ctype);
 
   StrPrintF(bot, "%s %s - %s", day, begin, end);
 
-  pressedButton=FrmCustomAlert(ALERT_dodel, c.name, type, bot);
+  pressedButton=FrmCustomAlert(ALERT_dodel, c.name, (Char *)MemHandleLock(type), bot);
 
+  MemHandleUnlock(type);
+  MemHandleFree(type);
   MemPtrFree((MemPtr)bot);
   MemHandleUnlock(mc);
   MemHandleUnlock(mt);

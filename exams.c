@@ -1,4 +1,4 @@
-/* $Id: exams.c,v 1.1 2003/02/06 21:27:23 tim Exp $
+/* $Id: exams.c,v 1.2 2003/03/13 14:56:47 tim Exp $
  *
  * Exams functions
  * Created: 2002-09-21
@@ -60,7 +60,7 @@ static void TableDrawData(void *table, Int16 row, Int16 column, RectangleType *b
   if (column == EXCOL_COURSE) {
     Char *temp;
     MemHandle m=MemHandleNew(1);
-    CourseGetName(ex->course, &m);
+    CourseGetName(ex->course, &m, true);
     temp = MemHandleLock(m);
 
     TNSetForeColorRGB(&fore, NULL);
@@ -206,7 +206,7 @@ static void ExamDelete(void) {
   ex = (ExamDBRecord *)MemHandleLock(mex);
 
   m=MemHandleNew(1);
-  CourseGetName(ex->course, &m);
+  CourseGetName(ex->course, &m, true);
   courseName = MemHandleLock(m);
 
   DateToAscii(ex->date.month, ex->date.day, ex->date.year+MAC_SHIT_YEAR_CONSTANT, PrefGetPreference(prefLongDateFormat), dateTemp);

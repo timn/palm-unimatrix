@@ -1,4 +1,4 @@
-/* $Id: clist.c,v 1.2 2003/02/07 01:07:52 tim Exp $
+/* $Id: clist.c,v 1.3 2003/03/13 14:56:47 tim Exp $
  *
  * Course List functions
  * Created: 2002-07-11
@@ -12,13 +12,19 @@
 #include "edit.h"
 #include "beam.h"
 #include "ctype.h"
+#include "cache.h"
 
 UInt16 *gCourseInd, gNumCourses;
 Char **gCourseList;
+CacheID gCourseNameCacheID=-1;
 
 // "Shared global" globals
 extern Char gCategoryName[dmCategoryLength];
 extern UInt16 gMenuCurrentForm;
+
+Boolean gCached=false;
+MemHandle cacheID, cacheInd;
+UInt16 gNumItems=0;
 
 Boolean CourseGetIndex(UInt16 courseID, UInt16 *index) {
   MemHandle m;
@@ -42,36 +48,100 @@ Boolean CourseGetIndex(UInt16 courseID, UInt16 *index) {
 return false;
 }
 
-
-void CourseGetName(UInt16 courseID, MemHandle *charHandle) {
-  MemHandle m;
-  UInt16 index=0;
-
-  if (CourseGetIndex(courseID, &index)) {      
-    // Found it, put it into the string
-    CourseDBRecord c;
-    MemPtr mp;
-    Char *tmp, *shortType;
-
-    m = DmQueryRecord(DatabaseGetRefN(DB_MAIN), index);
-    mp = MemHandleLock(m);
-    UnpackCourse(&c, mp);
-    MemHandleResize(*charHandle, (StrLen(c.name)+CTYPE_SHORT_MAXLENGTH+CTYPE_ADD_MAXLENGTH+1));
-    tmp=MemHandleLock(*charHandle);
+static void CourseNameCacheLoad(CacheID id, UInt16 *ids, Char **values, UInt16 numItems) {
+  MemHandle m; 
+  UInt16 index=0, i=0;
   
-    MemSet(tmp, MemPtrSize(tmp), 0);
-  
-    shortType =(Char *)MemPtrNew(CTYPE_SHORT_MAXLENGTH+1);
-    MemSet(shortType, MemPtrSize(shortType), 0);
-    CourseTypeGetShort(shortType, c.ctype);
-  
-    StrPrintF(tmp, "%s [%s]", c.name, shortType);
-    MemPtrFree(shortType);
-    MemHandleUnlock(*charHandle);
+  while ((i < numItems) && ((m = DmQueryNextInCategory(DatabaseGetRef(), &index, DatabaseGetCat())) != NULL)) {
+    Char *s=(Char *)MemHandleLock(m);
+    if (s[0] == TYPE_COURSE) {
+      CourseDBRecord c;
+      Char *tempString;
+
+      UnpackCourse(&c, s);
+      
+      tempString=(Char *)MemPtrNew(StrLen(c.name)+1);
+      MemSet(tempString, MemPtrSize(tempString), 0);
+      StrCopy(tempString, c.name);
+
+      ids[i] = c.id;
+      values[i] = tempString;
+      i += 1;
+    }
     MemHandleUnlock(m);
+    index += 1;
   }
 }
 
+static void CourseNameCacheFree(CacheID id, UInt16 *ids, Char **values, UInt16 numItems) {
+  UInt16 i;
+  for (i=0; i < numItems; ++i) {
+    MemPtrFree(values[i]);
+  }
+}
+
+static UInt16 CourseNameCacheNumI(CacheID id) {
+  return CountCourses();
+}
+
+void CourseGetName(UInt16 courseID, MemHandle *charHandle, Boolean longformat) {
+
+  if (! CacheValid(gCourseNameCacheID)) {
+    // Cache has not yet been initialized
+    gCourseNameCacheID = CacheRegister(CourseNameCacheNumI, CourseNameCacheLoad, CourseNameCacheFree);
+  }
+
+  CacheGet(gCourseNameCacheID, courseID, charHandle, longformat ? 0 : 3);
+}
+
+
+/*****************************************************************************
+* Function:  CountCourses
+*
+* Description: Counts the courses saved in the given current category.
+* Assumptions: This functions assumes, that the Records are SORTED with the
+*              courses first and then the times.
+*****************************************************************************/
+UInt16 CountCourses(void) {
+  MemHandle m;
+  UInt16 index=0,count=0;
+
+  while ((m = DmQueryNextInCategory(DatabaseGetRefN(DB_MAIN), &index, DatabaseGetCat()))) {
+    Char *s = MemHandleLock(m);
+    if (s[0] == TYPE_COURSE) count += 1;
+    MemHandleUnlock(m);
+    index += 1;
+  }
+
+  return count;
+}
+
+
+UInt16 CourseNewID(DmOpenRef cats, UInt16 category) {
+  Err err=errNone;
+  MemHandle m;
+  UInt16 index=0,lastid=0;
+
+  err = DmSeekRecordInCategory(cats, &index, 0, dmSeekForward, category);
+  if (err != errNone) return 0;
+
+  while ((m = DmQueryNextInCategory(cats, &index, category))) {
+    Char *s = MemHandleLock(m);
+    if (s[0] == TYPE_COURSE) {
+      CourseDBRecord c;
+      UnpackCourse(&c, s);
+
+      if (c.id > lastid) lastid = c.id;
+
+    }
+    index += 1;
+    MemHandleUnlock(m);
+  }
+
+  // lastid contains the last existing ID here, so return lastid+1 to get the first
+  // non-existing one
+  return lastid+1;
+}
 
 UInt8 CourseGetType(UInt16 courseID) {
   MemHandle m;
@@ -105,17 +175,17 @@ UInt16 CourseListGen(Char **itemList, UInt16 *courseID, UInt16 *courseInd, UInt1
     if (s[0] == TYPE_COURSE) {
       UInt16 j;
       CourseDBRecord c;
-      Char *tempString, *shortType;
+      Char *tempString;
+      MemHandle shortType;
 
       UnpackCourse(&c, s);
 
       tempString=(Char *)MemPtrNew(StrLen(c.name)+3+StrLen(c.teacherName)+CTYPE_SHORT_MAXLENGTH+CTYPE_ADD_MAXLENGTH+1);
-      shortType =(Char *)MemPtrNew(CTYPE_SHORT_MAXLENGTH+1);
-      MemSet(shortType, MemPtrSize(shortType), 0);
-      CourseTypeGetShort(shortType, c.ctype);
+      CourseTypeGetShort(&shortType, c.ctype);
       // StrPrintF(shortType, "T");
-      StrPrintF(tempString, "%s (%s) [%s]", c.name, c.teacherName, shortType);
-      MemPtrFree((MemPtr)shortType);
+      StrPrintF(tempString, "%s (%s) [%s]", c.name, c.teacherName, (Char *)MemHandleLock(shortType));
+      MemHandleUnlock(shortType);
+      
 
       // Do a nice insertion sort here. DatAlg MUST have been good for something :-)
       j = i;

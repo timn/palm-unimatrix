@@ -1,2 +1,2 @@
 application { "Uni Matrix" UMTX }
-multiple code { "SECSEC" }
+multiple code { "SECSEC" "THDSEC" }

@@ -1,4 +1,4 @@
-/* $Id: tnglue.c,v 1.1 2003/02/06 21:27:23 tim Exp $
+/* $Id: tnglue.c,v 1.2 2003/03/13 14:56:47 tim Exp $
  *
  * tnglue. See tnglue.h for more info
  * Created: 2002-07-11

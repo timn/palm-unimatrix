@@ -1,4 +1,4 @@
-/* $Id: prefs.c,v 1.1 2003/02/06 21:27:23 tim Exp $
+/* $Id: prefs.c,v 1.2 2003/03/13 14:56:47 tim Exp $
  *
  * Preferences
  */
@@ -8,6 +8,45 @@
 #include "gadget.h"
 
 extern UInt16 gMenuCurrentForm;
+extern UniMatrixPrefs gPrefs;
+
+void PrefLoadPrefs(UniMatrixPrefs *prefs) {
+  UInt16 prefsSize=0;
+  Int16 version;
+  
+  version = PrefGetAppPreferences(APP_CREATOR, PREFS_ID, NULL, &prefsSize, false);
+  
+  if (version == noPreferenceFound) {
+    MemSet(prefs, sizeof(UniMatrixPrefs), 0);
+    prefs->numDays = 5;
+  } else if (version != PREFS_VERSION) {
+    // Attempt import if old was smaller
+    if (prefsSize <= sizeof(UniMatrixPrefs)) {
+
+      MemHandle m=MemHandleNew(prefsSize);
+      MemPtr mp = MemHandleLock(m);
+  
+      PrefGetAppPreferences(APP_CREATOR, PREFS_ID, (Char *)mp, &prefsSize, false);
+  
+      MemSet(prefs, sizeof(UniMatrixPrefs), 0);
+      MemMove(prefs, mp, prefsSize);
+      prefs->numDays = 5;
+
+      PrefSetAppPreferences(APP_CREATOR, PREFS_ID, version, NULL, 0, false);
+
+      MemHandleUnlock(m);
+      MemHandleFree(m);
+    }
+  } else {
+    // Load
+    PrefGetAppPreferences(APP_CREATOR, PREFS_ID, prefs, &prefsSize, false);
+  }
+
+}
+
+void PrefSavePrefs(UniMatrixPrefs *prefs) {
+  PrefSetAppPreferences(APP_CREATOR, PREFS_ID, PREFS_VERSION, prefs, sizeof(UniMatrixPrefs), false);
+}
 
 
 /*****************************************************************************
@@ -15,49 +54,37 @@ extern UInt16 gMenuCurrentForm;
 *****************************************************************************/
 
 static void SettingsFormInit(FormType *frm) {
-  ControlType *ctl, *ctl_ShowType, *ctl_ShowTime;
-  UInt8 value_UInt8;
-  UInt16 size_UInt8=sizeof(UInt8);
+  ControlType *ctl;
   
   ctl = GetObjectPtr(CHECKBOX_sets_saturday);
-  ctl_ShowType = GetObjectPtr(CHECKBOX_sets_showtype);
-  ctl_ShowTime = GetObjectPtr(CHECKBOX_sets_showtime);
+  CtlSetValue(ctl, (gPrefs.numDays != GADGET_DEFAULT_NUMDAYS));
 
-  if (PrefGetAppPreferences(APP_CREATOR, PREFS_NUMDAYS, &value_UInt8, &size_UInt8, false) == noPreferenceFound)
-    value_UInt8=GADGET_DEFAULT_NUMDAYS;
-  CtlSetValue(ctl, (value_UInt8 != GADGET_DEFAULT_NUMDAYS));
+  ctl = GetObjectPtr(CHECKBOX_sets_showtype);
+  CtlSetValue(ctl, gPrefs.showTypes);
 
-  if (PrefGetAppPreferences(APP_CREATOR, PREFS_SHOWTYPES, &value_UInt8, &size_UInt8, false) == noPreferenceFound)
-    value_UInt8=0;
-  CtlSetValue(ctl_ShowType, value_UInt8);
+  ctl = GetObjectPtr(CHECKBOX_sets_showshort);
+  CtlSetValue(ctl, gPrefs.showShortNames);
 
-  if (PrefGetAppPreferences(APP_CREATOR, PREFS_SHOWTIMELINE, &value_UInt8, &size_UInt8, false) == noPreferenceFound)
-    value_UInt8=0;
-  CtlSetValue(ctl_ShowTime, value_UInt8);
+  ctl = GetObjectPtr(CHECKBOX_sets_showtime);
+  CtlSetValue(ctl, gPrefs.showTimeline);
 
 }
 
 static Boolean SettingsSave(FormType *frm) {
-  ControlType *ctl, *ctl_ShowType, *ctl_ShowTime;
-  UInt8 value_UInt8;
+  ControlType *ctl;
   
-  ctl_ShowType = GetObjectPtr(CHECKBOX_sets_showtype);
-  ctl_ShowTime = GetObjectPtr(CHECKBOX_sets_showtime);
   ctl=GetObjectPtr(CHECKBOX_sets_saturday);
+  gPrefs.numDays = (CtlGetValue(ctl)) ? 6 : 5;
+  GadgetSetNumDays(gPrefs.numDays);
 
-  value_UInt8 = (CtlGetValue(ctl)) ? 6 : 5;
-  PrefSetAppPreferences(APP_CREATOR, PREFS_NUMDAYS, PREFS_VERSION, &value_UInt8, sizeof(value_UInt8), false);
-  GadgetSetNumDays(value_UInt8);
+  ctl=GetObjectPtr(CHECKBOX_sets_showtype);
+  gPrefs.showTypes = (CtlGetValue(ctl)) ? 1 : 0;
 
-  ctl_ShowType=GetObjectPtr(CHECKBOX_sets_showtype);
-  value_UInt8 = (CtlGetValue(ctl_ShowType)) ? 1 : 0;
-  PrefSetAppPreferences(APP_CREATOR, PREFS_SHOWTYPES, PREFS_VERSION, &value_UInt8, sizeof(value_UInt8), false);
-  GadgetSetFeature(GADGET_FEAT_SHOWTYPES, value_UInt8);
+  ctl=GetObjectPtr(CHECKBOX_sets_showtime);
+  gPrefs.showTimeline = (CtlGetValue(ctl)) ? 1 : 0;
 
-  ctl_ShowType=GetObjectPtr(CHECKBOX_sets_showtime);
-  value_UInt8 = (CtlGetValue(ctl_ShowTime)) ? 1 : 0;
-  PrefSetAppPreferences(APP_CREATOR, PREFS_SHOWTIMELINE, PREFS_VERSION, &value_UInt8, sizeof(value_UInt8), false);
-  GadgetSetFeature(GADGET_FEAT_SHOWTIMELINE, value_UInt8);
+  ctl=GetObjectPtr(CHECKBOX_sets_showshort);
+  gPrefs.showShortNames = (CtlGetValue(ctl)) ? 1 : 0;
 
   return true;
 }
@@ -86,6 +113,18 @@ Boolean SettingsFormHandleEvent(EventPtr event) {
         handled=true;
         break;
 
+      case CHECKBOX_sets_showshort:
+        if (CtlGetValue(event->data.ctlSelect.pControl)) {
+          CtlSetValue(GetObjectPtr(CHECKBOX_sets_showtype), 0);
+        }
+        break;
+
+      case CHECKBOX_sets_showtype:
+        if (CtlGetValue(event->data.ctlSelect.pControl)) {
+          CtlSetValue(GetObjectPtr(CHECKBOX_sets_showshort), 0);
+        }
+        break;
+        
       default:
         break;
     }   

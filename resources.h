@@ -1,4 +1,4 @@
-/* $Id: resources.h,v 1.1 2003/02/07 01:07:52 tim Exp $
+/* $Id: resources.h,v 1.2 2003/03/13 14:56:47 tim Exp $
  *
  * ID's for use in ressource definitions
  *
@@ -86,6 +86,7 @@
 #define BUTTON_sets_cancel 1123
 #define CHECKBOX_sets_showtype 1124
 #define CHECKBOX_sets_showtime 1125
+#define CHECKBOX_sets_showshort 1126
 
 #define FORM_coursetypes 1130
 #define LIST_coursetypes 1131
@@ -165,7 +166,6 @@
 #define ALERT_nomem 4004
 #define ALERT_noroom 4005
 #define ALERT_dodel 4006
-#define ALERT_endBeforeBegin 4007
 #define ALERT_invend 4008
 #define ALERT_dodelc 4009
 #define ALERT_clist_noitem 4010

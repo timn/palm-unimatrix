@@ -1,10 +1,11 @@
-/* $Id: database.c,v 1.1 2003/02/06 21:27:23 tim Exp $
+/* $Id: database.c,v 1.2 2003/03/13 14:56:47 tim Exp $
  *
  * Database handling, another central piece in UniMatrix
  */
 
 #include "database.h"
 #include "ctype.h"
+#include "cache.h"
 
 DmOpenRef gDatabase[DATABASE_NUM]={NULL, NULL};
 UInt16    gCategory=0;
@@ -74,8 +75,15 @@ Err OpenDatabase(void) {
     version = appInfo->version;
     MemPtrUnlock(appInfo);
     if (version < DATABASE_VERSION) {
-      if (FrmAlert(ALERT_oldDB) == 0)  err = DatabaseConvert(version);
-      else  err = dmErrCorruptDatabase;
+      switch (version) {
+        case 1:
+          if (FrmAlert(ALERT_oldDB) == 0)  err = DatabaseConvert(version);
+          else   err = dmErrCorruptDatabase;
+          break;
+        case 2:
+          DatabaseSort();
+        break;
+      }
     }
     // We will keep that for 0.7 until everybody converted, remove befor 1.0
   }
@@ -96,18 +104,7 @@ void CloseDatabase(void) {
   gDatabase[DB_MAIN] = NULL;
   if (gDatabase[DB_DATA])  DmCloseDatabase(gDatabase[DB_DATA]);
   gDatabase[DB_DATA] = NULL;
-	// CleanupDatabase();
 }
-
-/*****************************************************************************
-* Function:  CleanupDatabase
-*
-* Description:  Cleans up module global vars of database like gNumInfoRecord
-*****************************************************************************/
-void CleanupDatabase(void) {
-  // Yet nothin' to do
-}
-
 
 /*****************************************************************************
 * Function:  DatabaseGetRef
@@ -129,18 +126,6 @@ DmOpenRef DatabaseGetRefN(UInt8 num) {
   // not be a problem with nicely used constants
   // if (num >= DATABASE_NUM) return gDatabase[DB_MAIN];
   return gDatabase[num];
-}
-
-
-
-/*****************************************************************************
-* Function:  DatabaseIsOpen
-*
-* Description: Returns true if database is open
-*****************************************************************************/
-Boolean DatabaseIsOpen(void) {
-  if (gDatabase[DB_MAIN])  return true;
-  else            return false;
 }
 
 
@@ -339,29 +324,7 @@ UInt16 DatabaseGetCat(void) {
 *****************************************************************************/
 void DatabaseSetCat(UInt16 newcat) {
   gCategory=newcat;
-}
-
-
-
-/*****************************************************************************
-* Function:  CountCourses
-*
-* Description: Counts the courses saved in the given current category.
-* Assumptions: This functions assumes, that the Records are SORTED with the
-*              courses first and then the times.
-*****************************************************************************/
-UInt16 CountCourses(void) {
-  MemHandle m;
-  UInt16 index=0,count=0;
-
-  while ((m = DmQueryNextInCategory(gDatabase[DB_MAIN], &index, gCategory))) {
-    Char *s = MemHandleLock(m);
-    if (s[0] == TYPE_COURSE) count += 1;
-    MemHandleUnlock(m);
-    index += 1;
-  }
-
-  return count;
+  CacheReset();
 }
 
 
@@ -430,40 +393,6 @@ void PackCourse(CourseDBRecord *course, MemHandle courseDBEntry) {
 }
 
 /*****************************************************************************
-* Function:  DatabaseGetNewCID
-*
-* Description: Get's a new ID for a course
-* Assumptions: This functions assumes, that the Records are SORTED with the
-*              courses first and then the times.
-*****************************************************************************/
-UInt16 DatabaseGetNewCID(DmOpenRef cats, UInt16 category) {
-  Err err=errNone;
-  MemHandle m;
-  UInt16 index=0,lastid=0;
-
-  err = DmSeekRecordInCategory(cats, &index, 0, dmSeekForward, category);
-  if (err != errNone) return 0;
-
-  while ((m = DmQueryNextInCategory(cats, &index, category))) {
-    Char *s = MemHandleLock(m);
-    if (s[0] == TYPE_COURSE) {
-      CourseDBRecord c;
-      UnpackCourse(&c, s);
-
-      if (c.id > lastid) lastid = c.id;
-
-    }
-    index += 1;
-    MemHandleUnlock(m);
-  }
-
-  // lastid contains the last existing ID here, so return lastid+1 to get the first
-  // non-existing one
-  return lastid+1;
-}
-
-
-/*****************************************************************************
 * Function:  DatabaseSort
 *
 * Description: Sorts the database, does a InsertionSort, since we excpect
@@ -511,7 +440,10 @@ Int16 DatabaseCompare(void *rec1, void *rec2, Int16 other,
       CourseDBRecord c1, c2;
       UnpackCourse(&c1, rec1);
       UnpackCourse(&c2, rec2);
-      return StrCompare(c1.name, c2.name);
+      if (c1.id < c2.id) return -1;
+      else if (c1.id > c2.id) return 1;
+      else return StrCompare(c1.name, c2.name); // although that should not happen
+                                                // we want to fail nicely
     } else if (s1[0] == TYPE_EXAM) {
       ExamDBRecord *e1=(ExamDBRecord *)rec1, *e2=(ExamDBRecord *)rec2;
       UInt32 d1, d2;
@@ -534,6 +466,13 @@ Int16 DatabaseCompare(void *rec1, void *rec2, Int16 other,
         else if (begin1 > begin2)  return 1;
         return 0;
       }
+    } else if (s1[0] == TYPE_CTYP) {      
+      CourseTypeDBRecord *ct1, *ct2;
+      ct1 = (CourseTypeDBRecord *)rec1;
+      ct2 = (CourseTypeDBRecord *)rec2;
+      if (ct1->id < ct2->id) return -1;
+      else if (ct1->id > ct2->id) return 1;
+      else return StrCompare(ct1->name, ct2->name);
     } else {
       // We don't know how to sort unknown types of data...
       return 0;

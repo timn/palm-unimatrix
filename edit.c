@@ -1,4 +1,4 @@
-/* $Id: edit.c,v 1.1 2003/02/06 21:27:23 tim Exp $
+/* $Id: edit.c,v 1.2 2003/03/13 14:56:47 tim Exp $
  *
  * Code for editing times, events, courses
  */
@@ -165,7 +165,7 @@ static Boolean EditCourseSave(FormType *frm) {
     cr.ctype=gEditCourseType;
 
     if (gEditTimeIsAdd) {
-      cr.id=DatabaseGetNewCID(DatabaseGetRefN(DB_MAIN), DatabaseGetCat());
+      cr.id = CourseNewID(DatabaseGetRefN(DB_MAIN), DatabaseGetCat());
     } else {
       cr.id=gEditCourseID;
     }
@@ -465,13 +465,7 @@ static Boolean EditTimeSave(FormType *frm) {
   b = FrmGetObjectPtr(frm, FrmGetObjectIndex(frm, FIELD_ed_b));
   room = FrmGetObjectPtr(frm, FrmGetObjectIndex(frm, FIELD_ed_room));
 
-  if ( (gEditTimeBegin.hours > gEditTimeEnd.hours) ||
-       ((gEditTimeBegin.hours == gEditTimeEnd.hours) &&
-        (gEditTimeBegin.minutes >= gEditTimeEnd.minutes))
-      ) {
-    FrmAlert(ALERT_endBeforeBegin);
-    return false;
-  } else if (EditTimeCheckCollision(gEditTimeBegin, gEditTimeEnd, LstGetSelection(day), ((gEditTimeIsAdd) ? 0 : GadgetGetHintTimeIndex()), !gEditTimeIsAdd)) {
+  if (EditTimeCheckCollision(gEditTimeBegin, gEditTimeEnd, LstGetSelection(day), ((gEditTimeIsAdd) ? 0 : GadgetGetHintTimeIndex()), !gEditTimeIsAdd)) {
     FrmAlert(ALERT_timeCollision);
     return false;
   } else {

@@ -29,7 +29,7 @@ anjuta.compatibility.level=1
 project.name=UniMatrix
 project.type=GENERIC
 project.target.type=EXECUTABLE
-project.version=0.7
+project.version=0.9
 project.author=Tim Niemueller
 project.source.target=unknown
 project.has.gettext=0
@@ -73,7 +73,9 @@ module.include.files=\
 	beam.h\
 	prefs.h\
 	ctype.h\
-	tnglue.h
+	tnglue.h\
+	resources.h\
+	cache.h
 
 module.source.name=.
 module.source.type=
@@ -89,7 +91,8 @@ module.source.files=\
 	beam.c\
 	prefs.c\
 	ctype.c\
-	tnglue.c
+	tnglue.c\
+	cache.c
 
 module.pixmap.name=.
 module.pixmap.type=
@@ -119,7 +122,7 @@ module.pixmap.files=\
 
 module.data.name=.
 module.data.type=
-module.data.expanded=0
+module.data.expanded=1
 module.data.files=\
 	resources/gadget.rcp.in\
 	resources/UniMatrix.rcp.in\

@@ -1,4 +1,4 @@
-/* $Id: beam.c,v 1.1 2003/02/06 21:27:23 tim Exp $
+/* $Id: beam.c,v 1.2 2003/03/13 14:56:47 tim Exp $
  *
  * Beam functions
  * Created: 2002-05-02
@@ -8,11 +8,11 @@
 #include "beam.h"
 #include "database.h"
 #include "ctype.h"
+#include "clist.h"
+#include "prefs.h"
 
 
-#ifdef BEAM_DEBUG
-#warning Beam DEBUG is ON
-#endif
+extern UniMatrixPrefs gPrefs;
 
 /***********************************************************************
  * Send Functions
@@ -214,7 +214,7 @@ static Err BeamReadRecordIntoDB(DmOpenRef cats, DmOpenRef dogs, ExgSocketPtr soc
     // It's a course, give it a new course ID
     PackedCourseDBRecord *pc=(PackedCourseDBRecord *)t;
 
-    pc->id = DatabaseGetNewCID(cats, category);
+    pc->id = CourseNewID(cats, category);
     pc->ctype = *courseType;
     *courseID=pc->id;
 
@@ -433,7 +433,8 @@ Err BeamReceive(DmOpenRef cats, DmOpenRef dogs, ExgSocketPtr socketPtr) {
                 category = newCatID;
                 CategorySetName(cats, category, name);
               }
-              PrefSetAppPreferences(APP_CREATOR, PREFS_CURCAT, PREFS_VERSION, &category, sizeof(category), false);
+              gPrefs.curCat = category;
+              DatabaseSetCat(category);
             }
           }
         }

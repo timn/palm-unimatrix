@@ -1,4 +1,4 @@
-/* $Id: ctype.c,v 1.1 2003/02/06 21:27:23 tim Exp $
+/* $Id: ctype.c,v 1.2 2003/03/13 14:56:47 tim Exp $
  *
  * Course Type related stuff
  * Created: 2002-08-31
@@ -8,11 +8,13 @@
 #include "ctype.h"
 #include "database.h"
 #include "clist.h"
+#include "cache.h"
 
 
 UInt16 gCourseTypeCurrentForm=FORM_main, gNumCourseTypes;
 UInt8 *gCourseTypeID;
 Char **gCourseTypeList;
+CacheID gCourseTypeCacheID=CACHE_UNINIT, gCourseTypeC2TCacheID=CACHE_UNINIT;
 
 extern UInt8 gEditCourseType;
 
@@ -115,6 +117,55 @@ UInt8 CourseTypeListPopup(UInt16 listID, UInt16 triggerID, UInt8 selected, Char 
   return selectedID;
 }
 
+static void CourseTypeShortCacheLoad(CacheID id, UInt16 *ids, Char **values, UInt16 numItems) {
+  MemHandle m; 
+  UInt16 index=0, i=0;
+
+  while ((i < numItems) && ((m = DmQueryNextInCategory(DatabaseGetRefN(DB_DATA), &index, 0)) != NULL)) {
+    CourseTypeDBRecord *ct = (CourseTypeDBRecord *)MemHandleLock(m);
+    if (ct->type == TYPE_CTYP) {
+      Char *tempString;
+
+      tempString=(Char *)MemPtrNew(CTYPE_SHORT_MAXLENGTH+1);
+      MemSet(tempString, MemPtrSize(tempString), 0);
+      StrNCopy(tempString, ct->shortName, CTYPE_SHORT_MAXLENGTH);
+
+      ids[i] = ct->id;
+      values[i] = tempString;
+      i += 1;
+
+    }
+    MemHandleUnlock(m);
+    index += 1;
+  }
+}
+
+static void CourseTypeShortCacheFree(CacheID id, UInt16 *ids, Char **values, UInt16 numItems) {
+  UInt16 i;
+  for (i=0; i < numItems; ++i) {
+    MemPtrFree(values[i]);
+  }
+}
+
+static UInt16 CourseTypeShortCacheNumI(CacheID id) {
+  return CourseTypesNum();
+}
+
+
+void CourseTypeGetShort(MemHandle *charHandle, UInt8 id) {
+
+  if (! CacheValid(gCourseTypeCacheID)) {
+    // Cache has not yet been initialized
+    gCourseTypeCacheID = CacheRegister(CourseTypeShortCacheNumI, CourseTypeShortCacheLoad, CourseTypeShortCacheFree);
+  }
+
+  CacheGet(gCourseTypeCacheID, id, charHandle, 3);
+
+}
+
+
+
+
 void CourseTypeGetName(Char *name, UInt8 id) {
   Boolean found=false;
   UInt16 index = 0;
@@ -140,36 +191,77 @@ void CourseTypeGetName(Char *name, UInt8 id) {
 }
 
 
-void CourseTypeGetShort(Char *name, UInt8 id) {
-  Boolean found=false;
-  UInt16 index = 0;
-  MemHandle m;
 
-  while(! found && ((m = DmQueryNextInCategory(DatabaseGetRefN(DB_DATA), &index, 0)) != NULL)) {
-    CourseTypeDBRecord *ct = (CourseTypeDBRecord *)MemHandleLock(m);
-    if ((ct->type == TYPE_CTYP) && (ct->id == id) ) {
-      StrPrintF(name, "%s", ct->shortName);
-      found=true;
+
+/***************************************************************************
+ * CourseID -> Short Course name cacheID
+ */
+
+static void CourseTypeC2TCacheLoad(CacheID id, UInt16 *ids, Char **values, UInt16 numItems) {
+  MemHandle m; 
+  UInt16 index=0, i=0;
+
+  if (! CacheValid(gCourseTypeCacheID)) {
+    // Cache has not yet been initialized
+    gCourseTypeCacheID = CacheRegister(CourseTypeShortCacheNumI, CourseTypeShortCacheLoad, CourseTypeShortCacheFree);
+  }
+
+  
+  while ((i < numItems) && ((m = DmQueryNextInCategory(DatabaseGetRefN(DB_MAIN), &index, DatabaseGetCat())) != NULL)) {
+    Char *s=(Char *)MemHandleLock(m);
+    if (s[0] == TYPE_COURSE) {
+      CourseDBRecord c;
+      Char *tempString;
+      MemHandle tmpHandle=MemHandleNew(1);
+
+      UnpackCourse(&c, s);
+      
+      CacheGet(gCourseTypeCacheID, c.ctype, &tmpHandle, CTYPE_SHORT_MAXLENGTH);
+
+      tempString=(Char *)MemPtrNew(CTYPE_SHORT_MAXLENGTH+1);
+      MemSet(tempString, MemPtrSize(tempString), 0);
+      StrNCopy(tempString, (Char *)MemHandleLock(tmpHandle), CTYPE_SHORT_MAXLENGTH);
+      MemHandleUnlock(tmpHandle);
+      MemHandleFree(tmpHandle);
+
+      ids[i] = c.id;
+      values[i] = tempString;
+      i += 1;
     }
     MemHandleUnlock(m);
     index += 1;
   }
+}
 
-  if (!found) {
-    Char *tmp;
-    m = DmGetResource(strRsc, STRING_ctype_short_unknown);
-    tmp = (Char *)MemHandleLock(m);
-    StrNCopy(name, tmp, CTYPE_SHORT_MAXLENGTH);
-    MemHandleUnlock(m);
+static void CourseTypeC2TCacheFree(CacheID id, UInt16 *ids, Char **values, UInt16 numItems) {
+  UInt16 i;
+  for (i=0; i < numItems; ++i) {
+    MemPtrFree(values[i]);
+  }
+}
+
+static UInt16 CourseTypeC2TCacheNumI(CacheID id) {
+  return CountCourses();
+}
+
+void CourseTypeGetShortByCourseID(MemHandle *charHandle, UInt16 courseID) {
+
+  if (! CacheValid(gCourseTypeC2TCacheID)) {
+    // Cache has not yet been initialized
+    gCourseTypeC2TCacheID = CacheRegister(CourseTypeC2TCacheNumI, CourseTypeC2TCacheLoad, CourseTypeC2TCacheFree);
   }
 
+  CacheGet(gCourseTypeC2TCacheID, courseID, charHandle, CTYPE_SHORT_MAXLENGTH);
 }
 
-
-void CourseTypeGetShortByCourseID(Char *name, UInt16 courseID) {
+/*
+void CourseTypeGetShortByCourseID(MemHandle *charHandle, UInt16 courseID) {
   UInt8 courseType = CourseGetType(courseID);
-  CourseTypeGetShort(name, courseType);
+  CourseTypeGetShort(charHandle, courseType);
 }
+*/
+
+
 
 Boolean CourseTypeGetDBIndex(UInt8 courseTypeID, UInt16 *courseTypeDBindex) {
   Boolean found=false;

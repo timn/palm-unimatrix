@@ -1,4 +1,4 @@
-/* $Id: gadget.c,v 1.2 2003/02/07 01:07:52 tim Exp $
+/* $Id: gadget.c,v 1.3 2003/03/13 14:56:47 tim Exp $
  *
  * THE heart of UniMatrix. This is the center piece of code in UniMatrix
  */
@@ -8,6 +8,10 @@
 #include "tnglue.h"
 #include "ctype.h"
 #include "clist.h"
+#include "prefs.h"
+#include "cache.h"
+
+extern UniMatrixPrefs gPrefs;
 
 FormPtr gForm=NULL;
 UInt16 gGadgetID=0, gHintGadgetID=0;
@@ -15,7 +19,7 @@ UInt16 gCourseIndex=0, gTimeIndex=0, gTimeDrawnIndex=0;
 Boolean gHintDrawn=false, gGadgetCompleteRedraw=true;
 UInt8 gGadgetCurMinHour=GADGET_MIN_HOUR, gGadgetCurMaxHour=GADGET_MAX_HOUR,
       gGadgetDaysNum=GADGET_DEFAULT_NUMDAYS, gGadgetDaysWidth=GADGET_TOTAL_DRAWWIDTH/GADGET_DEFAULT_NUMDAYS,
-      gGadgetCurScreen=GADGET_SCREEN_DAY, gGadgetFeature[GADGET_FEAT_NUM];
+      gGadgetCurScreen=GADGET_SCREEN_DAY;
 TimeType gGadgetLastTimeline={0x00, 0x00};
 
 
@@ -311,10 +315,10 @@ void GadgetDrawTimeline(GadgetTimelineDrawType drawType) {
 *              select next item, behaves more like the user expects
 *****************************************************************************/
 void GadgetRedraw() {
-  if (gGadgetFeature[GADGET_FEAT_SHOWTIMELINE])  GadgetDrawTimeline(gtErase);
+  if (gPrefs.showTimeline)  GadgetDrawTimeline(gtErase);
   GadgetDraw(gGadgetCompleteRedraw);
   GadgetDrawEvents();
-  if (gGadgetFeature[GADGET_FEAT_SHOWTIMELINE])  GadgetDrawTimeline(gtDraw);
+  if (gPrefs.showTimeline)  GadgetDrawTimeline(gtDraw);
   if (gGadgetCompleteRedraw) {
     gHintDrawn=false;
     GadgetDrawHintNext();
@@ -387,25 +391,40 @@ void GadgetDrawTime(TimeType begin, TimeType end, UInt8 day, RGBColorType *color
   TNSetForeColorRGB(color, &prevColor);
   WinDrawRectangle(&rect, 0);
 
-  if (gGadgetFeature[GADGET_FEAT_SHOWTYPES] && (height >= 10)) {
-    Char shortName[CTYPE_SHORT_MAXLENGTH+1];
+  if ( (gPrefs.showTypes || gPrefs.showShortNames) && (height >= FntLineHeight())) {
+
     RGBColorType oldBack, oldText;
+
     // Get inverted color
     inverted.r = 255 - color->r;
     inverted.g = 255 - color->g;
     inverted.b = 255 - color->b;
 
-    RctSetRectangle(&rect, rect.topLeft.x+2, rect.topLeft.y+1, rect.extent.x, rect.extent.y);
-
-    CourseTypeGetShortByCourseID(shortName, courseID);
+    RctSetRectangle(&rect, rect.topLeft.x+2, rect.topLeft.y, rect.extent.x-4, rect.extent.y);
 
     TNSetTextColorRGB(&inverted, &oldText);
     TNSetBackColorRGB(color, &oldBack);
-    TNDrawCharsToFitWidth(shortName, &rect);
+
+    if (gPrefs.showTypes) {
+      MemHandle shortName=MemHandleNew(1);;
+      CourseTypeGetShortByCourseID(&shortName, courseID);
+      TNDrawCharsToFitWidth((Char *)MemHandleLock(shortName), &rect);
+      MemHandleUnlock(shortName);
+      MemHandleFree(shortName);
+    } else if (gPrefs.showShortNames) {
+      MemHandle courseName=MemHandleNew(1);
+      CourseGetName(courseID, &courseName, false);
+
+      TNDrawCharsToFitWidth((Char *)MemHandleLock(courseName), &rect);
+
+      MemHandleUnlock(courseName);
+      MemHandleFree(courseName);
+    }
+
     TNSetBackColorRGB(&oldBack, NULL);
     TNSetTextColorRGB(&oldText, NULL);
   }
-  
+
   TNSetForeColorRGB(&prevColor, NULL);
 }
 
@@ -495,8 +514,8 @@ void GadgetDrawHintErase(void) {
 *              to draw with GadgetSetNeedsRedraw(false);
 *****************************************************************************/
 void GadgetDrawHintCurrent(void) {
-  Char *tmp, *bot, begin[timeStringLength], end[timeStringLength], *day, type[CTYPE_SHORT_MAXLENGTH+1];
-  MemHandle mc, mt, mh;
+  Char *tmp, *bot, begin[timeStringLength], end[timeStringLength], *day;
+  MemHandle mc, mt, mh, type;
   CourseDBRecord c;
   TimeDBRecord *tc;
   RectangleType rect, bounds;
@@ -525,9 +544,9 @@ void GadgetDrawHintCurrent(void) {
             color.r=tc->color[0];
             color.g=tc->color[1];
             color.b=tc->color[2];
-            if (gGadgetFeature[GADGET_FEAT_SHOWTIMELINE])  GadgetDrawTimeline(gtErase);
+            if (gPrefs.showTimeline)  GadgetDrawTimeline(gtErase);
             GadgetDrawTime(tc->begin, tc->end, tc->day, &color, tc->course);
-            if (gGadgetFeature[GADGET_FEAT_SHOWTIMELINE])  GadgetDrawTimeline(gtDraw);
+            if (gPrefs.showTimeline)  GadgetDrawTimeline(gtDraw);
           }
           MemHandleUnlock(mt);
         }
@@ -561,8 +580,11 @@ void GadgetDrawHintCurrent(void) {
         // Lecture Name (Teacher) [Typ]
         tmp=(Char *)MemPtrNew(StrLen(c.name)+StrLen(c.teacherName)+4+3+CTYPE_SHORT_MAXLENGTH);
         MemSet(tmp, MemPtrSize(tmp), 0);
-        CourseTypeGetShort(type, c.ctype);
-        StrPrintF(tmp, "%s (%s) [%s]", c.name, c.teacherName, type);
+        type = MemHandleNew(1);
+        CourseTypeGetShort(&type, c.ctype);
+        StrPrintF(tmp, "%s (%s) [%s]", c.name, c.teacherName, (Char *)MemHandleLock(type));
+        MemHandleUnlock(type);
+        MemHandleFree(type);
 
 
         // Fr 08:00 - 09:30 (Room)          <-- Example
@@ -857,57 +879,39 @@ void GadgetTap(FormGadgetType *pGadget, EventType *event) {
        1) we got a strike command
        2) a field was tapped
     */
-    RectangleType rect;
+    RectangleType topRight, bottomRight;
     Boolean found=false, foundTime=false;
     MemHandle m;
     TimeDBRecord *t;
-    UInt16 index=0, wantCourse=0;
+    UInt16 index=0, wantCourse=0, tmp3_4th=0;
     UInt8 top, height;
 
     /* Check for stroke commands */
-    /* Check start for bottom left */
-    RctSetRectangle(&rect,
-                    bounds.topLeft.x,
-                    bounds.topLeft.y+(bounds.extent.y/2),
-                    bounds.extent.x/2,
-                    bounds.extent.y/2
-                   );
-    if (RctPtInRectangle(startPointX, startPointY, &rect)) {
-      // Now check if stroke ended in top-right corner
-      RctSetRectangle(&rect,
-                      bounds.topLeft.x+(bounds.extent.x/2),
-                      bounds.topLeft.y,
-                      bounds.extent.x/2,
-                      bounds.extent.y/2
-                     );
-      if (RctPtInRectangle(newPointX, newPointY, &rect)) {
-        // Stroke Command: NEXT
-        // FrmCustomAlert(ALERT_debug, "NEXT", "", "");
-        GadgetDrawStep(winUp);
-        return;
-      }
-    }
 
-    /* Check start for top left */
-    RctSetRectangle(&rect,
-                    bounds.topLeft.x,
+    tmp3_4th = (3 * bounds.extent.x) / 4;
+    RctSetRectangle(&topRight,
+                    bounds.topLeft.x+ tmp3_4th,
                     bounds.topLeft.y,
-                    bounds.extent.x/2,
+                    bounds.extent.x - tmp3_4th,
                     bounds.extent.y/2
                    );
-    if (RctPtInRectangle(startPointX, startPointY, &rect)) {
-      // Now check if stroke ended in bottom-right corner
-      RctSetRectangle(&rect,
-                      bounds.topLeft.x+(bounds.extent.x/2),
-                      bounds.topLeft.y+(bounds.extent.y/2),
-                      bounds.extent.x/2,
-                      bounds.extent.y/2
-                     );
-      if (RctPtInRectangle(newPointX, newPointY, &rect)) {
-        // Stroke Command: BACK
-        GadgetDrawStep(winDown);
-        return;
-      }
+    RctSetRectangle(&bottomRight,
+                    bounds.topLeft.x + tmp3_4th,
+                    bounds.topLeft.y + (bounds.extent.y/2),
+                    bounds.extent.x - tmp3_4th,
+                    bounds.extent.y / 2
+                   );
+
+    if (RctPtInRectangle(startPointX, startPointY, &bottomRight) &&
+        RctPtInRectangle(newPointX, newPointY, &topRight) ) {
+      // Stroke Command: BACK
+      GadgetDrawStep(winDown);
+      return;
+    } else if (RctPtInRectangle(startPointX, startPointY, &topRight) &&
+               RctPtInRectangle(newPointX, newPointY, &bottomRight) ) {
+      // Stroke Command: NEXT
+      GadgetDrawStep(winUp);
+      return;
     }
 
     // Search for the clicked time
@@ -916,6 +920,7 @@ void GadgetTap(FormGadgetType *pGadget, EventType *event) {
       if (s[0] == TYPE_TIME) {
         t=(TimeDBRecord *)s;
         if ( GadgetEventIsVisible(t) ) {
+          RectangleType rect;
 
           height = GadgetCalcTimeHeight(t->begin, t->end);
           top = GadgetCalcTimeTop(t->begin);
@@ -967,19 +972,17 @@ void GadgetTap(FormGadgetType *pGadget, EventType *event) {
 * Description: Must be called before draw to set the form the gadget is in
 *              and the IDs of the Gadget and the hint gadget
 *****************************************************************************/
-void GadgetSet(FormPtr frm, UInt16 gadgetID, UInt16 hintGadgetID, UInt8 numDays) {
+void GadgetSet(FormPtr frm, UInt16 gadgetID, UInt16 hintGadgetID) {
   gForm=frm;
   gGadgetID=gadgetID;
   gHintGadgetID=hintGadgetID;
-  gGadgetDaysNum=numDays;
-  gGadgetDaysWidth=GADGET_TOTAL_DRAWWIDTH / numDays;
+  gGadgetDaysNum=gPrefs.numDays;
+  gGadgetDaysWidth=GADGET_TOTAL_DRAWWIDTH / gGadgetDaysNum;
   gCourseIndex=0;
   gTimeIndex=0;
   gTimeDrawnIndex=0;
   gHintDrawn=false;
   gGadgetCompleteRedraw=true;
-  gGadgetFeature[GADGET_FEAT_SHOWTYPES]=0;
-  gGadgetFeature[GADGET_FEAT_SHOWTIMELINE]=0;
 }
 
 
@@ -1046,26 +1049,13 @@ TimeFormatType GadgetGetTimeFormat(void) {
 
 
 /*****************************************************************************
-* Function: GadgetSetFeature
-*
-* Description: Sets the features of the drawing code. Known features are:
-*              GADGET_FEAT_NUMDAYS: Number of days to draw
-*              GADGET_FEAT_SHOWTYPES: Show short type in each event box
-*              GADGET_FEAT_SHOWTIMELINES: Show line for current time
-*****************************************************************************/
-void GadgetSetFeature(UInt8 feature, UInt8 value) {
-  if (feature < GADGET_FEAT_NUM)
-    gGadgetFeature[feature]=value;
-}
-
-
-/*****************************************************************************
 * Function: GadgetSetNeedsCompleteRedraw
 *
 * Description: On next GadgetRedraw we erase first
 *****************************************************************************/
 void GadgetSetNeedsCompleteRedraw(Boolean need) {
   gGadgetCompleteRedraw=need;
+  CacheReset();
 }
 
 /*****************************************************************************

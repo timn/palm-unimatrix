@@ -12,7 +12,12 @@ R = ./
 include *.mk
 
 CC = m68k-palmos-gcc
+ifdef DEBUG
+CFLAGS = -g
+LDFLAGS = -g
+else
 CFLAGS = -O2 -Wall -Os
+endif
 MULTIGEN = m68k-palmos-multigen
 
 LANGUAGE ?= german
