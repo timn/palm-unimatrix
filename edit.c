@@ -1,4 +1,4 @@
-/* $Id: edit.c,v 1.5 2003/10/15 21:42:49 tim Exp $
+/* $Id: edit.c,v 1.6 2003/11/20 22:55:50 tim Exp $
  *
  * Code for editing times, events, courses
  */
@@ -292,11 +292,11 @@ void CatPostEdit(UInt16 numRecords, UInt32 *recordList) {
   UInt16 index=0;
   Char categoryName[dmCategoryLength];
 
-  CategoryGetName(DatabaseGetRef(), 0, categoryName);
+  CategoryGetName(DatabaseGetRef(), DELETE_CATEGORY, categoryName);
   if (StrLen(categoryName) == 0) {
     MemHandle m;
     UInt16 index=0;
-    while( (m = DmQueryNextInCategory(DatabaseGetRef(), &index, DatabaseGetCat())) != NULL) {
+    while( (m = DmQueryNextInCategory(DatabaseGetRef(), &index, DELETE_CATEGORY)) != NULL) {
       DmRemoveRecord(DatabaseGetRef(), index);
       index = 0;
     }
