@@ -1,4 +1,4 @@
-/* $Id: translation.nl,v 1.1 2003/02/06 21:27:23 tim Exp $ */
+/* $Id: translation.nl,v 1.1.1.1 2003/02/06 21:27:23 tim Exp $ */
 
 translation "dutch"
 begin

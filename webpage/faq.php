@@ -1,6 +1,6 @@
 <?php
 
-/* $Id: faq.php,v 1.1 2003/02/06 21:27:23 tim Exp $ */
+/* $Id: faq.php,v 1.1.1.1 2003/02/06 21:27:23 tim Exp $ */
 
 $title="niemueller.de - palm software - UniMatrix - FAQ";
 $meta_desc="A software to manage your daily university business.";

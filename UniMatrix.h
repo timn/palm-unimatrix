@@ -1,4 +1,4 @@
-/* $Id: UniMatrix.h,v 1.1 2003/02/06 21:27:23 tim Exp $
+/* $Id: UniMatrix.h,v 1.1.1.1 2003/02/06 21:27:23 tim Exp $
  *
  * ID's for use in ressource definitions
  *

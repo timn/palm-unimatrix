@@ -1,4 +1,4 @@
-/* $Id: delete.c,v 1.1 2003/02/06 21:27:23 tim Exp $
+/* $Id: delete.c,v 1.1.1.1 2003/02/06 21:27:23 tim Exp $
  *
  * All you need to delete courses and events
  */

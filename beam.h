@@ -1,4 +1,4 @@
-/* $Id: beam.h,v 1.1 2003/02/06 21:27:23 tim Exp $
+/* $Id: beam.h,v 1.1.1.1 2003/02/06 21:27:23 tim Exp $
  *
  * Beam functions
  * Created: 2002-05-02

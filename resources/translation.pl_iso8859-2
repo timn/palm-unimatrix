@@ -1,4 +1,4 @@
-/* $Id: translation.pl_iso8859-2,v 1.1 2003/02/06 21:27:23 tim Exp $ */
+/* $Id: translation.pl_iso8859-2,v 1.1.1.1 2003/02/06 21:27:23 tim Exp $ */
 
 translation "polish_iso8859-2"
 begin

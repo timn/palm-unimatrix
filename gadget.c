@@ -1,4 +1,4 @@
-/* $Id: gadget.c,v 1.1 2003/02/06 21:27:23 tim Exp $
+/* $Id: gadget.c,v 1.1.1.1 2003/02/06 21:27:23 tim Exp $
  *
  * THE heart of UniMatrix. This is the center piece of code in UniMatrix
  */

@@ -1,4 +1,4 @@
-/* $Id: edit.c,v 1.1 2003/02/06 21:27:23 tim Exp $
+/* $Id: edit.c,v 1.1.1.1 2003/02/06 21:27:23 tim Exp $
  *
  * Code for editing times, events, courses
  */
