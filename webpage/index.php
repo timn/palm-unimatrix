@@ -1,6 +1,6 @@
 <?php
 
-/* $Id: index.php,v 1.2 2003/03/16 22:33:57 tim Exp $ */
+/* $Id: index.php,v 1.3 2003/06/05 17:07:10 tim Exp $ */
 
 $title="niemueller.de - palm software - UniMatrix";
 $meta_desc="A software to manage your daily university business.";
@@ -8,14 +8,14 @@ $meta_keyw="Palm, PalmOS, university, planer, business, beaming, semester, verwa
 include("$DOCUMENT_ROOT/header.inc.php");
 include("$DOCUMENT_ROOT/left.inc.php");
 
-$version="0.8a";
+$version="0.9";
 $basename="UniMatrix";
 $languages=array( "de" => "German/Deutsch",
                   "en" => "English",
                   "pt" => "Portugues",
                   "fr" => "French/Français",
                   "gr" => "Greek",
-                  "es" => "Spanish",
+                  "es" => "Spanish (needs new translator)",
                   "si_latin1" => "Slovenian (Latin1)",
                   "si_latin2" => "Slovenian (Latin2)",
                   "si_cp1250" => "Slovenian (cp1250)",
@@ -24,6 +24,7 @@ $languages=array( "de" => "German/Deutsch",
                   "pl_iso8859-2" => "Polish (ISO 8859-2)",
                   "cz_iso8859-2" => "Czech (ISO 8859-2)",
                   "cz_cp1250" => "Czech (cp1250)",
+                  "it" => "Italian",
                 );
 
 $preversion=0;
