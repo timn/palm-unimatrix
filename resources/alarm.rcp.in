@@ -1,0 +1,10 @@
+/* $Id: alarm.rcp.in,v 1.1 2003/04/24 20:30:12 tim Exp $
+ *
+ * alarm stuff
+ */
+
+#include "resources.h"
+
+##TRANSLATION##
+
+string id STRING_today "alarm_today"
