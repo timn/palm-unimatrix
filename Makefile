@@ -103,3 +103,6 @@ upload: dist
 	scp -r $(PROGNAME)-$(VERSION)_dist $(SSH_USER)@$(SSH_HOST):$(SSH_PATH)
 	scp -r webpage/* docs/CHANGES $(SSH_USER)@$(SSH_HOST):$(SSH_PATH)
 
+status:
+	cvs status | grep File | grep -v Up-to-date
+
