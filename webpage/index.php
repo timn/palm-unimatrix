@@ -1,6 +1,6 @@
 <?php
 
-/* $Id: index.php,v 1.3 2003/06/05 17:07:10 tim Exp $ */
+/* $Id: index.php,v 1.4 2003/06/18 11:18:03 tim Exp $ */
 
 $title="niemueller.de - palm software - UniMatrix";
 $meta_desc="A software to manage your daily university business.";
@@ -54,6 +54,8 @@ Some features:
  <li>Manage courses, events and exams</li>
  <li>Beaming Support: Courses can be beamed to another palm (You can also beam whole semesters).</li>
  <li>Keep your data easily in one place. Homepage, email, phone, everything about a lecture in your Palm.</li>
+ <li>Alarm for exams (but not during an exam, UniMatrix will take care of it, only PalmOS >= 4)</li>
+ <li>Notes for events and exams</li>
 </ul>
 
 <br/>
@@ -96,6 +98,13 @@ There are some questions people are asking again and again. Read the common answ
 
 
 <h5>News</h5>
+<b>2003/06/18</b><br/>
+Release of UniMatrix 0.9. Some major new features. This is the "feature freeze" release
+for UniMatrix 1.0 so please test it and gremling around to get it stable for
+1.0. New features include alarm for exams (only PalmOS >= 4) and notes for events
+and exams and new caching to get drawing faster (also some flicker removement still
+needs to be done), ability to show first letters of course name on main page in
+event boxes.
 <b>2002/11/28</b><br/>
 Release of UniMatrix 0.8. Getting pretty close to the 1.0 release. Lots of new features and several bug
 fixes. Integrated with other new software like <a href="../unimensa/">UniMensa</a> and <a href="../unichat/">UniChat</a>.
@@ -296,7 +305,7 @@ You may download the Palm install file provided as a .zip and as a .tar.gz file.
   <td>&nbsp; &nbsp;</td>
   <td></td>
   <td>&nbsp;</td>
-  <td><a href="http://www.palmgear.com/software/redirector.cfm/unimatrix0.7en.zip?prodID=43484&type=zip">.zip</a> (<?=filesize("{$basename}-{$version}_dist/{$basename}-{$version}-en.zip")?> Bytes)</td>
+  <td><a href="http://www.palmgear.com/software/redirector.cfm/unimatrix<?=$version>en.zip?prodID=43484&type=zip">.zip</a> (<?=filesize("{$basename}-{$version}_dist/{$basename}-{$version}-en.zip")?> Bytes)</td>
  </tr>
 </table>
 <br/>
