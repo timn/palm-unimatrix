@@ -1,4 +1,4 @@
-/* $Id: translation.it,v 1.2 2003/06/05 17:07:10 tim Exp $ */
+/* $Id: translation.it,v 1.3 2003/06/16 23:42:32 tim Exp $ */
 
 translation "italian"
 begin
@@ -26,7 +26,7 @@ begin
   "men_sets" = "Settaggi"
   "men_ex" = "Esami"
   "men_beam" = "Trasmetti Sem."
-  "men_alarm" = "Alarm..."
+  "men_alarm" = "Allarme..."
 
 
 /* alerts */
@@ -133,9 +133,9 @@ begin
   "sets_day" = "Il Sabato è un giorno lavorativo"
   "sets_showtype" = "Mostra abbrev. categ. per gli eventi"
   "sets_showtime" = "Mostra linea temporale per l'orario corrente"
-  "sets_showshort" = "Show short names for events"
-  "sets_muteevents" = "Mute during event"
-  "sets_muteexams" = "Mute during exam"
+  "sets_showshort" = "Mostra abbreviazioni per gli eventi"
+  "sets_muteevents" = "Muto durante evento"
+  "sets_muteexams" = "Muto durante esame"
 
 
 /* gadget */
@@ -185,28 +185,28 @@ begin
 
 
 /* Alarm related entries */
-  "alarm_today" = "Today"
-  "alarm_title" = "Alarm"
-  "alarm_use" = "Alarm for exams"
-  "alarm_time" = "Ring early:"
-  "alarm_mins" = "Minutes"
-  "alarm_hours" = "Hours"
-  "alarm_days" = "Days"
-  "alarm_remind" = "Remind Me:"
-  "alarm_repeat" = "Play every:"
-  "alarm_rem_1" = "Once"
-  "alarm_rem_2" = "Twice"
-  "alarm_rem_3" = "3 Times"
-  "alarm_rem_5" = "5 Times"
-  "alarm_rem_10" = "10 Times"
-  "alarm_rep_1" = "Minute"
-  "alarm_rep_5" = "5 Minutes"
-  "alarm_rep_10" = "10 Minutes"
-  "alarm_rep_30" = "30 Minutes"
-  "alarm_exam" = "Exam:"
+  "alarm_today" = "Oggi"
+  "alarm_title" = "Allarme"
+  "alarm_use" = "Allarme per gli esami"
+  "alarm_time" = "Suona prima:"
+  "alarm_mins" = "Minuti"
+  "alarm_hours" = "Ore"
+  "alarm_days" = "Giorni"
+  "alarm_remind" = "Ricordami:"
+  "alarm_repeat" = "Suona ogni:"
+  "alarm_rem_1" = "Una volta"
+  "alarm_rem_2" = "Due volte"
+  "alarm_rem_3" = "Tre volte"
+  "alarm_rem_5" = "Cinque volte"
+  "alarm_rem_10" = "Dieci volte"
+  "alarm_rep_1" = "Minuto"
+  "alarm_rep_5" = "5 Minuti"
+  "alarm_rep_10" = "10 Minuti"
+  "alarm_rep_30" = "30 Minuti"
+  "alarm_exam" = "Esame:"
   /* ^0 = day of week, ^1 = date string */
   "alarm_date_template" = "^0, ^1"
-  "alarm_sound" = "Alarm Sound"
+  "alarm_sound" = "Suono dell'allarme"
 
 
 end
