@@ -1,6 +1,6 @@
-<? php
+<?php
 
-// $Id: languages.inc.php,v 1.1 2004/08/27 20:39:58 tim Exp $
+// $Id: languages.inc.php,v 1.2 2004/08/27 20:41:04 tim Exp $
 
 $languages=array( "de" => "German/Deutsch",
                   "en" => "English",
