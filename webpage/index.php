@@ -1,6 +1,6 @@
 <?php
 
-/* $Id: index.php,v 1.7 2003/06/18 15:11:09 tim Exp $ */
+/* $Id: index.php,v 1.8 2003/07/03 14:49:15 tim Exp $ */
 
 $title="niemueller.de - palm software - UniMatrix";
 $meta_desc="A software to manage your daily university business.";
@@ -106,6 +106,12 @@ just to be sure make a backup before installing this version (as you should do w
 See below what changes have been made and which features I added.
 If you find any bugs please send me a <a href="mailto:unimatrix-bug@niemueller.de">mail</a> describing the
 problem (please note OS and hardware you use).
+
+<h5>Requested and/or planned features</h5>
+<li>Be able to enter events that occur only every second week</li>
+<li>"Zoom" - Have only 6 hours on one screen instead of 12 for example</li>
+<li>Enter grades (probably not)</li>
+<li>Enter feature that shows time to end of current lessens and to start of next lesson</li>
 
 
 <h5>Thanks</h5>
