@@ -165,7 +165,8 @@ module.data.files=\
 	resources/translation.it\
 	resources/alarm.rcp.in\
 	resources/translation.ca\
-	resources/translation.kr
+	resources/translation.kr\
+	resources/translation.il
 
 module.help.name=.
 module.help.type=
