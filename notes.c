@@ -1,4 +1,4 @@
-/* $Id: notes.c,v 1.2 2003/04/25 23:24:38 tim Exp $
+/* $Id: notes.c,v 1.3 2003/06/18 11:10:11 tim Exp $
  *
  * Note support functions
  * Created: 2003/04/17
@@ -451,14 +451,12 @@ Boolean NoteViewHandleEvent (EventType *event) {
       case NoteDoneButton:
         if (FldGetTextHandle(GetObjectPtr(NoteField))) NoteViewSave();
         FrmReturnToForm(gNoteReturnForm);
-        FrmUpdateForm(gNoteReturnForm, frmRedrawUpdateCode);
         handled = true;
         break;
 
       case NoteDeleteButton:
         NoteDeleteLocal();
         FrmReturnToForm(gNoteReturnForm);
-        FrmUpdateForm(gNoteReturnForm, frmRedrawUpdateCode);
         handled = true;
         break;
     }

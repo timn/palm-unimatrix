@@ -5,6 +5,14 @@
 
 === v0.9
 
+* Wed Jun 18 2003 Tim Niemueller <tim@niemueller.de>
+- Finally most translations are done, spanish is not, needs new translator
+- Fixed bug in exams, note edit resulted in invalid row when the note icon in
+  a table row was used. It updated twice -> removed FrmUpdateForm calls from
+  Note exit code in button handlind then it gets updated only once and works
+  just fine
+- RELEASE of 0.9!
+
 * Mon May 12 2003 Tim Niemueller <tim@niemueller.de>
 - Updated english and german translations
 - Sent mail with changes to translators
@@ -292,4 +300,4 @@
 
 
 
-$Id: CHANGES,v 1.11 2003/05/21 18:24:00 tim Exp $
+$Id: CHANGES,v 1.12 2003/06/18 11:10:05 tim Exp $

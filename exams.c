@@ -1,4 +1,4 @@
-/* $Id: exams.c,v 1.4 2003/04/25 23:24:38 tim Exp $
+/* $Id: exams.c,v 1.5 2003/06/18 11:10:11 tim Exp $
  *
  * Exams functions
  * Created: 2002-09-21
@@ -355,7 +355,7 @@ Boolean ExamsFormHandleEvent(EventPtr event) {
     }
   } else if (event->eType == tblEnterEvent) {
     UInt16 i;
-
+    
     if (event->data.tblEnter.column == EXCOL_DONE) {
       handled=false;
     } else if (event->data.tblEnter.column == EXCOL_NOTE) {
@@ -369,7 +369,7 @@ Boolean ExamsFormHandleEvent(EventPtr event) {
         TableDrawSelection(event->data.tblEnter.pTable, i, event->data.tblEnter.column, &r);
       }
 
-      
+
       m = DmQueryRecord(DatabaseGetRefN(DB_MAIN), TblGetRowID(event->data.tblEnter.pTable, event->data.tblEnter.row));
       if (m) {
         ExamDBRecord *ex = (ExamDBRecord *)MemHandleLock(m);
@@ -452,21 +452,9 @@ Boolean ExamsFormHandleEvent(EventPtr event) {
       MemHandleUnlock(mex);
 
     } else if (event->data.tblEnter.column == EXCOL_NOTE) {
-      MemHandle m;
-      Boolean hasNote=false;
-
-      m = DmQueryRecord(DatabaseGetRefN(DB_MAIN), TblGetRowID(event->data.tblEnter.pTable, event->data.tblEnter.row));
-      if (m) {
-        ExamDBRecord *ex = (ExamDBRecord *)MemHandleLock(m);
-        if (ex->note) hasNote = true;
-        else          hasNote = false;
-        MemHandleUnlock(m);
-      }
-
-      if (hasNote) {
-        NoteSet(TblGetRowID(event->data.tblEnter.pTable, event->data.tblEnter.row), FORM_exams);
-        FrmPopupForm(NewNoteView);
-      }
+      ControlType *ctl=GetObjectPtr(BUTTON_ex_note);
+      // Don't need code twice, just read ctlSelect Event for BUTTON_ex_note
+      CtlHitControl(ctl);
     }
     handled=true;
   } else if (event->eType == ctlRepeatEvent) {
