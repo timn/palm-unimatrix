@@ -3,7 +3,22 @@
 ==============================================================================
 
 
-=== v0.9a
+=== v1.0rc1
+
+* Thu Nov 20 2003 Tim Niemueller <tim@niemueller.de>
+- Make release, all critical bugs and more that I heard of fixed now, so this
+  is going to be 1.0rc1
+
+* Thu Oct 23 2003 Tim Niemueller <tim@niemueller.de>
+- Fixed BadBug(TM) in CatPostEdit(). It used DatabaseGetCat() instead of
+  DELETE_CATEGORY. This lead to data loss of the current semester if the
+  first category (0) was deleted or not existent. Doh!
+- Fixed another BadBug(TM): When UniMatrix was installed and then called after
+  Time change or Reset the database was assumed to be open and the closed
+  with DmCloseDatabase. This will lead to a fatal exception since UniMatrix
+  has not been run and there is no database!
+- AlarmReset() now checks for PalmOS Version >= 4.x.
+- Added hebrew translation
 
 * Thu Oct 09 2003 Tim Niemueller <tim@niemueller.de>
 - More intelligent event detail screen. It now tries to "guess" the color:
@@ -14,6 +29,7 @@
 - Removed some bugs that where sleeping deep inside the caching code. They
   occured only when CacheGet was called on an empty or almost empty (one
   element). Had to make l, r, x Int32 (signed)
+
 
 === v0.9
 
@@ -315,4 +331,4 @@
 
 
 
-$Id: CHANGES,v 1.15 2003/10/15 21:38:18 tim Exp $
+$Id: CHANGES,v 1.16 2003/11/20 22:57:59 tim Exp $

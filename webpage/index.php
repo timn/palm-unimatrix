@@ -1,6 +1,6 @@
 <?php
 
-/* $Id: index.php,v 1.11 2003/10/31 23:36:41 tim Exp $ */
+/* $Id: index.php,v 1.12 2003/11/20 22:57:59 tim Exp $ */
 
 $title="niemueller.de - palm software - UniMatrix";
 $meta_desc="A software to manage your daily university business.";
@@ -13,7 +13,7 @@ $basename="UniMatrix";
 $languages=array( "de" => "German/Deutsch",
                   "en" => "English",
                   "pt" => "Portugues",
-                  "fr" => "French/Français",
+                  "fr" => "French/Francais",
                   "gr" => "Greek",
                   "es" => "Spanish",
                   "si_latin1" => "Slovenian (Latin1)",
@@ -54,9 +54,9 @@ Some features:
 <br/>
 Just to be sure that you heard: You will need a PalmOS device to run this
 application. You can also use the Palm OS Emulator
-<a href="http://www.palmos.com/dev/tools/emulator/" target="_new">POSE</a>.
+<a href="http://www.palmos.com/dev/tools/emulator/" rel="external">POSE</a>.
 Linux binaries can be found
-<a href="http://sourceforge.net/project/showfiles.php?group_id=2189&release_id=84895" target="_new">here</a>.
+<a href="http://sourceforge.net/project/showfiles.php?group_id=2189" rel="external">here</a>.
 <br/>
 <i>Do not ask for ROM files</i>. I cannot and I do not want to share
 my ROMs with you. Go to the mentioned POSE page, there is a description
@@ -87,8 +87,8 @@ send you the language file.
 
 <h5>FAQ - Frequently Asked Questions</h5>
 There are some questions people are asking again and again. Read the common answers
-<a href="faq.php">here</a>. <span style="color: red;">Please read this FAQ <u>before</u> sending
-<u>any</u> questions!</span>
+<a href="faq.php">here</a>. <span style="color: red;">Please read this FAQ <span style="text-decoration: underline;">before</span> sending
+<span style="text-decoration: underline;">any</span> questions!</span>
 
 
 <h5>News</h5>
@@ -111,12 +111,14 @@ If you find any bugs please send me a <a href="mailto:unimatrix-bug@niemueller.d
 problem (please note OS and hardware you use).
 
 <h5>Requested and/or planned features</h5>
-<li>Be able to enter events that occur only every second week</li>
-<li>"Zoom" - Have only 6 hours on one screen instead of 12 for example</li>
-<li>Enter grades (probably not)</li>
-<li>Enter feature that shows time to end of current lessens and to start of next lesson</li>
-<li>Show remaining time for current event, this seems to be wanted by many people
+<ul>
+ <li>Be able to enter events that occur only every second week</li>
+ <li>"Zoom" - Have only 6 hours on one screen instead of 12 for example</li>
+ <li>Enter grades (probably not)</li>
+ <li>Enter feature that shows time to end of current lessens and to start of next lesson</li>
+ <li>Show remaining time for current event, this seems to be wanted by many people
 that are bored in their lessons :-)</li>
+</ul>
 
 
 <h5>Thanks</h5>
@@ -132,9 +134,9 @@ Some screenshots will give you an impression of the software.
 <br/><br/>
 <table border="0" width="100%" cellpadding="0">
  <tr>
-  <td align="center" width="33%"><img src="screens/main.png" border="1" alt="Main screen"></td>
-  <td align="center" width="34%"><img src="screens/edit_course.png" border="1" alt="Edit course"></td>
-  <td align="center" width="33%"><img src="screens/courselist.png" border="1" alt="Course List"></td>
+  <td align="center" style="width:33%;"><img src="screens/main.png" style="border: 1px solid #c0c0c0;" alt="Main screen" /></td>
+  <td align="center" style="width:34%;"><img src="screens/edit_course.png" style="border: 1px solid #c0c0c0;" alt="Edit course" /></td>
+  <td align="center" style="width:33%;"><img src="screens/courselist.png" style="border: 1px solid #c0c0c0;" alt="Course List" /></td>
  </tr>
  <tr>
   <th>Main screen. UniMatrix can handle up to 16 semesters</th>
@@ -147,9 +149,9 @@ Some screenshots will give you an impression of the software.
  </tr>
 
  <tr>
-  <td align="center"><img src="screens/main2.png" border="1" alt="Main screen with short types"></td>
-  <td align="center"><img src="screens/edit_event.png" border="1" alt="Edit Event"></td>
-  <td align="center"><img src="screens/exams.png" border="1" alt="Exams"></td>
+  <td align="center"><img src="screens/main2.png" style="border: 1px solid #c0c0c0;" alt="Main screen with short types" /></td>
+  <td align="center"><img src="screens/edit_event.png" style="border: 1px solid #c0c0c0;" alt="Edit Event" /></td>
+  <td align="center"><img src="screens/exams.png" style="border: 1px solid #c0c0c0;" alt="Exams" /></td>
  </tr>
  <tr>
   <th>UniMatrix can show the types for courses</th>
@@ -159,34 +161,36 @@ Some screenshots will give you an impression of the software.
 </table>
 
 <h5>What users said about UniMatrix</h5>
-<li style="list-style-position: outside; margin-bottom: 4;"> Dear Mr. Niemueller. Thank you for Unimatrix 0.4!
+<ul>
+<li>Dear Mr. Niemueller. Thank you for Unimatrix 0.4!
 It is EXACTLY what I have been looking for. I am not a student, but a teacher.
 I have three part-time teaching jobs, and UniMatrix will help me avoid schedule conflicts.
 <i>Bill Hogue (Kobe, Japan)</i>
-[Found on <a href="http://www.freewarepalm.com/educational/unimatrix.shtml" target="_new">freewarepalm.com</a>]
+[Found on <a href="http://www.freewarepalm.com/educational/unimatrix.shtml" rel="external">freewarepalm.com</a>]
 </li>
-<li style="list-style-position: outside; margin-bottom: 4;">Very good program! well coded, easy to use and very handy. I recommend it to anyone at school or uni!
+<li>Very good program! well coded, easy to use and very handy. I recommend it to anyone at school or uni!
 <i>Steg</i>
-[Found on <a href="http://www.freewarepalm.com/educational/unimatrix.shtml" target="_new">freewarepalm.com</a>]
+[Found on <a href="http://www.freewarepalm.com/educational/unimatrix.shtml" rel="external">freewarepalm.com</a>]
 </li>
-<li style="list-style-position: outside; margin-bottom: 4;">The developer seems to know exactly what a student needs and has implemented it in his program.
+<li>The developer seems to know exactly what a student needs and has implemented it in his program.
 This is what I would probably classify as one of those really functional program. I really wish I had
 this when I was in university. Guess I'll give this program a try anyway. It looks good!
 <i>Kuan Ming Keong (Singapore)</i>
-[Found on <a href="http://www.spug.net/forums/showthread.php?s=&threadid=30075" target="_new">SPUG</a>]
-<li style="list-style-position: outside; margin-bottom: 4;">A simple, well-organized app that does its job well. It should be useful to many people who need to keep
+[Found on <a href="http://www.spug.net/forums/showthread.php?threadid=30075" rel="external">SPUG</a>]</li>
+<li>A simple, well-organized app that does its job well. It should be useful to many people who need to keep
 track of weekly events or schedules.<i>Bill H.</i>
-[Found on <a href="http://www.freewarepalm.com/educational/unimatrix.shtml" target="_new">freewarepalm.com</a>]
-</li>
-<li style="list-style-position: outside; margin-bottom: 4;">[Zip-zilla] transfers everything from Timetable Pro to UniMatrix
+[Found on <a href="http://www.freewarepalm.com/educational/unimatrix.shtml" rel="external">freewarepalm.com</a>]</li>
+<li>[Zip-zilla] transfers everything from Timetable Pro to UniMatrix
 <i>Andre Tan, Singapore</i>
-[Found on <a href="http://www.freewarepalm.com/educational/unimatrix.shtml" target="_new">freewarepalm.com</a>]
-</li>
+[Found on <a href="http://www.freewarepalm.com/educational/unimatrix.shtml" rel="external">freewarepalm.com</a>]</li>
+</ul>
 
 <h5>UniMatrix in the press</h5>
-<li>The German magazine <a href="http://www.nouh.de" target="_new">"Notebooks, Organizer und Handy"</a> has a column
+<ul>
+ <li>The German magazine <a href="http://www.nouh.de" rel="external">"Notebooks, Organizer und Handy"</a> has a column
 about good freeware. The article can be downloaded <a href="unimatrix_nouh_oct2002.pdf">here</a>. Thanks to
 NOuH for permission to do so!</li>
+</ul>
 <br/>
 If you want to write an article about UniMatrix please let me know. The development version I have usually has the features
 of tommorrow so you might want to test that also. Please send me a printed or digital version or your writing. Thank you!
@@ -232,13 +236,6 @@ You may download the Palm install file provided as a .zip and as a .tar.gz file.
  </tr>
 <?   } ?>
 <? } ?>
- <tr>
-  <td>Download on PalmGear (English)</td>
-  <td>&nbsp; &nbsp;</td>
-  <td></td>
-  <td>&nbsp;</td>
-  <td><a href="http://www.palmgear.com/software/redirector.cfm/unimatrix<?=$version?>en.zip?prodID=43484&type=zip">.zip</a> (<?=filesize("{$basename}-{$version}_dist/{$basename}-{$version}-en.zip")?> Bytes)</td>
- </tr>
 </table>
 <br/>
 
