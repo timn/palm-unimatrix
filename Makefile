@@ -100,5 +100,5 @@ package: clean all
 
 upload: dist
 	scp -r $(PROGNAME)-$(VERSION)_dist $(SSH_USER)@$(SSH_HOST):$(SSH_PATH)
-	scp -r webpage/* $(SSH_USER)@$(SSH_HOST):$(SSH_PATH)
+	scp -r webpage/* docs/CHANGES $(SSH_USER)@$(SSH_HOST):$(SSH_PATH)
 

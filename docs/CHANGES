@@ -11,6 +11,9 @@
   a table row was used. It updated twice -> removed FrmUpdateForm calls from
   Note exit code in button handlind then it gets updated only once and works
   just fine
+- Update webpage
+- Added changelog.php
+- Update FAQ
 - RELEASE of 0.9!
 
 * Mon May 12 2003 Tim Niemueller <tim@niemueller.de>
@@ -300,4 +303,4 @@
 
 
 
-$Id: CHANGES,v 1.12 2003/06/18 11:10:05 tim Exp $
+$Id: CHANGES,v 1.13 2003/06/18 11:40:41 tim Exp $

@@ -1,6 +1,6 @@
 <?php
 
-/* $Id: faq.php,v 1.1 2003/02/06 21:27:23 tim Exp $ */
+/* $Id: faq.php,v 1.2 2003/06/18 11:40:41 tim Exp $ */
 
 $title="niemueller.de - palm software - UniMatrix - FAQ";
 $meta_desc="A software to manage your daily university business.";
@@ -44,6 +44,30 @@ please send it :-)
 <b>Q:</b> Can you compile a version that supports PalmOS version less than 3.5?<br/>
 <b>A:</b> No, I can't. The 3.5 feature sets really made my life easier to this software done and I do
 not plan to write more glue to make it run on older versions. Sorry.
+
+<br/><br/>
+<b>Q:</b> Can you add support for lessons that only appear every two weeks?<br/>
+<b>A:</b> Users who have course A in say even weeks and B in odd weeks have asked
+to add this feature. Right now I have no plans to implement that feature since only
+two or three asked for this feature. Maybe after 1.0.
+
+<br/><br/>
+<b>Q:</b> Where is this alarm feature? I can't find it!<br/>
+<b>A:</b> You are probably using a handheld with PalmOS version &lt; 4. Since I
+have decided to use the AttentionManager API to get it done fast those handhelds
+are not supported right now. Maybe after 1.0.
+
+<br/><br/>
+<b>Q:</b> Is this alarm feature save? Won't it ring during exams under any circumstances?<br/>
+<b>A:</b> Of course not :-) I have thought about the code for a while and think that
+it does what I promise: Do not ring during exams but before them (and if another
+exam is written when the alarm should ring it will ring before this exam and so on!).
+But of course I cannot guarantee that. If you want I can send you some pseudo code or
+the code that UniMatrix uses to find the right ring time and you can check it and
+tell me about it... Also there are some side conditions: Is your clock in sync
+with the university time (especially on short notification times), have you entered
+ALL exams?
+
 
 <br/><br/><br/>
 <a href="index.php">Back</a>

@@ -1,6 +1,6 @@
 <?php
 
-/* $Id: index.php,v 1.4 2003/06/18 11:18:03 tim Exp $ */
+/* $Id: index.php,v 1.5 2003/06/18 11:40:41 tim Exp $ */
 
 $title="niemueller.de - palm software - UniMatrix";
 $meta_desc="A software to manage your daily university business.";
@@ -201,78 +201,8 @@ Palm IIIx (PalmOS 3.5, gray, tested on emulator, works perfectly)<br/>
 Palm III (Palms OS 4.1, b/w, tested on emulator, works, but looks bad)<br/>
 
 <h5>Changes</h5>
-<table border="0">
- <tr>
-  <td valign="top" nowrap>v 0.6</td>
-  <td valign="top">This version adds a nice color picker instead of having to give the
-                   raw values. If you prefer that you can still do so!<br/>
-                   Cleanups in code, reorganised parts of the code.
-                   </td>
- </tr>
- <tr>
-  <td valign="top" nowrap>v 0.7pre1</td>
-  <td valign="top">This is just a pre-version since some subfeatures need to be implemented
-                   and it needs a lot of testing. Please test and send me all the BadBugs(TM) in there.
-                    The following features have been added:<br/>
-   <li>Times can now be set in 5 min interval.</li>
-   <li>Times are now entered using the default PalmOS Look and Feel and no longer with my
-       brute force method.</li>
-   <li>Saturday can now be set as a workday and events can be sheduled for saturday</li>
-   <li>Time can be set to be before 8:00 and after 20:00. Right now there is no code to
-       show those entries but since I delayed the release now it may make it into 0.7</li>
-   <li>Scrolling support (Up and Down Palm (Hardware) keys) to show hours 0:00 to 8:00 and 20:00 to 0:00</li>
-   <li>courses are now shown in alphabetical order</li>
-   <li>Short form of course type is shown in all course lists</li>
-   <li>There will be a settings screen to set some defaults</li>
-   <li>For the new time resolution I needed to change the internal data structures and a lot
-       of code. Right now you cannot convert your old databases, but since this should not be much
-       of a problem I want to implement that before release</li>
-   <li>UniMatrix now uses system wide format defaults</li>
-   <li>Speed inprovements. Database management has been enhance to optimize searching</li>
-   <li>New images, better readable and nicer look</li>
-   <li>Editable course types (Not yet possible to delete, will implement after my vacation)</li>
-  </td>
- </tr>
+Read complete changelog <a href="changelog.php">here</a>.
 
- <tr>
-  <td valign="top" nowrap>v 0.7</td>
-  <td valign="top">Several new features have been added since 0.7pre1. Testers are welcome!
-                    The following features have been added:<br/>
-   <li>Exams can be managed, per Semester, Referenced to entered courses with date and time and done flag</li>
-   <li>Collision detection for events. You are now warned if you try to enter an event for that
-       collides with an existing one</li>
-   <li>Several new translations. Special thanks to the translators!</li>
-   <li>Some new graphics, trying to do more with graphics to keep translation effort low :-)</li>
-   <li>A lot of internal cleanups. After adding all the features of 0.7pre1 and 0.7 the PRC grew to over
-       40 KByte. After the cleanup it is now less than 38 KByte in size (depending on language)</li>
-   <li>Better handling of buttons, if you assign a software hard button to UniMatrix it will now get
-       you to the next upcoming event, wherever you are</li>
-  </td>
- </tr>   
- <tr>   
-  <td valign="top" nowrap>v 0.8</td>
-  <td valign="top">Lots of new features like:<br/>
-   <li>Can now display course type in main window in each event box</li>
-   <li>Can display a line indicating the current time</li>
-   <li>Whole semesters can be beamed</li>
-   <li>Beam code more intelligent. Checks if course already exists on destination
-       Palm and does only create new information that does not already exist</li>
-   <li>Current day is now marked in heading</li>
-   <li>If you mapped stroke down->up to beam in global PalmOS settings then it will beam currently
-       selected course</li>
-   <li>New Czech, Dutch and Polish translations. Thanx to the translators!</li>
-  </td>
- </tr>
- <tr>
-  <td valign="top" nowrap>v 0.8a</td>
-  <td valign="top">Only smaller fixups, therefore only an "a" release:<br/>
-   <li>Updated translations: French, Polish, Czech</li>
-   <li>FAQ update</li>
-  </td>
- </tr>
-
-
-</table>
 
 <h5>Download</h5>
 UniMatrix is released and distributed under the terms of a proprietary
