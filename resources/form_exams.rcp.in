@@ -1,4 +1,4 @@
-/* $Id: form_exams.rcp.in,v 1.2 2003/02/07 01:07:52 tim Exp $
+/* $Id: form_exams.rcp.in,v 1.3 2003/04/18 23:40:33 tim Exp $
  *
  * Exams forms
  */
@@ -14,10 +14,13 @@ begin
   list "" id LIST_ex_cat at (90 2 70 auto) visibleitems 5 nonusable
   popuplist id LIST_ex_cat_trigger LIST_ex_cat
   popuptrigger "" id LIST_ex_cat_trigger at (140 0 auto auto) font 0 usable rightanchor
-  table id TABLE_exams at (0 20 160 120) rows 10 columns 5 columnwidths 12 78 34 24 5
+
+  table id TABLE_exams at (0 20 160 120) rows 10 columns 6 columnwidths 12 71 6 33 23 5
+
   button "" id BUTTON_ex_back at (1 146 11 11) noframe graphical bitmapid BITMAP_back selectedbitmapid BITMAP_back_clicked
   button "" id BUTTON_ex_add at (prevright+12 prevtop 11 11) noframe graphical bitmapid BITMAP_add selectedbitmapid BITMAP_add_clicked
   button "" id BUTTON_ex_edit at (prevright+4 prevtop 11 11) noframe graphical bitmapid BITMAP_edit selectedbitmapid BITMAP_edit_clicked
+  button "" id BUTTON_ex_note at (prevright+4 prevtop 11 11) noframe graphical bitmapid BITMAP_note selectedbitmapid BITMAP_note_clicked
   button "" id BUTTON_ex_del at (prevright+4 prevtop 11 11) noframe graphical bitmapid BITMAP_del selectedbitmapid BITMAP_del_clicked
   button "" id BUTTON_ex_beam at (prevright+4 prevtop 11 11) noframe graphical bitmapid BITMAP_beam selectedbitmapid BITMAP_beam_clicked
 
