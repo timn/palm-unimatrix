@@ -1,6 +1,6 @@
 <?php
 
-/* $Id: index.php,v 1.8 2003/07/03 14:49:15 tim Exp $ */
+/* $Id: index.php,v 1.9 2003/09/05 13:33:30 tim Exp $ */
 
 $title="niemueller.de - palm software - UniMatrix";
 $meta_desc="A software to manage your daily university business.";
@@ -15,7 +15,7 @@ $languages=array( "de" => "German/Deutsch",
                   "pt" => "Portugues",
                   "fr" => "French/Français",
                   "gr" => "Greek",
-                  "es" => "Spanish (needs new translator)",
+                  "es" => "Spanish",
                   "si_latin1" => "Slovenian (Latin1)",
                   "si_latin2" => "Slovenian (Latin2)",
                   "si_cp1250" => "Slovenian (cp1250)",
@@ -25,6 +25,7 @@ $languages=array( "de" => "German/Deutsch",
                   "cz_iso8859-2" => "Czech (ISO 8859-2)",
                   "cz_cp1250" => "Czech (cp1250)",
                   "it" => "Italian",
+                  "ca" => "Catalan",
                 );
 
 $preversion=0;
@@ -69,10 +70,11 @@ UniMatrix is available in multiple languages. Supported languages are right now 
  <li>French (Thanx to Francis H. and Antoine from France)</li>
  <li>Greek (Thanx to Tom Diamond from Greece)</li>
  <li>Slovenian (Thanx to Bostjan Müller from Slovenia)</li>
- <li>Spanish (Thanx to Antonio Guijarro from Spain)</li>
+ <li>Spanish (Thanx to Antonio Guijarro and Andreu Bassols from Spain)</li>
  <li>Czech (Thanx to Tomas Kolousek)</li>
  <li>Dutch (Thanx to Colin Helvensteijn)</li>
  <li>Polish (Thanx to Tomasz Zielinski)</li>
+ <li>Catalan (Thanx to Andreu Bassols from Spain)</li>
 </ul>
 If you want to help and translate UniMatrix to another language please
 <a href="mailto:tim@niemueller.de?Subject=Translate UniMatrix">contact</a> me and I will
