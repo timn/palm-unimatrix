@@ -1,4 +1,4 @@
-/* $Id: ctype.c,v 1.4 2003/04/25 23:24:38 tim Exp $
+/* $Id: ctype.c,v 1.5 2003/10/15 21:41:21 tim Exp $
  *
  * Course Type related stuff
  * Created: 2002-08-31
@@ -159,11 +159,20 @@ void CourseTypeGetShort(MemHandle *charHandle, UInt8 id) {
     // Cache has not yet been initialized
     gCourseTypeCacheID = CacheRegister(CourseTypeShortCacheNumI, CourseTypeShortCacheLoad, CourseTypeShortCacheFree);
   }
+  if (! CacheGet(gCourseTypeCacheID, id, charHandle, 3)) {
+    MemHandle m;
+    Char *src, *dst;
 
-  CacheGet(gCourseTypeCacheID, id, charHandle, 3);
+    m = DmGetResource(strRsc, STRING_ctype_short_unknown);
+    MemHandleResize(*charHandle, MemHandleSize(m));
+    src = MemHandleLock(m);
+    dst = MemHandleLock(*charHandle);
+    MemMove(dst, src, MemHandleSize(m));
+    MemHandleUnlock(m);
+    MemHandleUnlock(*charHandle);
+  }
 
 }
-
 
 
 
@@ -457,6 +466,7 @@ static void CourseTypeDelete(UInt8 id) {
 
   if (clickedButton == 0) {
     DmRemoveRecord(DatabaseGetRefN(DB_DATA), index);
+    CacheReset();
   } // else do nothing
 }
 
