@@ -1,0 +1,207 @@
+/* $Id: translation.cn_s,v 1.1 2005/05/27 15:02:24 tim Exp $ */
+
+translation "chinese_simplified"
+begin
+
+
+/* about translation */
+  "translator" = "Johannes Fiederling"
+  "trans_mail" = "no.use@for.a.mail.de"
+  "trans_hdev" = "Sony Clie NX80V"
+  "trans_palm" = "5.21"
+  "trans_trby" = "中文版译者："
+
+
+/* common */
+  "com_cur" = "目前的学期"
+  "com_man" = "学期管理"
+
+
+/* menu */
+  "men_addc" = "输入课程..."
+  "men_adde" = "时间分配..."
+  "men_cl" = "课单..."
+  "men_ex" = "考试日期..."
+  "men_ab" = "关于UniMatrix"
+  "men_opt" = "选项"
+  "men_sets" = "设定..."
+  "men_beam" = "用红外转送学期"
+  "men_alarm" = "响铃..."
+
+
+/* alerts */
+  "al_ok" = "确定"
+  "al_rominc1" = "系统不兼容"
+  "al_rominc2" = "使用本软件至少需要Palm OS 3.5。"
+  "al_noc1" = "错误：还没输入课程"
+  "al_noc2" = "分配时间前，清先输入课程!"
+  "al_noc3" = "是"
+  "al_nr1" = "没输入教室"
+  "al_nr2" = "请输入教室。"
+  "al_nomem1" = "记忆体不足"
+  "al_nomem2" = "无法储存。程序失败。"
+  "al_del1" = "您确定要删除吗?"
+  "al_del2" = "您确定要删除此项目：(^1 [^2], ^3)?"
+  "al_dely" = "确定"
+  "al_deln" = "取消"
+  "al_invend1" = "无效的时间"
+  "al_invend2" = "请选择8：00点到20：00点之间的时间!"
+  "al_delc1" = "您确定要删除吗？"
+  "al_delc2" = "您确定要删除 (^1) 和所有属于它的时间分配吗? ^2^3"
+  "al_delcy" = "确定"
+  "al_delcn" = "取消"
+  "al_ni1" = "没选项目"
+  "al_ni2" = "请选择要改或删除的项目。"
+  "al_ecn1" = "没输入名称"
+  "al_ecn2" = "请输入名称!"
+  "al_ect1" = "没输入老师"
+  "al_ect2" = "请输入此课的老师!"
+  "al_unt1" = "没输入时间"
+  "al_unt2" = "您必须为所有课表中的课输入上课时间!"
+  "al_old1" = "旧的数据库"
+  "al_old2" = "此数据库是用Unimatrix的一个旧版本建立的。您是否想转换它吗?"
+  "al_old3" = "是"
+  "al_old4" = "否"
+  "al_ctd1" = "输入错误"
+  "al_ctd2" = "请输入名称和缩写!"
+  "al_ct_del1" = "您确定要删除吗!"
+  "al_ct_del2" = "您确定要删除此课程类别: ^1 [^2] ^3 ?"
+  "al_ex_del1" = "您确定要删除吗?"
+  "al_ex_del2" = "您确定要删除次考试: ^1 日期 ^2 时间 ^3 ?"
+  "al_timecol1" = "时间冲突"
+  "al_timecol2" = "课程冲堂。"
+  "al_beamdbfail1" = "无法打开数据库"
+  "al_beamdbfail2" = "在用红外线接收新的课程前，请先启动Unimatrix一次。"
+  "al_beamnocat1" = "记忆体不足"
+  "al_beamnocat2" = "目录数量已达到限制数。请删除一个旧目录后再试。"
+
+
+/* about */
+  "ab_title" = "关于UniMatrix"
+  "ab_d1" = "学生生活规划软件"
+  "ab_get" = "此处可下载最新版本:"
+
+
+/* beam */
+  "b_title" = "清选择学期"
+  "b_d1" = "请为新收到的课程选择一个学期"
+  "bs_d1" = "Unimatrix会为新收到的课程建立一个新的学期"
+  "b_sem" = "学期："
+
+
+/* course list */
+  "cl_title" = "课程列表"
+  "cl_desc" = "本学期的课程:"
+
+
+/* course details (add and edit) */
+  "cd_title" = "编辑课程"
+  "cd_name" = "名称"
+  "cd_type" = "类别"
+  "cd_teacher" = "老师"
+  "cd_email" = "电子信箱"
+  "cd_website" = "网址"
+  "cd_phone" = "电话"
+
+
+/* event details (add and edit */
+  "ed_title" = "时间"
+  "ed_course" = "课程"
+  "ed_day" = "日期"
+  "ed_time" = "时间"
+  "ed_title" = "实践设定"
+  "ed_color" = "颜色"
+  "ed_room" = "教室"
+  "ed_mo" = "星期一"
+  "ed_tu" = "星期二"
+  "ed_we" = "星期三"
+  "ed_th" = "星期四"
+  "ed_fr" = "星期五"
+  "ed_sa" = "星期六"
+  "ed_r" = "红"
+  "ed_g" = "绿"
+  "ed_b" = "蓝"
+
+
+/* settings */
+  "sets_title" = "设定"
+  "sets_day" = "星期六有课"
+  "sets_showtype" = "在课表中显示课的类别"
+  "sets_showtime" = "以目前的时间作为基准线"
+  "sets_showshort" = "在课表中显示课的简称"
+  "sets_muteevents" = "课堂中无声响铃"
+  "sets_muteexams" = "考试中无声响铃"
+
+
+/* gadget */
+  "gad_mo" = "周一"
+  "gad_tu" = "周二"
+  "gad_we" = "周三"
+  "gad_th" = "周四"
+  "gad_fr" = "周五"
+  "gad_sa" = "周六"
+
+
+/* Course types */
+  "ct_title" = "课程类别表"
+  "ct_desc" = "情选要改的课程类别:"
+  "ct_edct" = "改类别..."
+  /* Course type defaults for database initialization */
+  "ct_lec" = "讲座"
+  "ct_ex" = "练习"
+  "ct_bex" = "大规模的练习"
+  "ct_sem" = "研究课"
+  "ct_psem" = "初级研究课"
+  "ct_rep" = "补习班"
+  /* The short names may be only 3 chars in length! */
+  "ct_sh_lec" = "讲座"
+  "ct_sh_ex" = "练习"
+  "ct_sh_bex" = "大练习"
+  "ct_sh_sem" = "研究课"
+  "ct_sh_psem" = "初研课"
+  "ct_sh_rep" = "补习班"
+  "ct_unk" = "未知"
+  "ct_sh_unk" = "?"
+
+
+/* Course type details */
+  "ctdet_title" = "课程内容"
+  "ctdet_name" = "课程名称"
+  "ctdet_short" = "简称"
+
+
+/* Exam list and exam details */
+  "ex_title" = "考试"
+  "exd_title" = "内容"
+  "exd_course" = "课程"
+  "exd_date" = "日期"
+  "exd_time" = "时间"
+  "exd_length" = "进行时间"
+
+
+/* Alarm related entries */
+  "alarm_today" = "今天"
+  "alarm_title" = "响铃"
+  "alarm_use" = "提醒考试来临"
+  "alarm_time" = "时间:"
+  "alarm_mins" = "分钟数"
+  "alarm_hours" = "钟点数"
+  "alarm_days" = "天数"
+  "alarm_remind" = "提醒数次:"
+  "alarm_repeat" = "重复:"
+  "alarm_rem_1" = "一次"
+  "alarm_rem_2" = "两次"
+  "alarm_rem_3" = "三次"
+  "alarm_rem_5" = "五次"
+  "alarm_rem_10" = "十次"
+  "alarm_rep_1" = "每隔 1 分钟"
+  "alarm_rep_5" = "每隔 5 分钟"
+  "alarm_rep_10" = "每隔 10 分钟"
+  "alarm_rep_30" = "每隔 30 分钟"
+  "alarm_exam" = "考试："
+  /* ^0 = day of week, ^1 = date string */
+  "alarm_date_template" = "^0, ^1"
+  "alarm_sound" = "铃声:"
+
+
+end
