@@ -32,78 +32,100 @@ PFLAGS = -q -I $(R) -L $(LANGUAGE)
 PILOTRATE=115200
 PILOTXFER=/usr/bin/pilot-xfer
 
-OBJECTS=$(shell ls *.c | sed -e "s/.c$$/.o/") $(PROGNAME)-sections.o
+SILENT=@
+ECHO=$(SILENT)echo
 
-RSCBINS:=$(shell ls resources/*.rcp.in | sed -e "s/rcp.in/bin/g")
+OBJECT_FILES=$(shell ls *.c | sed -e "s/.c$$/.o/") $(PROGNAME)-sections.o
+OBJECTS=$(OBJECT_FILES:%=.obj/%)
+
+RSCBINS_FILES:=$(shell ls resources/*.rcp.in | sed -e "s/rcp.in/bin/g")
+RSCBINS := $(RSCBINS_FILES:resources/%=.obj/%)
 RSCBINSPRINT:=$(shell echo "$(RSCBINS)" | sed -e "s/resources\///g")
 
-$(PROGNAME).prc: $(PROGNAME) $(RSCBINS) $(PROGNAME).mk $(PROGNAME).def
-	@echo -e "\n\n================================================================================\nBUILDING:\n"
-	build-prc $(PROGNAME).def "$(PROGDESC)" *.bin -o $(PROGNAME).prc
-	@echo -e "\n================================================================================\n"
-	@echo "RSC BINS: $(RSCBINSPRINT)"
-	@echo "OBJECTS : $(OBJECTS)"
-	@echo "COMPILER: $(CC) $(CFLAGS)"
-	@echo "LANGUAGE: $(PRINTLANGUAGE) [$(SHORTLANGUAGE):$(LANGUAGE)]"
-	@ls -l $(PROGNAME).prc | awk '{ print sprintf("PRC size: %s", $$5) }'
-	@echo -e "\n================================================================================\n\n"
+$(PROGNAME).prc: setup $(PROGNAME) $(RSCBINS) $(PROGNAME).mk $(PROGNAME).def
+	$(ECHO) "--> Creating PRC file"
+	$(SILENT)build-prc $(PROGNAME).def "$(PROGDESC)" .obj/*.bin -o $(PROGNAME).prc
+	$(ECHO) -e "\n\n================================================================================\n"
+	$(ECHO) "RSC BINS: $(RSCBINSPRINT)"
+	$(ECHO) "OBJECTS : $(OBJECTS)"
+	$(ECHO) "COMPILER: $(CC) $(CFLAGS)"
+	$(ECHO) "LANGUAGE: $(PRINTLANGUAGE) [$(SHORTLANGUAGE):$(LANGUAGE)]"
+	$(SILENT)ls -l $(PROGNAME).prc | awk '{ print sprintf("PRC size: %s", $$5) }'
+	$(ECHO) -e "\n================================================================================\n\n"
 
 all: clean $(PROGNAME).prc
 
-$(PROGNAME): $(OBJECTS) $(PROGNAME)-sections.ld
+$(PROGNAME): $(OBJECTS) .obj/$(PROGNAME)-sections.ld
+	$(ECHO) "--> Creating $(PROGNAME)"
+	$(SILENT)$(CC) $(CFLAGS) $(OBJECTS) .obj/$(PROGNAME)-sections.ld -o $@
 
 
-%.o: %.c
-	$(CC) $(CFLAGS) -c $<
+.obj/%.o: %.c
+	$(ECHO) "--- Compiling $<"
+	$(SILENT)$(CC) $(CFLAGS) -o $@ -c $<
 
-%.bin: %.rcp $(PROGNAME).h
-	$(PILRC) $(PFLAGS) $<
+.obj/%.bin: resources/%.rcp $(PROGNAME).h
+	$(ECHO) "--- Compiling resource file $<"
+	$(SILENT)$(PILRC) $(PFLAGS) $< .obj/
 
 %.rcp: %.rcp.in
-	sed -e 's/##VERSION##/$(VERSION)/g' -e 's/##LANGUAGE##/$(PRINTLANGUAGE)/' \
+	$(ECHO) "--- Generating $@"
+	$(SILENT)sed -e 's/##VERSION##/$(VERSION)/g' -e 's/##LANGUAGE##/$(PRINTLANGUAGE)/' \
         -e '/##TRANSLATION##/{' \
 	-e 'r resources/translation.$(SHORTLANGUAGE)' -e 's/##TRANSLATION##//' \
 	-e '}' \
         -e 's/##APPID##/$(APPID)/g' -e 's/##APPNAME##/$(PROGDESC)/g' \
         < $< > $@
 
-$(PROGNAME)-sections.o: $(PROGNAME)-sections.s
-	$(CC) -c $(PROGNAME)-sections.s
+.obj/$(PROGNAME)-sections.o: .obj/$(PROGNAME)-sections.s
+	$(ECHO) "--- Compiling sections information"
+	$(SILENT)$(CC) -o $@ -c $<
 
-$(PROGNAME)-sections.s $(PROGNAME)-sections.ld: $(PROGNAME).def
-	$(MULTIGEN) $(PROGNAME).def
+.obj/$(PROGNAME)-sections.s .obj/$(PROGNAME)-sections.ld: $(PROGNAME).def
+	$(ECHO) "--- Generating sections file"
+	$(SILENT)$(MULTIGEN) -b .obj/$(PROGNAME)-sections $(PROGNAME).def
 
 install: clean all
-	@echo -e "No going to install $(PROGDESC) on PalmOS device\n"
-	@echo -e "If you have a USB device press NOW the HotSync Button"
-	@echo -e "and THEN press enter to continue.\n"
-	@read foo </dev/tty
-	PILOTRATE=$(PILOTRATE) $(PILOTXFER) -i $(PROGNAME).prc
+	$(ECHO) -e "No going to install $(PROGDESC) on PalmOS device\n"
+	$(ECHO) -e "If you have a USB device press NOW the HotSync Button"
+	$(ECHO) -e "and THEN press enter to continue.\n"
+	$(SILENT)read foo </dev/tty
+	$(SILENT)PILOTRATE=$(PILOTRATE) $(PILOTXFER) -i $(PROGNAME).prc
+
+setup:
+	$(SILENT)if [ ! -d .obj ]; then \
+		echo "-- Creating .obj"; \
+		mkdir .obj; \
+	fi
 
 clean:
-	-rm -f $(PROGNAME) $(PROGNAME).prc *.o *.bin *.ld *.s
+	$(ECHO) "--- Cleaning up"
+	$(SILENT)-rm -f $(PROGNAME) $(PROGNAME).prc .obj/*.o .obj/*.bin .obj/*.ld .obj/*.s
 
 dist:
-	mkdir -p $(PROGNAME)-$(VERSION)_dist
-	for L in $(LANGUAGES); do LANGUAGE=$$L $(MAKE) package; done
-	mv -f $(PROGNAME)-$(VERSION)-* $(PROGNAME)-$(VERSION)_dist
+	$(ECHO) "--- Creating dist directory '$(PROGNAME)-$(VERSION)_dist'"
+	$(SILENT)mkdir -p $(PROGNAME)-$(VERSION)_dist
+	$(SILENT)for L in $(LANGUAGES); do LANGUAGE=$$L $(MAKE) --no-print-directory package; done
+	$(SILENT)mv -f $(PROGNAME)-$(VERSION)-* $(PROGNAME)-$(VERSION)_dist
 
 package: clean all
-	@echo -e "\n\nPackaging $(PROGNAME) for language $(LANGUAGE) ($(SHORTLANGUAGE))\n\n"
+	$(ECHO) -e "\n\n--> Packaging $(PROGNAME) for language $(LANGUAGE) ($(SHORTLANGUAGE))\n\n"
 
-	mkdir -p $(PROGNAME)-$(VERSION)-$(SHORTLANGUAGE)
-	cp -ar docs $(PROGNAME)-$(VERSION)-$(SHORTLANGUAGE)
-	rm -rf $(PROGNAME)-$(VERSION)-$(SHORTLANGUAGE)/docs/CVS
-	cp $(PROGNAME).prc $(PROGNAME)-$(VERSION)-$(SHORTLANGUAGE)
-	tar cvfz $(PROGNAME)-$(VERSION)-$(SHORTLANGUAGE).tar.gz $(PROGNAME)-$(VERSION)-$(SHORTLANGUAGE)
-	zip -r $(PROGNAME)-$(VERSION)-$(SHORTLANGUAGE).zip $(PROGNAME)-$(VERSION)-$(SHORTLANGUAGE)
-	rm -rf $(PROGNAME)-$(VERSION)-$(SHORTLANGUAGE)
+	$(SILENT)mkdir -p $(PROGNAME)-$(VERSION)-$(SHORTLANGUAGE)
+	$(SILENT)cp -ar docs $(PROGNAME)-$(VERSION)-$(SHORTLANGUAGE)
+	$(SILENT)rm -rf $(PROGNAME)-$(VERSION)-$(SHORTLANGUAGE)/docs/CVS
+	$(SILENT)cp $(PROGNAME).prc $(PROGNAME)-$(VERSION)-$(SHORTLANGUAGE)
+	$(SILENT)tar cvfz $(PROGNAME)-$(VERSION)-$(SHORTLANGUAGE).tar.gz $(PROGNAME)-$(VERSION)-$(SHORTLANGUAGE)
+	$(SILENT)zip -r $(PROGNAME)-$(VERSION)-$(SHORTLANGUAGE).zip $(PROGNAME)-$(VERSION)-$(SHORTLANGUAGE)
+	$(SILENT)rm -rf $(PROGNAME)-$(VERSION)-$(SHORTLANGUAGE)
 
 upload: dist
-	echo -e "<?php\n$$version=\"$(VERSION)\";\n?>" > webpage/version.inc.php
-	scp -r $(PROGNAME)-$(VERSION)_dist $(SSH_USER)@$(SSH_HOST):$(SSH_PATH)
-	scp -r webpage/*.inc.php docs/CHANGES $(SSH_USER)@$(SSH_HOST):$(SSH_PATH)
-	rm webpage/version.inc.php
+	$(ECHO) "--- Generating PHP version file"
+	$(SILENT)echo -e "<?php\n$$version=\"$(VERSION)\";\n?>" > webpage/version.inc.php
+	$(ECHO) "--> Uploading to $(SSH_HOST)"
+	$(SILENT)scp -r $(PROGNAME)-$(VERSION)_dist $(SSH_USER)@$(SSH_HOST):$(SSH_PATH)
+	$(SILENT)scp -r webpage/*.inc.php docs/CHANGES $(SSH_USER)@$(SSH_HOST):$(SSH_PATH)
+	$(SILENT)rm webpage/version.inc.php
 
 status:
 	cvs status | grep File | grep -v Up-to-date
