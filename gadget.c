@@ -1,4 +1,4 @@
-/* $Id: gadget.c,v 1.6 2003/04/25 23:24:38 tim Exp $
+/* $Id: gadget.c,v 1.7 2005/05/27 15:01:35 tim Exp $
 *
 * THE heart of UniMatrix. This is the center piece of code in UniMatrix
 */
@@ -11,17 +11,26 @@
 #include "prefs.h"
 #include "cache.h"
 #include "notes.h"
+#include "tnlist.h"
 
 extern UniMatrixPrefs gPrefs;
 
 FormPtr gForm=NULL;
-UInt16 gGadgetID=0, gHintGadgetID=0;
-UInt16 gCourseIndex=0, gTimeIndex=0, gTimeDrawnIndex=0, gHintNote=0;
-Boolean gHintDrawn=false, gGadgetCompleteRedraw=true;
-UInt8 gGadgetCurMinHour=GADGET_MIN_HOUR, gGadgetCurMaxHour=GADGET_MAX_HOUR,
-      gGadgetDaysNum=GADGET_DEFAULT_NUMDAYS, gGadgetDaysWidth=GADGET_TOTAL_DRAWWIDTH/GADGET_DEFAULT_NUMDAYS,
-      gGadgetCurScreen=GADGET_SCREEN_DAY;
+UInt16  gGadgetID=0,
+        gHintGadgetID=0,
+        gCourseIndex=0,
+        gTimeIndex=0,
+        gTimeDrawnIndex=0,
+        gHintNote=0;
+Boolean gHintDrawn=false,
+        gGadgetCompleteRedraw=true;
+UInt8   gGadgetCurMinHour = GADGET_MIN_HOUR,
+        gGadgetCurMaxHour = GADGET_MAX_HOUR,
+        gGadgetDaysNum    = GADGET_DEFAULT_NUMDAYS,
+        gGadgetDaysWidth=GADGET_TOTAL_DRAWWIDTH/GADGET_DEFAULT_NUMDAYS,
+        gGadgetCurScreen=GADGET_SCREEN_DAY;
 TimeType gGadgetLastTimeline={0x00, 0x00};
+TNlist  *gGadgetTimeList = NULL;
 
 
 /*****************************************************************************
@@ -40,7 +49,7 @@ static UInt8 GadgetCalcTimeTop(TimeType begin) {
 
     if (tmp < 0)  tmp = 0;
   } else { // GADGET_SCREEN_NIGHT
-    if ((begin.hours < 20) && (begin.hours > 8)) {
+    if ((begin.hours < 20) && (begin.hours >= 8)) {
       tmp = 0;
     } else {
       tmp = begin.minutes / 15;
@@ -64,7 +73,7 @@ static UInt8 GadgetCalcTimeHeight(TimeType begin, TimeType end) {
   UInt16 diff, tmp;
 
   if (gGadgetCurScreen == GADGET_SCREEN_NIGHT) {
-    if  ((begin.hours < 20) && (begin.hours > 8)) {
+    if  ((begin.hours < 20) && (begin.hours >= 8)) {
       begin.hours=20;
       begin.minutes=0;
     }
@@ -329,45 +338,203 @@ void GadgetRedraw() {
   gGadgetCompleteRedraw=false;
 }
 
+inline Boolean
+GadgetEventTimesCollide( UInt8 t1_day, UInt16 t1_begin, UInt16 t1_end,
+			 UInt8 t2_day, UInt16 t2_begin, UInt16 t2_end )
+{
+  // days must be equal to have a collision
+  // four cases have to be cared:
+  // 1) t1 begin is in t2 == t2 end is in t1
+  // 2) t1 end is in t2 == t2 begin is in t1
+  // 3) t1 is in t2
+  // 4) t2 is in t1
+
+  return ( (t1_day == t2_day) &&
+           (
+	    ((t1_begin >= t2_begin) && (t1_begin < t2_end)) ||
+	    ((t1_end > t2_begin) && (t1_end <= t2_end)) ||
+	    ((t1_begin <= t2_begin) && (t1_end >= t2_end)) ||
+	    ((t1_begin >= t2_begin) && (t1_end <= t2_end))
+	    )
+	  );
+}
+
+Boolean
+GadgetEventsCollide(TimeDBRecord *t1, TimeDBRecord *t2)
+{
+  UInt16 t1_begin=TimeToInt(t1->begin), t1_end=TimeToInt(t1->end);
+  UInt16 t2_begin=TimeToInt(t2->begin), t2_end=TimeToInt(t2->end);
+
+  return GadgetEventTimesCollide(t1->day, t1_begin, t1_end,
+				 t2->day, t2_begin, t2_end);
+}
+
 
 /*****************************************************************************
 * Function: GadgetDrawEvents
 *
 * Description: Draws all events, used by GadgetRedraw and GadgetDrawComplete
 *****************************************************************************/
-void GadgetDrawEvents(void) {
-  UInt16 index=0;
-  MemHandle m;
-  TimeDBRecord *t;
+void
+GadgetDrawEvents()
+{
+  UInt8 pos = 0;
+  UInt8 num_times = 0;
+  UInt16 index=0, time_index;
+  MemHandle m, ml; // ml = memhandle for look-ahead, would have to be an array for >2 MAX_AT_A_TIME
+  TimeDBRecord *t = NULL;
+  TimeDBRecord *tl = NULL; // look_ahead time
 
-  while( (m = DmQueryNextInCategory(DatabaseGetRef(), &index, DatabaseGetCat())) != NULL) {
+  UInt8 last_day = 0;
+  UInt16 last_begin = 0, last_end = 0;
+  UInt8 last_pos = 0;
+  
+  TNlistFree(gGadgetTimeList);
+  gGadgetTimeList = NULL;
+
+  ml = DmQueryNextInCategory(DatabaseGetRef(), &index, DatabaseGetCat());
+
+  while( ml != NULL ) {
+
+    Boolean look_ahead_not_visible = true;
+
+    m = ml;
+    time_index = index;
     t=(TimeDBRecord *)MemHandleLock(m);
+
+    while (look_ahead_not_visible) {
+      index += 1;
+      ml = DmQueryNextInCategory(DatabaseGetRef(), &index, DatabaseGetCat());
+
+      if (ml != NULL) {
+	tl = (TimeDBRecord *)MemHandleLock(ml);
+	if ( (tl->type == TYPE_TIME) && GadgetEventIsVisible(tl) ) {
+	  look_ahead_not_visible = false;
+	} else {
+	  MemHandleUnlock(ml);
+	  ml = NULL;
+	  tl = NULL;
+	}
+      } else {
+	break;
+      }
+    }
+
     if ((t->type == TYPE_TIME) && GadgetEventIsVisible(t) ) {
+
       RGBColorType c;
+      GadgetTimeListType *gtl;
+      UInt16 current_begin, current_end;
+
+      current_begin = TimeToInt(t->begin);
+      current_end = TimeToInt(t->end);
+
+      // How many entries?
+      if ( GadgetEventTimesCollide(last_day, last_begin, last_end,
+				   t->day, current_begin, current_end) ) {
+	// we collide with previous event, draw right
+	if (last_pos == 0) {
+	  pos = 1;
+	} else {
+	  pos = 0;
+	}
+	if (last_end < current_end) {
+	  last_begin = current_begin;
+	  last_end = current_end;
+	  last_day = t->day;
+	  last_pos = pos;
+	}
+	num_times = 2;
+      } else {
+	// We do not collide with last event, check if we collide with next event
+	if ( (tl != NULL) && (tl->type == TYPE_TIME) && GadgetEventsCollide(t, tl) ) {
+	  // Next event is visible and collides with current event 
+	  last_begin = current_begin;
+	  last_end = current_end;
+	  last_day = t->day;
+	  num_times = 2;
+	  pos = 0;
+	  last_pos = pos;
+	} else {
+	  // We do not collide with previous or next event => no collision
+	  last_begin = TimeToInt(t->begin);
+	  last_end = TimeToInt(t->end);
+	  last_day = t->day;
+	  num_times = 1;
+	  pos = 0;	  
+	  last_pos = pos;
+	}
+      }
+
+
       c.r=t->color[0];
       c.g=t->color[1];
       c.b=t->color[2];
-      GadgetDrawTime((TimeType)t->begin, (TimeType)t->end, t->day, &c, t->course);
+
+      gtl = (GadgetTimeListType *)MemPtrNew(sizeof(GadgetTimeListType));
+      gtl->index = time_index;
+      gtl->num = num_times;
+      gtl->pos = pos;
+      GadgetTimeSetRect(&(gtl->rect), (TimeType)t->begin, (TimeType)t->end, t->day, num_times, pos);
+
+      gGadgetTimeList = TNlistAppend(gGadgetTimeList, gtl);
+
+      GadgetDrawTime((TimeType)t->begin, (TimeType)t->end, t->day, &c, t->course, num_times, pos);
+
     }
     MemHandleUnlock(m);
-    index += 1;
+    if (ml != NULL) {
+      MemHandleUnlock(ml);
+      tl = NULL;
+    }
   }
 }
 
+void
+GadgetTimeSetRect(RectangleType *rect, TimeType begin, TimeType end, UInt8 day, UInt8 num_times, UInt8 pos)
+{
+  UInt8 top, height, width, width_base;
+  RectangleType bounds;
+  UInt16 gadgetIndex = FrmGetObjectIndex(gForm, gGadgetID);
+
+  FrmGetObjectBounds(gForm, gadgetIndex, &bounds);
+
+  height = GadgetCalcTimeHeight(begin, end);
+  top = GadgetCalcTimeTop(begin);
+
+  if ( (top + height) > GADGET_MAX_PIXELHEIGHT)
+    height -= ((top + height) - GADGET_MAX_PIXELHEIGHT);
+
+  width = gGadgetDaysWidth / num_times;
+  width_base = width;
+  if (pos == (GADGET_MAX_AT_A_TIME-1)) {
+    // It's the last item, add any pixels that get cut off by the division otherwise
+    // (like: width: 20, num_items = 3, item width = 6, 2 got cut off, add them to the last entry)
+    width += (gGadgetDaysWidth - (num_times * width));
+  }
+
+  RctSetRectangle(rect,
+		  // Left          Left Offset                 Days to left          lines between days  position offset
+		  bounds.topLeft.x+GADGET_BASELEFT+GADGET_LEFT+(gGadgetDaysWidth*day)+day              + pos * width_base,
+		  // Top           Top Offset      hours
+		  bounds.topLeft.y+GADGET_TOP +top,
+		  // Width
+		  width,
+		  // 2px per 15min
+		  height);
+
+}
 
 /*****************************************************************************
 * Function: GadgetDrawTime
 *
 * Description: Show a time in the grid
 *****************************************************************************/
-void GadgetDrawTime(TimeType begin, TimeType end, UInt8 day, RGBColorType *color, UInt16 courseID) {
-  UInt8 top, height;
-  RectangleType bounds, rect;
+void
+GadgetDrawTime(TimeType begin, TimeType end, UInt8 day, RGBColorType *color, UInt16 courseID, UInt8 num_times, UInt8 pos)
+{
+  RectangleType rect;
   RGBColorType prevColor, inverted;
-  UInt16 gadgetIndex = FrmGetObjectIndex(gForm, gGadgetID);
-
-  FrmGetObjectBounds(gForm, gadgetIndex, &bounds);
-
 
   // Sort out bogus requests, could be more intelligent, maybe later...
   if (day >= gGadgetDaysNum) return;
@@ -376,23 +543,13 @@ void GadgetDrawTime(TimeType begin, TimeType end, UInt8 day, RGBColorType *color
   if (! gForm) return;
   if (! gGadgetID) return;
 
-  height = GadgetCalcTimeHeight(begin, end);
-  top = GadgetCalcTimeTop(begin);
-  if ( (top + height) > GADGET_MAX_PIXELHEIGHT)
-    height -= ((top + height) - GADGET_MAX_PIXELHEIGHT);
+  GadgetTimeSetRect(&rect, begin, end, day, num_times, pos);
 
-  RctSetRectangle(&rect,
-  // Left          Left Offset   Dayss to left         lines between day
-  bounds.topLeft.x+GADGET_BASELEFT+GADGET_LEFT+(gGadgetDaysWidth*day)+day,
-  // Top           Top Offset      hours          
-  bounds.topLeft.y+GADGET_TOP+top,
-  // Width            // 2px per 15min
-  gGadgetDaysWidth, height);
 
   TNSetForeColorRGB(color, &prevColor);
   WinDrawRectangle(&rect, 0);
 
-  if ( (gPrefs.showTypes || gPrefs.showShortNames) && (height >= FntLineHeight())) {
+  if ( (gPrefs.showTypes || gPrefs.showShortNames) && (rect.extent.y >= FntLineHeight())) {
 
     RGBColorType oldBack, oldText;
 
@@ -492,7 +649,6 @@ void GadgetDrawHint(const char *toptext, const char *bottext, UInt16 note) {
   CtlShowControl(ctl);
   ctl=GetObjectPtr(BUTTON_beam);
   CtlShowControl(ctl);
-
 }
 
 
@@ -526,7 +682,7 @@ void GadgetDrawHintErase(void) {
 * Function: GadgetDrawHintCurrent
 *
 * Description: Draw hint for current gTimeIndex if needed (may be forced NOT
-*              to draw with GadgetSetNeedsRedraw(false);
+*              to draw with GadgetSetNeedsRedraw(false));
 *****************************************************************************/
 void GadgetDrawHintCurrent(void) {
   Char *tmp, *bot, begin[timeStringLength], end[timeStringLength], *day;
@@ -556,11 +712,25 @@ void GadgetDrawHintCurrent(void) {
           // mt may be null, for example if next is drawn after delete!
           tc = (TimeDBRecord *)MemHandleLock(mt);
           if ((tc->type == TYPE_TIME) && GadgetEventIsVisible(tc) ) {
+
+	    TNlist *tmpl = gGadgetTimeList;
+	    GadgetTimeListType *gtl = NULL;
+	    while (tmpl != NULL) {
+	      gtl = tmpl->data;
+	      if (gtl->index == gTimeDrawnIndex) {
+		break;
+	      }
+	      tmpl = tmpl->next;
+	    }
+ 
             color.r=tc->color[0];
             color.g=tc->color[1];
             color.b=tc->color[2];
             if (gPrefs.showTimeline)  GadgetDrawTimeline(gtErase);
-            GadgetDrawTime(tc->begin, tc->end, tc->day, &color, tc->course);
+
+	    if (gtl != NULL) {
+	      GadgetDrawTime(tc->begin, tc->end, tc->day, &color, tc->course, gtl->num, gtl->pos);
+	    }
             if (gPrefs.showTimeline)  GadgetDrawTimeline(gtDraw);
           }
           MemHandleUnlock(mt);
@@ -587,7 +757,16 @@ void GadgetDrawHintCurrent(void) {
       tc = (TimeDBRecord *)MemHandleLock(mt);
 
       if ( GadgetEventIsVisible(tc) ) {
-        UInt8 top, height;
+
+	TNlist *tmpl = gGadgetTimeList;
+	GadgetTimeListType *gtl = NULL;
+	while (tmpl != NULL) {
+	  gtl = tmpl->data;
+	  if (gtl->index == gTimeDrawnIndex) {
+	    break;
+	  }
+	  tmpl = tmpl->next;
+	}
 
         mh = DmGetResource(strRsc, GADGET_STRINGS_WDAYSTART+tc->day);
         day = (Char *)MemHandleLock(mh);
@@ -616,36 +795,36 @@ void GadgetDrawHintCurrent(void) {
 
         FrmGetObjectBounds(gForm, gadgetIndex, &bounds);
 
-        top = GadgetCalcTimeTop(tc->begin);
-        height = GadgetCalcTimeHeight(tc->begin, tc->end);
-        if ( (top + height) > GADGET_MAX_PIXELHEIGHT)
-          height -= ((top + height) - GADGET_MAX_PIXELHEIGHT);
+	if (gtl != NULL) {
+	  GadgetTimeSetRect(&rect, tc->begin, tc->end, tc->day, gtl->num, gtl->pos);
+	  RctSetRectangle(&rect,
+			  //             + inset (two boxes, one black, one white)
+			  rect.topLeft.x + 2,
+			  rect.topLeft.y + 2,
+			  // width      - 2 * inset
+			  rect.extent.x - 4,
+			  // height     - 2 * inset
+			  rect.extent.y - 4
+			  );
 
-        RctSetRectangle(&rect,
-        // Left          Left Offset   Dayss to left         lines between day
-        bounds.topLeft.x+GADGET_BASELEFT+GADGET_LEFT+(gGadgetDaysWidth*tc->day)+tc->day+2,
-        // Top           Top Offset  2 pixels per 15 min
-        bounds.topLeft.y+GADGET_TOP+top+2,
-        // Width            // 2px per 15min
-        gGadgetDaysWidth - 4, height-4);
-
-        /* Invert color, looks not so nice aka bad
-        color.r=255- tc->color[0];
-        color.g=255- tc->color[1];
-        color.b=255- tc->color[2];
-        */
-        color.r=255;
-        color.g=255;
-        color.b=255;
-        TNSetForeColorRGB(&color, &prevColor);
-        WinDrawRectangleFrame(simpleFrame, &rect);
-        color.r=0;
-        color.g=0;
-        color.b=0;
-        RctSetRectangle(&rect, rect.topLeft.x-1, rect.topLeft.y-1, rect.extent.x+2, rect.extent.y+2);
-        TNSetForeColorRGB(&color, NULL);
-        WinDrawRectangleFrame(simpleFrame, &rect);
-        TNSetForeColorRGB(&prevColor, NULL);
+	  /* Invert color, looks not so nice aka bad
+	     color.r=255- tc->color[0];
+	     color.g=255- tc->color[1];
+	     color.b=255- tc->color[2];
+	  */
+	  color.r=255;
+	  color.g=255;
+	  color.b=255;
+	  TNSetForeColorRGB(&color, &prevColor);
+	  WinDrawRectangleFrame(simpleFrame, &rect);
+	  color.r=0;
+	  color.g=0;
+	  color.b=0;
+	  RctSetRectangle(&rect, rect.topLeft.x-1, rect.topLeft.y-1, rect.extent.x+2, rect.extent.y+2);
+	  TNSetForeColorRGB(&color, NULL);
+	  WinDrawRectangleFrame(simpleFrame, &rect);
+	  TNSetForeColorRGB(&prevColor, NULL);
+	}
 
        // WinInvertRectangleFrame(simpleFrame, &rect);
         GadgetDrawHint(tmp, bot, tc->note);
@@ -663,7 +842,6 @@ void GadgetDrawHintCurrent(void) {
       MemHandleUnlock(mt);
     } // End attr == current category
   }
-
 }
 
 
@@ -769,6 +947,8 @@ Boolean GadgetHandler(FormGadgetTypeInCallback *gadgetP, UInt16 cmd, void *param
 
     case formGadgetDeleteCmd:
       //Perform any cleanup prior to deletion.
+      TNlistFree(gGadgetTimeList);
+      gGadgetTimeList = NULL;
       break;
 
     case formGadgetEraseCmd:
@@ -909,7 +1089,8 @@ void GadgetTap(FormGadgetType *pGadget, EventType *event) {
     MemHandle m;
     TimeDBRecord *t;
     UInt16 index=0, wantCourse=0, tmp3_4th=0;
-    UInt8 top, height;
+    GadgetTimeListType *gtl;
+    TNlist *tmpl;
 
     /* Check for stroke commands */
 
@@ -939,42 +1120,40 @@ void GadgetTap(FormGadgetType *pGadget, EventType *event) {
       return;
     }
 
+
+    tmpl = gGadgetTimeList;
+    while (tmpl != NULL) {
+      gtl = (GadgetTimeListType *)tmpl->data;
+      if (RctPtInRectangle(newPointX, newPointY, &(gtl->rect))) {
+	m = DmQueryRecord(DatabaseGetRef(), gtl->index);
+        if (m) {
+          // mt may be null, for example if next is drawn after delete!
+          t = (TimeDBRecord *)MemHandleLock(m);
+
+	  // we got a match
+	  wantCourse=t->course;
+	  gTimeIndex=gtl->index;
+	  foundTime=true;
+
+	  MemHandleUnlock(m);
+	}
+      }
+      tmpl = tmpl->next;
+    }
+
     // Search for the clicked time
     while(! found && ((m = DmQueryNextInCategory(DatabaseGetRef(), &index, DatabaseGetCat())) != NULL)) {
-      Char *s=MemHandleLock(m);
-      if (s[0] == TYPE_TIME) {
-        t=(TimeDBRecord *)s;
-        if ( GadgetEventIsVisible(t) ) {
-          RectangleType rect;
-
-          height = GadgetCalcTimeHeight(t->begin, t->end);
-          top = GadgetCalcTimeTop(t->begin);
-          if ( (top + height) > GADGET_MAX_PIXELHEIGHT)
-            height -= ((top + height) - GADGET_MAX_PIXELHEIGHT);
-
-          RctSetRectangle(&rect,  // For definitions of coords and sizes see GadgetDrawTime
-                          bounds.topLeft.x+GADGET_BASELEFT+GADGET_LEFT+(gGadgetDaysWidth*t->day)+t->day,
-                          bounds.topLeft.y+GADGET_TOP+top,
-                          gGadgetDaysWidth, height);
-
-          if (RctPtInRectangle(newPointX, newPointY, &rect)) {
-            // we got a match
-            wantCourse=t->course;
-            gTimeIndex=index;
-            foundTime=true;
-          }
-        }
-      } else if (s[0] == TYPE_COURSE) {
-        if (! foundTime)  found=true;
-        else {
-          CourseDBRecord c;
-          UnpackCourse(&c, s);
-          if (c.id == wantCourse) {
-            SndPlaySystemSound(sndClick);
-            gCourseIndex = index;
-            found=true;
-          }
-        }
+      Char *s = (Char *)MemHandleLock(m);
+      if (s[0] == TYPE_COURSE) {
+	if (foundTime) {
+	  CourseDBRecord c;
+	  UnpackCourse(&c, s);
+	  if (c.id == wantCourse) {
+	    SndPlaySystemSound(sndClick);
+	    gCourseIndex = index;
+	  }
+	}
+	found=true;
       }
       MemHandleUnlock(m);
       index += 1;
