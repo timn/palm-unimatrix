@@ -2,3 +2,6 @@
 *.cache
 *.prc
 *.pws
+UniMatrix
+UniMatrix-*_dist
+.obj
