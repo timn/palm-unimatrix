@@ -1,4 +1,4 @@
-/* $Id: edit.c,v 1.6 2003/11/20 22:55:50 tim Exp $
+/* $Id: edit.c,v 1.7 2005/05/27 14:58:56 tim Exp $
  *
  * Code for editing times, events, courses
  */
@@ -477,6 +477,7 @@ static void EditTimeFormInit(FormType *frm) {
     old = FldGetTextHandle(room);
     FldSetTextHandle(room, mroom);
     if (old != NULL)    MemHandleFree(old); 
+    FldDrawField(room);
 
     selectedCourse = CourseListGen(gEditTimeItemList, gEditTimeItemIDs, gEditTimeItemInd, gEditTimeNumCourses, GadgetGetHintCourseIndex(), CLIST_SEARCH_INDEX);
 
@@ -710,30 +711,84 @@ void EditTimeGetTime(ControlType *ctl, TimeType *begin, TimeType *end, Char *lab
 *
 * Description: Checks if given times collides with an existing event/time
 *              record. Returns true on collision and false otherwise
+*              This should already word on arbitrary GADGET_MAX_AT_A_TIME
+*              values >= 2
 *****************************************************************************/
 Boolean EditTimeCheckCollision(TimeType begin, TimeType end, UInt8 day, UInt16 notIndex, Boolean checkIndex) {
-  Boolean rv=false;
-  UInt16 beginVal=TimeToInt(begin), endVal=TimeToInt(end);
+  UInt16 begin_val=TimeToInt(begin), end_val=TimeToInt(end);
   UInt16 index=0;
   MemHandle m;
-  Char *s;
+  UInt8 num_events = 0;
 
-  while (!rv && ((m = DmQueryNextInCategory(DatabaseGetRef(), &index, DatabaseGetCat())) != NULL)) {
+  UInt16 begins[GADGET_MAX_AT_A_TIME], ends[GADGET_MAX_AT_A_TIME];
+
+  /* Basic idea:
+
+     while (more records available pick next)
+       check if entry collides with given time
+          - if first time push to array
+          - if not first and collide check if it collides with any already found time in the arrays
+	    - if so increas num_events and search further
+            - else prune not colliding time from array and decrease num_times
+            if num_events >= GADGET_MAX_AT_A_TIME   return true => collision
+     return false, no collision
+
+   */
+
+  
+
+  // Find first colliding entry
+  while ((m = DmQueryNextInCategory(DatabaseGetRef(), &index, DatabaseGetCat())) != NULL) {
     if ( !checkIndex || (index != notIndex)) {
-      s = MemHandleLock(m);
-      if (s[0] == TYPE_TIME) {
-        TimeDBRecord *t=(TimeDBRecord *)s;
-        UInt16 beginTmp=TimeToInt(t->begin), endTmp=TimeToInt(t->end);
+      TimeDBRecord *t = (TimeDBRecord *)MemHandleLock(m);
+      if (t->type == TYPE_TIME) {
+        UInt16 begin_tmp=TimeToInt(t->begin), end_tmp=TimeToInt(t->end);
         if (day == t->day) {
           // days must be equal to have a collision
           // Three cases have to be cared:
-          // 1) Existing begin is in the new time
-          // 2) existing end is in the new time
-          // 3) complete time is in the new time
-          if ( ((beginVal >= beginTmp) && (beginVal < endTmp)) ||
-               ((endVal > beginTmp) && (endVal <= endTmp)) ||
-               ((beginVal <= beginTmp) && (endVal >= endTmp)) ) {
-            rv = true;
+          // 1) new begin is in the existing time
+          // 2) new end is in the existing time
+          // 3) complete existing time is in the new time
+          if ( ((begin_val >= begin_tmp) && (begin_val < end_tmp)) ||
+               ((end_val > begin_tmp) && (end_val <= end_tmp)) ||
+               ((begin_val <= begin_tmp) && (end_val >= end_tmp)) ) {
+
+	    // It collides with the time, check with all already found times, this will
+	    // not happen for the first time of course
+	    if (num_events == 0) {
+	      num_events += 1;
+	      begins[0] = begin_tmp;
+	      ends[0] = end_tmp;
+	    } else {
+	      Int16 i, j;
+	      UInt8 new_num_events = num_events;
+	      for (i = 0; i < num_events; ++i) {
+		if ( ((begin_tmp >= begins[i]) && (begin_tmp < ends[i])) ||
+		     ((end_tmp > begins[i]) && (end_tmp <= ends[i])) ||
+		     ((begin_tmp <= begins[i]) && (end_tmp >= ends[i])) ) {
+		  // The already time collides with this time
+		  begins[new_num_events] = begin_tmp;
+		  ends[new_num_events] = end_tmp;
+		  new_num_events += 1;
+		} else {
+		  // Prune this time
+		  for (j = i; j < num_events - 1; ++j) {
+		    begins[j] = begins[j+1];
+		    ends[j] = ends[j+1];
+		  }
+		  new_num_events -= 1;
+		  num_events -= 1;
+		  i -= 1;
+		}
+	      }
+	      num_events = new_num_events;
+	    }
+
+	    if (num_events >= GADGET_MAX_AT_A_TIME) {
+	      MemHandleUnlock(m);
+	      return true;
+	    }
+
           }
         }
       }
@@ -742,7 +797,7 @@ Boolean EditTimeCheckCollision(TimeType begin, TimeType end, UInt8 day, UInt16 n
     index += 1;
   }
 
-  return rv;
+  return false;
 }
 
 Boolean EditTimeFormHandleEvent(EventPtr event) {
