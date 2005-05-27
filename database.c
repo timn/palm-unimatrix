@@ -1,4 +1,4 @@
-/* $Id: database.c,v 1.5 2003/04/29 23:03:48 tim Exp $
+/* $Id: database.c,v 1.6 2005/05/27 14:57:31 tim Exp $
  *
  * Database handling, another central piece in UniMatrix
  */
@@ -588,7 +588,15 @@ Int16 DatabaseCompare(void *rec1, void *rec2, Int16 other,
         begin2 = TimeToInt(t2->begin);
         if (begin1 < begin2)  return -1;
         else if (begin1 > begin2)  return 1;
-        return 0;
+	else { // t1->begin == t2->begin
+	  // If both start at the same time we will sort the bigger entry first
+	  UInt16 end1, end2;
+	  end1 = TimeToInt(t1->end);
+	  end2 = TimeToInt(t2->end);
+	  if (end1 > end2)  return -1; // t1 is longer
+	  else if (end1 < end2)  return 1; // t2 is longer
+	  else return 0; // both are at identical times
+	}
       }
     } else if (s1[0] == TYPE_CTYP) {      
       CourseTypeDBRecord *ct1, *ct2;
