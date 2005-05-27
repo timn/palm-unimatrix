@@ -1,4 +1,4 @@
-/* $Id: alarm.rcp.in,v 1.4 2003/04/27 16:38:48 tim Exp $
+/* $Id: alarm.rcp.in,v 1.5 2005/05/27 15:06:01 tim Exp $
  *
  * alarm stuff
  */
@@ -42,5 +42,7 @@ begin
 
   button "" id ALARM_cancel at (105 prevbottom+12 11 11) noframe graphical bitmapid BITMAP_cancel selectedbitmapid BITMAP_cancel_clicked
   button "" id ALARM_ok at (prevright+3 prevtop 11 11) noframe graphical bitmapid BITMAP_ok selectedbitmapid BITMAP_ok_clicked
+
+  graffitistateindicator at (144 prevtop)
 
 end
