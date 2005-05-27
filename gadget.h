@@ -1,4 +1,4 @@
-/* $Id: gadget.h,v 1.3 2003/04/18 23:34:59 tim Exp $
+/* $Id: gadget.h,v 1.4 2005/05/27 15:04:02 tim Exp $
  *
  * The headers for th heart of UniMatrix
  */
@@ -33,15 +33,26 @@
 
 #define GADGET_NOTESYMBOL 11
 
+// Changing this to anything >2 _will_ break the code! See GadgetDrawEvents. The look-ahead
+// needs to be changed for that case!
+#define GADGET_MAX_AT_A_TIME 2
+
 // Local definition for timeline drawtype
 typedef enum GadgetTimelineDrawType {
   gtDraw, gtErase
 } GadgetTimelineDrawType;
 
+typedef struct {
+  UInt16 index;
+  RectangleType rect;
+  UInt8 num;
+  UInt8 pos;
+} GadgetTimeListType;
+
 
 extern void DrawCharsToFitWidth(const char *s, RectanglePtr r) THIRD_SECTION;
 extern void GadgetDraw(Boolean eraseFirst) THIRD_SECTION;
-extern void GadgetDrawTime(TimeType begin, TimeType end, UInt8 day, RGBColorType *color, UInt16 courseID) THIRD_SECTION;
+extern void GadgetDrawTime(TimeType begin, TimeType end, UInt8 day, RGBColorType *color, UInt16 courseID, UInt8 num_times, UInt8 pos) THIRD_SECTION;
 extern void GadgetRedraw(void) THIRD_SECTION;
 extern void GadgetDrawEvents(void) THIRD_SECTION;
 extern void GadgetDrawTimeline(GadgetTimelineDrawType drawType) THIRD_SECTION;
@@ -62,6 +73,8 @@ extern void GadgetSetNumDays(UInt8 numDays) THIRD_SECTION;
 extern void GadgetSetHintTimeIndex(UInt16 newTimeInd) THIRD_SECTION;
 extern UInt16 GadgetGetHintCourseIndex(void) THIRD_SECTION;
 extern void GadgetSetHintCourseIndex(UInt16 newCourseInd) THIRD_SECTION;
-extern void GadgetDrawStep(WinDirectionType direction);
+extern void GadgetDrawStep(WinDirectionType direction) THIRD_SECTION;
+extern void GadgetTimeSetRect(RectangleType *rect, TimeType begin, TimeType end, UInt8 day, UInt8 num_times, UInt8 pos) THIRD_SECTION;
+
 
 #endif // GADGET_H
