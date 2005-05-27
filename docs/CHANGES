@@ -2,6 +2,34 @@
  [Uni Matrix] CHANGES
 ==============================================================================
 
+=== v1.1
+
+* Fri May 27 2005 Tim Niemueller <tim@niemueller.de>
+- Now the list is correctly used to draw the right rectangles. This made some
+  database searching uneccessary. No speed penalty.
+- Fixed bug in time edit form: room was not drawn on edit
+- Renamed version to 1.1
+- Added simplified chinese translation and sent compiled version to translator
+  for checking
+- EditTimeCheckCollision does now work again. This should already work for any
+  given GADGET_MAX_AT_A_TIME value. Translations have to be modified I think
+  for more precise error messages.
+
+* Fri May 20 2005 Tim Niemueller <tim@niemueller.de>
+- Fixed underlocking in new code
+- Added tnlist.(c|h) from Onager
+- Use list to remember all drawn rectangles and their corresponding num/pos
+  values. This makes it a lot easier to do all the tap handline etc. later
+- This is still totally buggy and does not work, list handling works though
+
+* Thu May 19 2005 Tim Niemueller <tim@niemueller.de>
+- Fixed bug: If a time started at 8:xx and ended after 20:00 it was not drawn
+  (not even partly as needed) in the night screen
+- First support for colliding events. One screen collides working
+- Multi screen collides working, take next _visible_ event as look ahead
+- Changed build process: objects and resources are now built in .obj, nicer
+  output of compile process
+
 
 === v1.0rc1
 
@@ -331,4 +359,4 @@
 
 
 
-$Id: CHANGES,v 1.16 2003/11/20 22:57:59 tim Exp $
+$Id: CHANGES,v 1.17 2005/05/27 15:09:07 tim Exp $
