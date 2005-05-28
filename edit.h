@@ -1,15 +1,17 @@
-/* $Id: edit.h,v 1.2 2003/03/13 14:56:47 tim Exp $
+/* $Id: edit.h,v 1.3 2005/05/28 09:49:54 tim Exp $
  *
  * Functions for editing courses, events, times, ...
  */
 
 
-extern void CatPreEdit(UInt16 numRecords, UInt32 *recordList);
-extern void CatPostEdit(UInt16 numRecords, UInt32 *recordList);
-extern void EditCourse(UInt16 courseInd);
+extern void CatPreEdit(UInt16 numRecords, UInt32 *recordList) SECOND_SECTION;
+extern void CatPostEdit(UInt16 numRecords, UInt32 *recordList) SECOND_SECTION;
+extern void EditCourse(UInt16 courseInd) SECOND_SECTION;
+extern Boolean EditCourseAutoFill(EventPtr event) SECOND_SECTION;
 extern Boolean EditCourseFormHandleEvent(EventPtr event);
+extern Boolean EditTimeAutoFill(EventPtr event) SECOND_SECTION;
 extern Boolean EditTimeFormHandleEvent(EventPtr event);
-extern void EditTimeGetTime(ControlType *ctl, TimeType *begin, TimeType *end, Char *label);
+extern void EditTimeGetTime(ControlType *ctl, TimeType *begin, TimeType *end, Char *label) SECOND_SECTION;
 extern void EditTimeSetSelectorText(ControlType *ctl, TimeType *begin, TimeType *end, Char *label);
 extern Boolean EditTimeCheckCollision(TimeType begin, TimeType end, UInt8 day, UInt16 notIndex, Boolean checkIndex);
 extern void EditTime(void);

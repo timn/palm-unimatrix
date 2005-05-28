@@ -1,4 +1,4 @@
-/* $Id: edit.c,v 1.7 2005/05/27 14:58:56 tim Exp $
+/* $Id: edit.c,v 1.8 2005/05/28 09:49:54 tim Exp $
  *
  * Code for editing times, events, courses
  */
@@ -61,7 +61,6 @@ static void EditCourseFormInit(FormType *frm) {
     mwebsite=MemHandleNew(StrLen(c.website)+1);
     mphone=MemHandleNew(StrLen(c.teacherPhone)+1);
 
-
     // Copy contents to the memory handle
     buffer=(Char *)MemHandleLock(mname);
     MemSet(buffer, MemPtrSize(buffer), 0);
@@ -119,7 +118,9 @@ static void EditCourseFormInit(FormType *frm) {
 
 }
 
-static Boolean EditCourseSave(FormType *frm) {
+static Boolean
+EditCourseSave(FormType *frm)
+{
   ListType *lst;
   MemHandle mc;
   FieldType *fName, *fTeacher, *fEmail, *fWeb, *fPhone;
@@ -208,7 +209,104 @@ void AddCourse(void) {
   FrmPopupForm(FORM_course_det);
 }
 
-Boolean EditCourseFormHandleEvent(EventPtr event) {
+Boolean
+EditCourseAutoFill(EventPtr event)
+{
+  FormType       *frm;
+  FieldType      *fld;
+  UInt16          focus,
+                  focus_id,
+                  pos;
+  Char           *txt,
+                 *compare_to = NULL;
+  MemHandle       m;
+  UInt16          index = 0;
+  CourseDBRecord  c;
+  Boolean         autofill_found = false;
+
+
+
+  if ( TxtCharIsHardKey(event->data.keyDown.modifiers, event->data.keyDown.chr) ||
+       (EvtKeydownIsVirtual(event)) ||
+       (!TxtCharIsPrint(event->data.keyDown.chr))) {
+    return false;
+  }
+
+  frm = FrmGetActiveForm();
+  focus = FrmGetFocus(frm);
+  if (focus == noFocus)  return false;
+
+  focus_id = FrmGetObjectId(frm, focus);
+  fld = FrmGetObjectPtr(frm, focus);
+
+  // Let the OS insert the character into the field.
+  FrmHandleEvent(frm, event);
+
+  txt = FldGetTextPtr(fld);
+  pos = FldGetInsPtPosition(fld);
+
+  // Only auto-fill if the insertion point is at the end.
+  // Return true because we already called FrmHandleEvent, returning false
+  // would cause the character to appear twice
+  if (pos != FldGetTextLength(fld))  return true;
+
+
+  // Search
+  while( ! autofill_found && ((m = DmQueryRecord(DatabaseGetRef(), index)) != NULL) ) {
+
+    Char *s = (Char *)MemHandleLock(m);
+    UnpackCourse(&c, s);
+
+    if (focus_id == FIELD_cd_name) {
+      UInt16 attr = 0;
+      DmRecordInfo(DatabaseGetRef(), index, &attr, NULL, NULL);
+      if ( (attr & dmRecAttrCategoryMask) == DatabaseGetCat() ) {
+	// It makes no sense to suggest an auto fill for the course name from
+	// a course of the same category, these names have to be unique to be
+	// helpful...
+	MemHandleUnlock(m);
+	index += 1;
+	continue;
+      }
+      compare_to = (Char *)c.name;
+    } else if (focus_id == FIELD_cd_teacher) {
+      compare_to = (Char *)c.teacherName;
+    } else if (focus_id == FIELD_cd_email) {
+      compare_to = (Char *)c.teacherEmail;
+    }
+
+
+    if (compare_to == NULL) {
+      MemHandleUnlock(m);
+      return true;
+    }
+
+    if (s[0] == TYPE_COURSE) {
+
+      Char *found;
+
+      found = StrStr(compare_to, txt);
+      if (( found != NULL) && (found == compare_to)) {
+
+	Char *ptr = (Char *)compare_to + StrLen(txt);
+
+	FldInsert(fld, ptr, StrLen(ptr));
+	FldSetSelection(fld, pos, pos + StrLen(ptr));
+
+	autofill_found = true;
+      }
+    }
+    MemHandleUnlock(m);
+    index += 1;
+  }
+
+  // Always, we already called FrmHandleEvent, see explanation above
+  return true;
+}
+
+Boolean
+EditCourseFormHandleEvent(EventPtr event)
+{
   Boolean handled = false;
   FormType *frm=FrmGetActiveForm();
 
@@ -242,7 +340,11 @@ Boolean EditCourseFormHandleEvent(EventPtr event) {
 
       default:
         break;
-    }   
+    }
+  } else if (event->eType == keyDownEvent) {
+    if ( ! TxtCharIsHardKey(event->data.keyDown.modifiers, event->data.keyDown.chr) && ! EvtKeydownIsVirtual(event)) {
+      handled = EditCourseAutoFill(event);
+    }
   } else if (event->eType == frmUpdateEvent) {
       // redraws the form if needed
       ControlType *ctl;
@@ -800,7 +902,90 @@ Boolean EditTimeCheckCollision(TimeType begin, TimeType end, UInt8 day, UInt16 n
   return false;
 }
 
-Boolean EditTimeFormHandleEvent(EventPtr event) {
+
+Boolean
+EditTimeAutoFill(EventPtr event)
+{
+  FormType       *frm;
+  FieldType      *fld;
+  UInt16          focus,
+                  focus_id,
+                  pos;
+  Char           *txt,
+                 *compare_to = NULL;
+  MemHandle       m;
+  UInt16          index = 0;
+  Boolean         autofill_found = false;
+
+
+
+  if ( TxtCharIsHardKey(event->data.keyDown.modifiers, event->data.keyDown.chr) ||
+       (EvtKeydownIsVirtual(event)) ||
+       (!TxtCharIsPrint(event->data.keyDown.chr))) {
+    return false;
+  }
+
+  frm = FrmGetActiveForm();
+  focus = FrmGetFocus(frm);
+  if (focus == noFocus)  return false;
+
+  focus_id = FrmGetObjectId(frm, focus);
+  fld = FrmGetObjectPtr(frm, focus);
+
+  // Let the OS insert the character into the field.
+  FrmHandleEvent(frm, event);
+
+  txt = FldGetTextPtr(fld);
+  pos = FldGetInsPtPosition(fld);
+
+  // Only auto-fill if the insertion point is at the end.
+  // Return true because we already called FrmHandleEvent, returning false
+  // would cause the character to appear twice
+  if (pos != FldGetTextLength(fld))  return true;
+
+
+  // Search
+  while( ! autofill_found && ((m = DmQueryRecord(DatabaseGetRef(), index)) != NULL) ) {
+
+    TimeDBRecord *t = (TimeDBRecord *)MemHandleLock(m);
+
+    if (focus_id == FIELD_ed_room) {
+      compare_to = (Char *)t->room;
+    }
+
+
+    if (compare_to == NULL) {
+      MemHandleUnlock(m);
+      return true;
+    }
+
+    if (t->type == TYPE_TIME) {
+
+      Char *found;
+
+      found = StrStr(compare_to, txt);
+      if (( found != NULL) && (found == compare_to)) {
+
+	Char *ptr = (Char *)compare_to + StrLen(txt);
+
+	FldInsert(fld, ptr, StrLen(ptr));
+	FldSetSelection(fld, pos, pos + StrLen(ptr));
+
+	autofill_found = true;
+      }
+    }
+    MemHandleUnlock(m);
+    index += 1;
+  }
+
+  // Always, we already called FrmHandleEvent, see explanation above
+  return true;
+}
+
+
+Boolean
+EditTimeFormHandleEvent(EventPtr event)
+{
   Boolean handled = false;
   FormType *frm=FrmGetActiveForm();
 
@@ -857,6 +1042,10 @@ Boolean EditTimeFormHandleEvent(EventPtr event) {
   } else if (event->eType == popSelectEvent) {
     if (event->data.popSelect.listID == LIST_ed_course) {
       EditTimeFindColor(frm, gEditTimeItemIDs[event->data.popSelect.selection]);
+    }
+  } else if (event->eType == keyDownEvent) {
+    if ( ! TxtCharIsHardKey(event->data.keyDown.modifiers, event->data.keyDown.chr) && ! EvtKeydownIsVirtual(event)) {
+      handled = EditTimeAutoFill(event);
     }
   } else if (event->eType == frmUpdateEvent) {
       // redraws the form if needed

@@ -4,6 +4,12 @@
 
 === v1.1
 
+* Sat May 28 2005 Tim Niemueller <tim@niemueller.de>
+- Added auto fill feature for course and event detail screens. On the course
+  screen the name is autofilled (only with course names from different
+  semesters), the teacher name and email are autofilled, in the event screen
+  only the room is autofilled. This can make entry a lot faster.
+
 * Fri May 27 2005 Tim Niemueller <tim@niemueller.de>
 - Now the list is correctly used to draw the right rectangles. This made some
   database searching uneccessary. No speed penalty.
@@ -14,6 +20,7 @@
 - EditTimeCheckCollision does now work again. This should already work for any
   given GADGET_MAX_AT_A_TIME value. Translations have to be modified I think
   for more precise error messages.
+- Started work on EditCourseAutoFill.
 
 * Fri May 20 2005 Tim Niemueller <tim@niemueller.de>
 - Fixed underlocking in new code
@@ -359,4 +366,4 @@
 
 
 
-$Id: CHANGES,v 1.17 2005/05/27 15:09:07 tim Exp $
+$Id: CHANGES,v 1.18 2005/05/28 09:49:54 tim Exp $
