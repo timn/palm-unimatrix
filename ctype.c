@@ -1,7 +1,28 @@
-/* $Id: ctype.c,v 1.5 2003/10/15 21:41:21 tim Exp $
+
+/***************************************************************************
+ *  ctype.h - Course types
  *
- * Course Type related stuff
- * Created: 2002-08-31
+ *  Generated: 2002-08-31
+ *  Copyright  2002-2005  Tim Niemueller [www.niemueller.de]
+ *
+ *  $Id: ctype.c,v 1.6 2005/05/28 12:59:14 tim Exp $
+ *
+ ****************************************************************************/
+
+/*
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Library General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
 #include "UniMatrix.h"
@@ -11,15 +32,19 @@
 #include "cache.h"
 
 
-UInt16 gCourseTypeCurrentForm=FORM_main, gNumCourseTypes;
-UInt8 *gCourseTypeID;
-Char **gCourseTypeList;
-CacheID gCourseTypeCacheID=CACHE_UNINIT, gCourseTypeC2TCacheID=CACHE_UNINIT;
+UInt16    gCourseTypeCurrentForm = FORM_main,
+          gNumCourseTypes;
+UInt8    *gCourseTypeID;
+Char    **gCourseTypeList;
+CacheID   gCourseTypeCacheID = CACHE_UNINIT,
+          gCourseTypeC2TCacheID = CACHE_UNINIT;
 
 extern UInt8 gEditCourseType;
 
 
-static UInt16 CourseTypesNum(void) {
+static UInt16
+CourseTypesNum(void)
+{
   MemHandle m;
   UInt16 index=0, numItems=0;
 
@@ -33,7 +58,10 @@ static UInt16 CourseTypesNum(void) {
   return numItems;
 }
 
-static UInt16 CourseTypeFillList(Char **itemList, UInt8 *itemIDs, UInt16 numItems, UInt8 selectedID, Boolean edit) {
+
+static UInt16
+CourseTypeFillList(Char **itemList, UInt8 *itemIDs, UInt16 numItems, UInt8 selectedID, Boolean edit)
+{
   MemHandle m;
   UInt16 index=0, i=0, selectedItem=0;
   Char *tempString;
@@ -61,7 +89,9 @@ static UInt16 CourseTypeFillList(Char **itemList, UInt8 *itemIDs, UInt16 numItem
 *
 * Description: Manages the coursetype list
 *****************************************************************************/
-UInt8 CourseTypeListPopup(UInt16 listID, UInt16 triggerID, UInt8 selected, Char *triggerLabel) {
+UInt8
+CourseTypeListPopup(UInt16 listID, UInt16 triggerID, UInt8 selected, Char *triggerLabel)
+{
   UInt16 numItems=0, selectedItem=0, i=0;
   MemHandle m;
   Char **itemList=NULL, *tempString;
@@ -118,7 +148,10 @@ UInt8 CourseTypeListPopup(UInt16 listID, UInt16 triggerID, UInt8 selected, Char 
   return selectedID;
 }
 
-static void CourseTypeShortCacheLoad(CacheID id, UInt16 *ids, Char **values, UInt16 numItems) {
+
+static void
+CourseTypeShortCacheLoad(CacheID id, UInt16 *ids, Char **values, UInt16 numItems)
+{
   MemHandle m; 
   UInt16 index=0, i=0;
 
@@ -141,19 +174,26 @@ static void CourseTypeShortCacheLoad(CacheID id, UInt16 *ids, Char **values, UIn
   }
 }
 
-static void CourseTypeShortCacheFree(CacheID id, UInt16 *ids, Char **values, UInt16 numItems) {
+
+static void
+CourseTypeShortCacheFree(CacheID id, UInt16 *ids, Char **values, UInt16 numItems)
+{
   UInt16 i;
   for (i=0; i < numItems; ++i) {
     MemPtrFree(values[i]);
   }
 }
 
-static UInt16 CourseTypeShortCacheNumI(CacheID id) {
+static UInt16
+CourseTypeShortCacheNumI(CacheID id)
+{
   return CourseTypesNum();
 }
 
 
-void CourseTypeGetShort(MemHandle *charHandle, UInt8 id) {
+void
+CourseTypeGetShort(MemHandle *charHandle, UInt8 id)
+{
 
   if (! CacheValid(gCourseTypeCacheID)) {
     // Cache has not yet been initialized
@@ -176,7 +216,9 @@ void CourseTypeGetShort(MemHandle *charHandle, UInt8 id) {
 
 
 
-void CourseTypeGetName(Char *name, UInt8 id) {
+void
+CourseTypeGetName(Char *name, UInt8 id)
+{
   Boolean found=false;
   UInt16 index = 0;
   MemHandle m;
@@ -207,7 +249,9 @@ void CourseTypeGetName(Char *name, UInt8 id) {
  * CourseID -> Short Course name cacheID
  */
 
-static void CourseTypeC2TCacheLoad(CacheID id, UInt16 *ids, Char **values, UInt16 numItems) {
+static void
+CourseTypeC2TCacheLoad(CacheID id, UInt16 *ids, Char **values, UInt16 numItems)
+{
   MemHandle m; 
   UInt16 index=0, i=0;
 
@@ -243,18 +287,27 @@ static void CourseTypeC2TCacheLoad(CacheID id, UInt16 *ids, Char **values, UInt1
   }
 }
 
-static void CourseTypeC2TCacheFree(CacheID id, UInt16 *ids, Char **values, UInt16 numItems) {
+
+static void
+CourseTypeC2TCacheFree(CacheID id, UInt16 *ids, Char **values, UInt16 numItems)
+{
   UInt16 i;
   for (i=0; i < numItems; ++i) {
     MemPtrFree(values[i]);
   }
 }
 
-static UInt16 CourseTypeC2TCacheNumI(CacheID id) {
+
+static UInt16
+CourseTypeC2TCacheNumI(CacheID id)
+{
   return CountCourses();
 }
 
-void CourseTypeGetShortByCourseID(MemHandle *charHandle, UInt16 courseID) {
+
+void
+CourseTypeGetShortByCourseID(MemHandle *charHandle, UInt16 courseID)
+{
 
   if (! CacheValid(gCourseTypeC2TCacheID)) {
     // Cache has not yet been initialized
@@ -273,7 +326,9 @@ void CourseTypeGetShortByCourseID(MemHandle *charHandle, UInt16 courseID) {
 
 
 
-Boolean CourseTypeGetDBIndex(UInt8 courseTypeID, UInt16 *courseTypeDBindex) {
+Boolean
+CourseTypeGetDBIndex(UInt8 courseTypeID, UInt16 *courseTypeDBindex)
+{
   Boolean found=false;
   MemHandle m;
   UInt16 index=0;
@@ -293,11 +348,13 @@ Boolean CourseTypeGetDBIndex(UInt8 courseTypeID, UInt16 *courseTypeDBindex) {
 
 
 /* LOCAL *********************************************************************
-* Function: CourseTypeEdit
-*
-* Description: Edit a course type
-*****************************************************************************/
-static void CourseTypeEdit(UInt8 id) {
+ * Function: CourseTypeEdit
+ *
+ * Description: Edit a course type
+ *****************************************************************************/
+static void
+CourseTypeEdit(UInt8 id)
+{
   FormType *frm, *previousForm;
   FieldType *fldName, *fldShortName;
   CourseTypeDBRecord *savedCT=NULL;
@@ -372,11 +429,13 @@ static void CourseTypeEdit(UInt8 id) {
 
 
 /* LOCAL *********************************************************************
-* Function: CourseTypeAdd
-*
-* Description: Add an course type
-*****************************************************************************/
-static void CourseTypeAdd(void) {
+ * Function: CourseTypeAdd
+ *
+ * Description: Add an course type
+ *****************************************************************************/
+static void
+CourseTypeAdd(void)
+{
   FormType *frm, *previousForm;
   FieldType *fldName, *fldShortName;
   CourseTypeDBRecord *savedCT=NULL;
@@ -443,11 +502,13 @@ static void CourseTypeAdd(void) {
 }
 
 /* LOCAL *********************************************************************
-* Function: CourseTypeDelete
-*
-* Description: Delete a course type
-*****************************************************************************/
-static void CourseTypeDelete(UInt8 id) {
+ * Function: CourseTypeDelete
+ *
+ * Description: Delete a course type
+ *****************************************************************************/
+static void
+CourseTypeDelete(UInt8 id)
+{
   UInt16 clickedButton;
   MemHandle m=NULL;
   UInt16 index=0;
@@ -475,11 +536,13 @@ static void CourseTypeDelete(UInt8 id) {
 
 
 /*****************************************************************************
-* Function: DrawCourseTypes
-*
-* Description: local function to fill the course types list
-*****************************************************************************/
-static void DrawCourseTypes(ListType *lst) {
+ * Function: DrawCourseTypes
+ *
+ * Description: local function to fill the course types list
+ *****************************************************************************/
+static void
+DrawCourseTypes(ListType *lst)
+{
 
   gNumCourseTypes=CourseTypesNum();
   gCourseTypeList = (Char **) MemPtrNew(gNumCourseTypes * sizeof(Char *));
@@ -492,7 +555,9 @@ static void DrawCourseTypes(ListType *lst) {
 }
 
 
-static void CleanupCourseTypeList(void) {
+static void
+CleanupCourseTypeList(void)
+{
   if (gNumCourseTypes) {
     UInt16 i;
     for (i=0; i<gNumCourseTypes; i++)
@@ -505,7 +570,9 @@ static void CleanupCourseTypeList(void) {
 
 
 
-Boolean CourseTypeFormHandleEvent(EventPtr event) {
+Boolean
+CourseTypeFormHandleEvent(EventPtr event)
+{
   FormPtr frm=FrmGetActiveForm();
   Boolean handled = false;
   ListType *lstP=GetObjectPtr(LIST_coursetypes);

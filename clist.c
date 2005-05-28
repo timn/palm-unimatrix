@@ -1,7 +1,28 @@
-/* $Id: clist.c,v 1.5 2003/04/25 23:24:38 tim Exp $
+
+/***************************************************************************
+ *  clist.c - Functions for course list
  *
- * Course List functions
- * Created: 2002-07-11
+ *  Generated: 2002-07-11
+ *  Copyright  2002-2005  Tim Niemueller [www.niemueller.de]
+ *
+ *  $Id: clist.c,v 1.6 2005/05/28 12:59:14 tim Exp $
+ *
+ ****************************************************************************/
+
+/*
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Library General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
 #include "UniMatrix.h"
@@ -14,19 +35,23 @@
 #include "ctype.h"
 #include "cache.h"
 
-UInt16 *gCourseInd, gNumCourses;
-Char **gCourseList;
-CacheID gCourseNameCacheID=-1;
+UInt16   *gCourseInd,
+          gNumCourses;
+Char    **gCourseList;
+CacheID   gCourseNameCacheID=-1;
+Boolean   gCached=false;
+MemHandle cacheID,
+          cacheInd;
+UInt16    gNumItems=0;
 
 // "Shared global" globals
-extern Char gCategoryName[dmCategoryLength];
+extern Char   gCategoryName[dmCategoryLength];
 extern UInt16 gMenuCurrentForm;
 
-Boolean gCached=false;
-MemHandle cacheID, cacheInd;
-UInt16 gNumItems=0;
 
-Boolean CourseGetIndex(DmOpenRef cats, UInt16 category, UInt16 courseID, UInt16 *index) {
+Boolean
+CourseGetIndex(DmOpenRef cats, UInt16 category, UInt16 courseID, UInt16 *index)
+{
   MemHandle m;
 
   *index = 0;
@@ -45,10 +70,14 @@ Boolean CourseGetIndex(DmOpenRef cats, UInt16 category, UInt16 courseID, UInt16 
     MemHandleUnlock(m);
     *index += 1;
   }
-return false;
+
+  return false;
 }
 
-static void CourseNameCacheLoad(CacheID id, UInt16 *ids, Char **values, UInt16 numItems) {
+
+static void
+CourseNameCacheLoad(CacheID id, UInt16 *ids, Char **values, UInt16 numItems)
+{
   MemHandle m; 
   UInt16 index=0, i=0;
   
@@ -73,18 +102,27 @@ static void CourseNameCacheLoad(CacheID id, UInt16 *ids, Char **values, UInt16 n
   }
 }
 
-static void CourseNameCacheFree(CacheID id, UInt16 *ids, Char **values, UInt16 numItems) {
+
+static void
+CourseNameCacheFree(CacheID id, UInt16 *ids, Char **values, UInt16 numItems)
+{
   UInt16 i;
   for (i=0; i < numItems; ++i) {
     MemPtrFree(values[i]);
   }
 }
 
-static UInt16 CourseNameCacheNumI(CacheID id) {
+
+static UInt16
+CourseNameCacheNumI(CacheID id)
+{
   return CountCourses();
 }
 
-void CourseGetName(UInt16 courseID, MemHandle *charHandle, Boolean longformat) {
+
+void
+CourseGetName(UInt16 courseID, MemHandle *charHandle, Boolean longformat)
+{
 
   if (! CacheValid(gCourseNameCacheID)) {
     // Cache has not yet been initialized
@@ -102,7 +140,9 @@ void CourseGetName(UInt16 courseID, MemHandle *charHandle, Boolean longformat) {
 * Assumptions: This functions assumes, that the Records are SORTED with the
 *              courses first and then the times.
 *****************************************************************************/
-UInt16 CountCourses(void) {
+UInt16
+CountCourses(void)
+{
   MemHandle m;
   UInt16 index=0,count=0;
 
@@ -117,7 +157,9 @@ UInt16 CountCourses(void) {
 }
 
 
-UInt16 CourseNewID(DmOpenRef cats, UInt16 category) {
+UInt16
+CourseNewID(DmOpenRef cats, UInt16 category)
+{
   Err err=errNone;
   MemHandle m;
   UInt16 index=0,lastid=0;
@@ -143,7 +185,10 @@ UInt16 CourseNewID(DmOpenRef cats, UInt16 category) {
   return lastid+1;
 }
 
-UInt8 CourseGetType(UInt16 courseID) {
+
+UInt8
+CourseGetType(UInt16 courseID)
+{
   MemHandle m;
   UInt16 index=0;
 
@@ -159,10 +204,13 @@ UInt8 CourseGetType(UInt16 courseID) {
     return c.ctype;
   }
 
-return 0;
+  return 0;
 }
 
-UInt16 CourseListGen(Char **itemList, UInt16 *courseID, UInt16 *courseInd, UInt16 numItems, UInt16 curInd, UInt8 searchFor) {
+
+UInt16
+CourseListGen(Char **itemList, UInt16 *courseID, UInt16 *courseInd, UInt16 numItems, UInt16 curInd, UInt8 searchFor)
+{
   UInt16 index=0, i=0, rv=0;
   MemHandle m;
   UInt16 *tmpCourseInd=NULL;
@@ -249,7 +297,9 @@ UInt16 CourseListGen(Char **itemList, UInt16 *courseID, UInt16 *courseInd, UInt1
 *
 * Description: local function to fill the course list
 *****************************************************************************/
-static void DrawCourses(ListType *lst) {
+static void
+DrawCourses(ListType *lst)
+{
   MemHandle mWebsite, mEmail, old;
   Char *buffer;
   FieldType *fldWebsite, *fldEmail;
@@ -290,7 +340,9 @@ static void DrawCourses(ListType *lst) {
 }
 
 
-static void CleanupCourselist(void) {
+static void
+CleanupCourselist(void)
+{
   if (gNumCourses) {
     UInt16 i;
     for (i=0; i<gNumCourses; i++)
@@ -301,7 +353,9 @@ static void CleanupCourselist(void) {
   }
 }
 
-static Boolean CourseListHandleSelection(void) {
+static Boolean
+CourseListHandleSelection(void)
+{
   MemHandle m, mWebsite, mEmail, old;
   CourseDBRecord c;
   FieldType *fldWebsite, *fldEmail;
@@ -353,7 +407,9 @@ static Boolean CourseListHandleSelection(void) {
 }
 
 
-Boolean CourseListHandleEvent(EventPtr event) {
+Boolean
+CourseListHandleEvent(EventPtr event)
+{
   FormPtr frm=FrmGetActiveForm();
   Boolean handled = false;
   ListType *lstP=GetObjectPtr(LIST_courses);

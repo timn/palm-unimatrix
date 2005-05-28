@@ -1,7 +1,27 @@
-/* $Id: UniMatrix.c,v 1.5 2003/11/20 22:53:48 tim Exp $
+/***************************************************************************
+ *  UniMatrix.c - Main program and event handler
  *
- * UniMatrix main, event handling
- * Created: July 2002
+ *  Generated: July 2002
+ *  Copyright  2002-2005  Tim Niemueller [www.niemueller.de]
+ *
+ *  $Id: UniMatrix.c,v 1.6 2005/05/28 12:59:14 tim Exp $
+ *
+ ****************************************************************************/
+
+/*
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Library General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
 #include "UniMatrix.h"
@@ -19,14 +39,13 @@
 #include "notes.h"
 #include "alarm.h"
 
-Char gCategoryName[dmCategoryLength];
-UInt16 gMenuCurrentForm=FORM_main;
+Char           gCategoryName[dmCategoryLength];
+UInt16         gMenuCurrentForm = FORM_main,
+               // backup of key parameters
+               gKeyP1,gKeyP2,gKeyP3;
+Boolean        gKeyP4;
 UniMatrixPrefs gPrefs;
-UInt32 gMainRepeat=false;
-
-// backup of key parameters
-UInt16 gKeyP1,gKeyP2,gKeyP3;
-Boolean gKeyP4;
+UInt32         gMainRepeat=false;
 
 
 /***********************************************************************
@@ -35,9 +54,11 @@ Boolean gKeyP4;
  *              form.
  * PARAMETERS:  formId - id of the form to display
  ***********************************************************************/
-void * GetObjectPtr(UInt16 objectID) {
-	FormPtr frmP = FrmGetActiveForm();
-	return (FrmGetObjectPtr(frmP, FrmGetObjectIndex(frmP, objectID)));
+void *
+GetObjectPtr(UInt16 objectID)
+{
+  FormPtr frmP = FrmGetActiveForm();
+  return (FrmGetObjectPtr(frmP, FrmGetObjectIndex(frmP, objectID)));
 }
 
 
@@ -45,11 +66,13 @@ void * GetObjectPtr(UInt16 objectID) {
  * function is called at program start
  * you can put your own initialization jobs there
  ***********************************************************************/
-static UInt16 StartApplication (void) {
+static UInt16
+StartApplication(void)
+{
   Err err = 0;
 
-	// Initialize the random number seed;
-	SysRandom( TimGetSeconds() );
+  // Initialize the random number seed;
+  SysRandom( TimGetSeconds() );
 
   // Load prefs
   PrefLoadPrefs(&gPrefs);
@@ -76,16 +99,18 @@ static UInt16 StartApplication (void) {
  * if ROM version is less then required the result of this function is
  * sysErrRomIncompatible
  ***********************************************************************/
-static Err RomVersionCompatible (UInt32 requiredVersion, UInt16 launchFlags) {
-	// See if we're on in minimum required version of the ROM or later.
-	if (TNPalmOSVersion() < requiredVersion) {
-		if ((launchFlags & (sysAppLaunchFlagNewGlobals | sysAppLaunchFlagUIApp)) ==
-  			(sysAppLaunchFlagNewGlobals | sysAppLaunchFlagUIApp)) {
-			FrmAlert (ALERT_ROMIncompatible);
+static Err
+RomVersionCompatible (UInt32 requiredVersion, UInt16 launchFlags)
+{
+  // See if we're on in minimum required version of the ROM or later.
+  if (TNPalmOSVersion() < requiredVersion) {
+    if ((launchFlags & (sysAppLaunchFlagNewGlobals | sysAppLaunchFlagUIApp)) ==
+	(sysAppLaunchFlagNewGlobals | sysAppLaunchFlagUIApp)) {
+      FrmAlert (ALERT_ROMIncompatible);
 
-			// PalmOS before 3.5 will continuously relaunch this app unless we switch to
-			// another safe one.
-			AppLaunchWithCommand(sysFileCDefaultApp, sysAppLaunchCmdNormalLaunch, NULL);
+      // PalmOS before 3.5 will continuously relaunch this app unless we switch to
+      // another safe one.
+      AppLaunchWithCommand(sysFileCDefaultApp, sysAppLaunchCmdNormalLaunch, NULL);
     }
 
     return (sysErrRomIncompatible);
@@ -97,17 +122,19 @@ static Err RomVersionCompatible (UInt32 requiredVersion, UInt16 launchFlags) {
 /***********************************************************************
  * Notification Handle
  ***********************************************************************/
-static Err HandleNotification(SysNotifyParamType *notifyParams) {
+static Err
+HandleNotification(SysNotifyParamType *notifyParams)
+{
   switch (notifyParams->notifyType) {
-    case sysNotifyLateWakeupEvent:
-      if (FrmGetActiveFormID() == FORM_main) {
-        // We are on the main form, we have a LateWakup notification => Highlight next event
-        GadgetDrawHintNext();
-      }
-      break;
-
-    default:
-      break;
+  case sysNotifyLateWakeupEvent:
+    if (FrmGetActiveFormID() == FORM_main) {
+      // We are on the main form, we have a LateWakup notification => Highlight next event
+      GadgetDrawHintNext();
+    }
+    break;
+    
+  default:
+    break;
   }
 
   return errNone;
@@ -118,74 +145,79 @@ static Err HandleNotification(SysNotifyParamType *notifyParams) {
 /***********************************************************************
  * handling for the main drop down menu actions
  ***********************************************************************/
-Boolean HandleMenuEvent (UInt16 command){
+Boolean
+HandleMenuEvent (UInt16 command)
+{
   Boolean handled = false;
   MenuEraseStatus(0);
   gMenuCurrentForm=FrmGetFormId(FrmGetActiveForm());
 
   switch (command) {
-    case MENUITEM_about:
-      FrmDoDialog(FrmInitForm(FORM_about));
-      handled=true;
-      break;
+  case MENUITEM_about:
+    FrmDoDialog(FrmInitForm(FORM_about));
+    handled=true;
+    break;
 
-    case MENUITEM_course:
-      AddCourse();
-      handled=true;
-      break;
+  case MENUITEM_course:
+    AddCourse();
+    handled=true;
+    break;
 
-    case MENUITEM_time:
-      if (CountCourses() != 0) {
-        AddTime();
-      } else {
-        FrmAlert(ALERT_nocourses);
-      }
-      handled=true;
-      break;
+  case MENUITEM_time:
+    if (CountCourses() != 0) {
+      AddTime();
+    } else {
+      FrmAlert(ALERT_nocourses);
+    }
+    handled=true;
+    break;
 
-    case MENUITEM_courselist:
-      FrmGotoForm(FORM_courselist);
-      handled=true;
-      break;
+  case MENUITEM_courselist:
+    FrmGotoForm(FORM_courselist);
+    handled=true;
+    break;
 
-    case MENUITEM_settings:
-      FrmPopupForm(FORM_settings);
-      handled=true;
-      break;
+  case MENUITEM_settings:
+    FrmPopupForm(FORM_settings);
+    handled=true;
+    break;
 
-    case MENUITEM_alarm:
-      FrmPopupForm(FORM_alarm_sets);
-      handled=true;
-      break;
+  case MENUITEM_alarm:
+    FrmPopupForm(FORM_alarm_sets);
+    handled=true;
+    break;
 
-    case MENUITEM_exams:
-      FrmGotoForm(FORM_exams);
-      handled=true;
-      break;
+  case MENUITEM_exams:
+    FrmGotoForm(FORM_exams);
+    handled=true;
+    break;
 
-    case MENUITEM_beam:
-      BeamSemester(DatabaseGetCat());
-      handled=true;
-      break;
+  case MENUITEM_beam:
+    BeamSemester(DatabaseGetCat());
+    handled=true;
+    break;
 
-    case MENUITEM_chat:
-			AppLaunchWithCommand(UNICHAT_APP_CREATOR, sysAppLaunchCmdNormalLaunch, NULL);
-      handled=true;
-      break;
+  case MENUITEM_chat:
+    AppLaunchWithCommand(UNICHAT_APP_CREATOR, sysAppLaunchCmdNormalLaunch, NULL);
+    handled=true;
+    break;
 
-    case MENUITEM_mensa:
-			AppLaunchWithCommand(UNIMENSA_APP_CREATOR, sysAppLaunchCmdNormalLaunch, NULL);
-      handled=true;
-      break;
+  case MENUITEM_mensa:
+    AppLaunchWithCommand(UNIMENSA_APP_CREATOR, sysAppLaunchCmdNormalLaunch, NULL);
+    handled=true;
+    break;
 
-    default:
-      break;
+  default:
+    break;
   }
 
   return handled;
 }
 
-Boolean HandleMenuOpenEvent(EventType *event) {
+
+Boolean
+HandleMenuOpenEvent(EventType *event)
+{
   DmSearchStateType searchState;
   UInt16 cardNo;
   LocalID dbID;
@@ -219,7 +251,9 @@ Boolean HandleMenuOpenEvent(EventType *event) {
  * handling for form and control actions
  * menu actions are forwarded to MainFormDoCommand
  ***********************************************************************/
-static Boolean MainFormHandleEvent (EventPtr event){
+static Boolean
+MainFormHandleEvent (EventPtr event)
+{
   FormType *frm;
   Boolean handled = false;
   Boolean categoryEdited, reDraw=false;
@@ -376,53 +410,73 @@ static Boolean MainFormHandleEvent (EventPtr event){
 /***********************************************************************
  * chooses an displays the requested form
  ***********************************************************************/
-static Boolean AppHandleEvent( EventPtr eventP) {
-	UInt16 formId;
-	FormPtr frmP;
+static Boolean
+AppHandleEvent( EventPtr eventP)
+{
+  UInt16 formId;
+  FormPtr frmP;
 
-	switch (eventP->eType) {
-  	case frmLoadEvent:
-      // Load the form resource.
-		  formId = eventP->data.frmLoad.formID;
-		  frmP = FrmInitForm(formId);
-		  FrmSetActiveForm(frmP);
+  switch (eventP->eType) {
+  case frmLoadEvent:
+    // Load the form resource.
+    formId = eventP->data.frmLoad.formID;
+    frmP = FrmInitForm(formId);
+    FrmSetActiveForm(frmP);
 
-      // Set the event handler for the form.  The handler of the currently
-      // active form is called by FrmHandleEvent each time is receives an
-      // event.
-		  switch (formId) {
-			  case FORM_main:
-				  FrmSetEventHandler(frmP, MainFormHandleEvent);
-				  break;
+    // Set the event handler for the form.  The handler of the currently
+    // active form is called by FrmHandleEvent each time is receives an
+    // event.
+    switch (formId) {
+    case FORM_main:
+      FrmSetEventHandler(frmP, MainFormHandleEvent);
+      break;
 
-  			case FORM_courselist: FrmSetEventHandler(frmP, CourseListHandleEvent); break;
+    case FORM_courselist:
+      FrmSetEventHandler(frmP, CourseListHandleEvent);
+      break;
 
-        case FORM_evt_det:    FrmSetEventHandler(frmP, EditTimeFormHandleEvent); break;
+    case FORM_evt_det:
+      FrmSetEventHandler(frmP, EditTimeFormHandleEvent);
+      break;
 
-        case FORM_course_det: FrmSetEventHandler(frmP, EditCourseFormHandleEvent); break;
+    case FORM_course_det:
+      FrmSetEventHandler(frmP, EditCourseFormHandleEvent);
+      break;
 
-        case FORM_settings:   FrmSetEventHandler(frmP, SettingsFormHandleEvent); break;
+    case FORM_settings:
+      FrmSetEventHandler(frmP, SettingsFormHandleEvent);
+      break;
 
-        case FORM_coursetypes: FrmSetEventHandler(frmP, CourseTypeFormHandleEvent); break;
+    case FORM_coursetypes:
+      FrmSetEventHandler(frmP, CourseTypeFormHandleEvent);
+      break;
 
-        case FORM_exams:      FrmSetEventHandler(frmP, ExamsFormHandleEvent); break;
+    case FORM_exams:
+      FrmSetEventHandler(frmP, ExamsFormHandleEvent);
+      break;
 
-        case FORM_exam_details: FrmSetEventHandler(frmP, ExamDetailsFormHandleEvent); break;
+    case FORM_exam_details:
+      FrmSetEventHandler(frmP, ExamDetailsFormHandleEvent);
+      break;
         
-        case NewNoteView:     FrmSetEventHandler(frmP, NoteViewHandleEvent); break;
+    case NewNoteView:
+      FrmSetEventHandler(frmP, NoteViewHandleEvent);
+      break;
 
-        case FORM_alarm_sets:   FrmSetEventHandler(frmP, AlarmFormHandleEvent); break;
+    case FORM_alarm_sets:
+      FrmSetEventHandler(frmP, AlarmFormHandleEvent);
+      break;
 
-        default:
-   				ErrNonFatalDisplay("Invalid Form Load Event");
-		  		break;
-			}
-		  break;
+    default:
+      ErrNonFatalDisplay("Invalid Form Load Event");
+      break;
+    }
+    break;
 
-	  default:
-		  return false;
-	}
-	return true;
+  default:
+    return false;
+  }
+  return true;
 }
 
 
@@ -430,102 +484,108 @@ static Boolean AppHandleEvent( EventPtr eventP) {
  * main event loop; loops until appStopEvent is caught or
  * QuitApp is set
  ***********************************************************************/
-static void AppEventLoop(void){
-	UInt16 error;
-	EventType event;
+static void
+AppEventLoop(void)
+{
+  UInt16 error;
+  EventType event;
 
 
-	do {
-		EvtGetEvent(&event, evtWaitForever);
+  do {
+    EvtGetEvent(&event, evtWaitForever);
 
 
-		if (! SysHandleEvent(&event))
-			if (! MenuHandleEvent(0, &event, &error))
-				if (! AppHandleEvent(&event))
-					FrmDispatchEvent(&event);
+    if (! SysHandleEvent(&event))
+      if (! MenuHandleEvent(0, &event, &error))
+	if (! AppHandleEvent(&event))
+	  FrmDispatchEvent(&event);
 
-// Check the heaps after each event
-		#if EMULATION_LEVEL != EMULATION_NONE
-			MemHeapCheck(0);
-			MemHeapCheck(1);
-		#endif
-
-	} while (event.eType != appStopEvent);
+    // Check the heaps after each event
+#if EMULATION_LEVEL != EMULATION_NONE
+    MemHeapCheck(0);
+    MemHeapCheck(1);
+#endif
+  } while (event.eType != appStopEvent);
 
 }
 
 /***********************************************************************
  * application is finished, so we have to clean the desktop behind us
  ***********************************************************************/
-static void StopApplication (void){
+static void
+StopApplication (void)
+{
   gPrefs.curCat = DatabaseGetCat();
   PrefSavePrefs(&gPrefs);
-	FrmCloseAllForms ();
+  FrmCloseAllForms ();
   CacheFree();
-	CloseDatabase();
+  CloseDatabase();
 }
 
 
 /***********************************************************************
  * main function
  ***********************************************************************/
-UInt32 PilotMain(UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlags){
-	UInt16 error = RomVersionCompatible (MINVERSION, launchFlags);
-	if (error) return (error);
+UInt32
+PilotMain(UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlags)
+{
+  UInt16 error = RomVersionCompatible (MINVERSION, launchFlags);
+  if (error) return (error);
 
   /***
   * NORMAL STARTUP
   ****/
-	if ( cmd == sysAppLaunchCmdNormalLaunch ) {
+  if ( cmd == sysAppLaunchCmdNormalLaunch ) {
     error = StartApplication ();
     if (error) {
-			// PalmOS before 3.5 will continuously relaunch this app unless we switch to
-			// another safe one.
+      // PalmOS before 3.5 will continuously relaunch this app unless we switch to
+      // another safe one.
       if (error != dmErrCorruptDatabase) {
         FrmCustomAlert(ALERT_debug, "Please reports this bug! Give your Palm device and PalmOS version, this BadBug(TM) should not happen.", "", "");
       }
       StopApplication();
-			AppLaunchWithCommand(sysFileCDefaultApp, sysAppLaunchCmdNormalLaunch, NULL);
+      AppLaunchWithCommand(sysFileCDefaultApp, sysAppLaunchCmdNormalLaunch, NULL);
       return error;
     }
 
     FrmGotoForm(FORM_main);
 
-		AppEventLoop ();
-		StopApplication ();
+    AppEventLoop ();
+    StopApplication ();
 
-  /***
-  * FIND
-  ****/
-/*
-	} else if (cmd == sysAppLaunchCmdSaveData) {
-    FrmSaveAllForms();
-  } else if (cmd == sysAppLaunchCmdFind) {
-    PalmGlobalFind((FindParamsPtr)cmdPBP);
-*/
+    /***
+     * FIND
+     ****/
+    /*
+      } else if (cmd == sysAppLaunchCmdSaveData) {
+      FrmSaveAllForms();
+      } else if (cmd == sysAppLaunchCmdFind) {
+      PalmGlobalFind((FindParamsPtr)cmdPBP);
+    */
 
-  /***
-  * GoTo
-  ****/
-/*	} else if (cmd == sysAppLaunchCmdGoTo) {
-    Boolean launched = launchFlags & sysAppLaunchFlagNewGlobals;
-
-    if (launched) {
+    /***
+     * GoTo
+     ****/
+    /*
+      } else if (cmd == sysAppLaunchCmdGoTo) {
+      Boolean launched = launchFlags & sysAppLaunchFlagNewGlobals;
+	
+      if (launched) {
       error = StartApplication();
       if (! error) {
-        GoToItem((GoToParamsPtr)cmdPBP, launched);
-        AppEventLoop();
-        StopApplication();
-      }
-    } else {
       GoToItem((GoToParamsPtr)cmdPBP, launched);
-    }
-*/
+      AppEventLoop();
+      StopApplication();
+      }
+      } else {
+      GoToItem((GoToParamsPtr)cmdPBP, launched);
+      }
+    */
 
-  /***
-  * BEAMING
-  ****/
-	} else if (cmd == sysAppLaunchCmdSyncNotify) {
+    /***
+     * BEAMING
+     ****/
+  } else if (cmd == sysAppLaunchCmdSyncNotify) {
     // Register with the Exchange Manager
     ExgRegisterData(APP_CREATOR, exgRegExtensionID, "umx");
   } else if (cmd == sysAppLaunchCmdExgAskUser) {
@@ -533,7 +593,7 @@ UInt32 PilotMain(UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlags){
     // own on which the user can cancel the data
     ExgAskParamType *exgAskParam = (ExgAskParamType *)cmdPBP;
     exgAskParam->result=exgAskOk;
-	} else if (cmd == sysAppLaunchCmdExgReceiveData) {
+  } else if (cmd == sysAppLaunchCmdExgReceiveData) {
     DmOpenRef cats=NULL, dogs=NULL;
     // Is app active?
     if (launchFlags & sysAppLaunchFlagSubCall) {
@@ -559,9 +619,9 @@ UInt32 PilotMain(UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlags){
       if (dogs)  DmCloseDatabase(dogs);
     }
 
-  /***
-  * ALARM
-  ****/
+    /***
+     * ALARM
+     ****/
   } else if (cmd == sysAppLaunchCmdAlarmTriggered) {
     // Is app active?
     if (launchFlags & sysAppLaunchFlagSubCall) {
@@ -572,9 +632,9 @@ UInt32 PilotMain(UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlags){
       DmCloseDatabase(cats);
     }
 
-  /***
-  * ATTENTION
-  ****/
+    /***
+     * ATTENTION
+     ****/
   } else if (cmd == sysAppLaunchCmdAttention) {
     // Is app active?
     if (launchFlags & sysAppLaunchFlagSubCall) {
@@ -586,27 +646,27 @@ UInt32 PilotMain(UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlags){
       DmCloseDatabase(cats);
     }
 
-  /***
-  * ATTENTION GOTO
-  ****/
+    /***
+     * ATTENTION GOTO
+     ****/
   } else if (cmd == appLaunchCmdAlarmEventGoto) {
     error = StartApplication ();
     if (error) {
-			// PalmOS before 3.5 will continuously relaunch this app unless we switch to
-			// another safe one.
+      // PalmOS before 3.5 will continuously relaunch this app unless we switch to
+      // another safe one.
       if (error != dmErrCorruptDatabase) {
         FrmCustomAlert(ALERT_debug, "Please reports this bug! Give your Palm device and PalmOS version, this BadBug(TM) should not happen.", "", "");
       }
       StopApplication();
-			AppLaunchWithCommand(sysFileCDefaultApp, sysAppLaunchCmdNormalLaunch, NULL);
+      AppLaunchWithCommand(sysFileCDefaultApp, sysAppLaunchCmdNormalLaunch, NULL);
       return error;
     }
 
     ExamSetGoto(*(UInt32 *)cmdPBP);
     FrmGotoForm(FORM_exams);
 
-		AppEventLoop ();
-		StopApplication ();
+    AppEventLoop ();
+    StopApplication ();
 
 
   /***
@@ -651,5 +711,5 @@ UInt32 PilotMain(UInt16 cmd, MemPtr cmdPBP, UInt16 launchFlags){
 
   }
 
-	return 0;
+  return 0;
 }

@@ -1,10 +1,32 @@
-/* $Id: gadget.h,v 1.4 2005/05/27 15:04:02 tim Exp $
+
+/***************************************************************************
+ *  gadget.h - The headers for the heart of UniMatrix
  *
- * The headers for th heart of UniMatrix
+ *  Generated: 2002
+ *  Copyright  2002-2005  Tim Niemueller [www.niemueller.de]
+ *
+ *  $Id: gadget.h,v 1.5 2005/05/28 12:59:14 tim Exp $
+ *
+ ****************************************************************************/
+
+/*
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Library General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#ifndef GADGET_H
-#define GADGET_H
+#ifndef __GADGET_H
+#define __GADGET_H
 
 #include "database.h"
 
@@ -77,4 +99,4 @@ extern void GadgetDrawStep(WinDirectionType direction) THIRD_SECTION;
 extern void GadgetTimeSetRect(RectangleType *rect, TimeType begin, TimeType end, UInt8 day, UInt8 num_times, UInt8 pos) THIRD_SECTION;
 
 
-#endif // GADGET_H
+#endif // __GADGET_H

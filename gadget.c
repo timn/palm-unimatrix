@@ -1,7 +1,29 @@
-/* $Id: gadget.c,v 1.7 2005/05/27 15:01:35 tim Exp $
-*
-* THE heart of UniMatrix. This is the center piece of code in UniMatrix
-*/
+
+/***************************************************************************
+ *  gadget.h - THE heart of UniMatrix. This is the center piece of code
+ *
+ *  Generated: 2002
+ *  Copyright  2002-2005  Tim Niemueller [www.niemueller.de]
+ *
+ *  $Id: gadget.c,v 1.8 2005/05/28 12:59:14 tim Exp $
+ *
+ ****************************************************************************/
+
+/*
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Library General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
 
 #include "UniMatrix.h"
 #include "gadget.h"
@@ -15,22 +37,22 @@
 
 extern UniMatrixPrefs gPrefs;
 
-FormPtr gForm=NULL;
-UInt16  gGadgetID=0,
-        gHintGadgetID=0,
-        gCourseIndex=0,
-        gTimeIndex=0,
-        gTimeDrawnIndex=0,
-        gHintNote=0;
-Boolean gHintDrawn=false,
-        gGadgetCompleteRedraw=true;
-UInt8   gGadgetCurMinHour = GADGET_MIN_HOUR,
-        gGadgetCurMaxHour = GADGET_MAX_HOUR,
-        gGadgetDaysNum    = GADGET_DEFAULT_NUMDAYS,
-        gGadgetDaysWidth=GADGET_TOTAL_DRAWWIDTH/GADGET_DEFAULT_NUMDAYS,
-        gGadgetCurScreen=GADGET_SCREEN_DAY;
-TimeType gGadgetLastTimeline={0x00, 0x00};
-TNlist  *gGadgetTimeList = NULL;
+FormPtr   gForm=NULL;
+UInt16    gGadgetID=0,
+          gHintGadgetID=0,
+          gCourseIndex=0,
+          gTimeIndex=0,
+          gTimeDrawnIndex=0,
+          gHintNote=0;
+Boolean   gHintDrawn=false,
+          gGadgetCompleteRedraw = true;
+UInt8     gGadgetCurMinHour = GADGET_MIN_HOUR,
+          gGadgetCurMaxHour = GADGET_MAX_HOUR,
+          gGadgetDaysNum    = GADGET_DEFAULT_NUMDAYS,
+          gGadgetDaysWidth = GADGET_TOTAL_DRAWWIDTH / GADGET_DEFAULT_NUMDAYS,
+          gGadgetCurScreen = GADGET_SCREEN_DAY;
+TimeType  gGadgetLastTimeline = {0x00, 0x00};
+TNlist   *gGadgetTimeList = NULL;
 
 
 /*****************************************************************************
@@ -38,7 +60,9 @@ TNlist  *gGadgetTimeList = NULL;
 *
 * Description: Calculates top offset for drawing
 *****************************************************************************/
-static UInt8 GadgetCalcTimeTop(TimeType begin) {
+static UInt8
+GadgetCalcTimeTop(TimeType begin)
+{
   Int8 tmp;
 
   if (gGadgetCurScreen == GADGET_SCREEN_DAY) {
@@ -68,7 +92,9 @@ static UInt8 GadgetCalcTimeTop(TimeType begin) {
 *
 * Description: Computes height for time to be drawn
 *****************************************************************************/
-static UInt8 GadgetCalcTimeHeight(TimeType begin, TimeType end) {
+static UInt8
+GadgetCalcTimeHeight(TimeType begin, TimeType end)
+{
   TimeType diffTime;
   UInt16 diff, tmp;
 
@@ -102,7 +128,9 @@ static UInt8 GadgetCalcTimeHeight(TimeType begin, TimeType end) {
 *
 * Description: Checks if an event is currently visible
 *****************************************************************************/
-static Boolean GadgetEventIsVisible(TimeDBRecord *t) {
+static Boolean
+GadgetEventIsVisible(TimeDBRecord *t)
+{
   if ((t->type == TYPE_TIME) && (t->day < gGadgetDaysNum)) {
     if (gGadgetCurScreen == GADGET_SCREEN_DAY) {
       if ( ((t->begin.hours >= 8) && (t->begin.hours < 20)) ||
@@ -129,7 +157,9 @@ static Boolean GadgetEventIsVisible(TimeDBRecord *t) {
 * Description: Draws the weekdays, extra function since called in
 *              GadgetDrawTimeline
 *****************************************************************************/
-void GadgetDrawWeekdays(void) {
+void
+GadgetDrawWeekdays(void)
+{
   UInt8 i;
   MemHandle mh;
   Char *text;
@@ -182,7 +212,9 @@ void GadgetDrawWeekdays(void) {
 *
 * Description: Draws the basic gadget (grid, days, times)
 *****************************************************************************/
-void GadgetDraw(Boolean eraseFirst) {
+void
+GadgetDraw(Boolean eraseFirst)
+{
   RectangleType bounds;
   UInt8 i, gadgetWidth;
   RGBColorType color, prevColor;
@@ -263,7 +295,9 @@ void GadgetDraw(Boolean eraseFirst) {
 *
 * Description: Draws a line for the current time
 *****************************************************************************/
-void GadgetDrawTimeline(GadgetTimelineDrawType drawType) {
+void
+GadgetDrawTimeline(GadgetTimelineDrawType drawType)
+{
   DateTimeType dt;
   TimeType now;
 
@@ -324,7 +358,9 @@ void GadgetDrawTimeline(GadgetTimelineDrawType drawType) {
 * Description: Redraws without erasing first, avoids flicker and does not
 *              select next item, behaves more like the user expects
 *****************************************************************************/
-void GadgetRedraw() {
+void
+GadgetRedraw()
+{
   if (gPrefs.showTimeline)  GadgetDrawTimeline(gtErase);
   GadgetDraw(gGadgetCompleteRedraw);
   GadgetDrawEvents();
@@ -596,7 +632,9 @@ GadgetDrawTime(TimeType begin, TimeType end, UInt8 day, RGBColorType *color, UIn
 *
 * Description: Draw the hintbox with the hint
 *****************************************************************************/
-void GadgetDrawHint(const char *toptext, const char *bottext, UInt16 note) {
+void
+GadgetDrawHint(const char *toptext, const char *bottext, UInt16 note)
+{
   RectangleType bounds;
   UInt16 gadgetIndex;
   RectangleType rect, textbox_top, textbox_bot;
@@ -659,7 +697,9 @@ void GadgetDrawHint(const char *toptext, const char *bottext, UInt16 note) {
 *
 * Description: Erase the area where the hintbox goes
 *****************************************************************************/
-void GadgetDrawHintErase(void) {
+void
+GadgetDrawHintErase(void)
+{
   RectangleType bounds;
   UInt16 gadgetIndex;
   ControlType *ctl;
@@ -684,7 +724,9 @@ void GadgetDrawHintErase(void) {
 * Description: Draw hint for current gTimeIndex if needed (may be forced NOT
 *              to draw with GadgetSetNeedsRedraw(false));
 *****************************************************************************/
-void GadgetDrawHintCurrent(void) {
+void
+GadgetDrawHintCurrent(void)
+{
   Char *tmp, *bot, begin[timeStringLength], end[timeStringLength], *day;
   MemHandle mc, mt, mh, type;
   CourseDBRecord c;
@@ -852,7 +894,9 @@ void GadgetDrawHintCurrent(void) {
 *
 * Description: Draw info for closest upcoming event.
 *****************************************************************************/
-void GadgetDrawHintNext(void) {
+void
+GadgetDrawHintNext(void)
+{
   MemHandle m;
   UInt16 index=0;
   DateTimeType dt;
@@ -917,7 +961,9 @@ void GadgetDrawHintNext(void) {
 *
 * Description: We use extended Gadgeting => We need an event handler for it
 *****************************************************************************/
-Boolean GadgetHandler(FormGadgetTypeInCallback *gadgetP, UInt16 cmd, void *paramP) {
+Boolean
+GadgetHandler(FormGadgetTypeInCallback *gadgetP, UInt16 cmd, void *paramP)
+{
   Boolean handled = false; 
   EventType *event = (EventType *)paramP;
   
@@ -965,7 +1011,9 @@ Boolean GadgetHandler(FormGadgetTypeInCallback *gadgetP, UInt16 cmd, void *param
 }
 
 
-Boolean GadgetHintHandler(FormGadgetTypeInCallback *gadgetP, UInt16 cmd, void *paramP) {
+Boolean
+GadgetHintHandler(FormGadgetTypeInCallback *gadgetP, UInt16 cmd, void *paramP)
+{
   Boolean handled = false; 
   EventType *event = (EventType *)paramP;
 
@@ -988,7 +1036,9 @@ Boolean GadgetHintHandler(FormGadgetTypeInCallback *gadgetP, UInt16 cmd, void *p
 * Description: Helper function for GadgetTap. Highlights next of previous
 *              event on current screen
 *****************************************************************************/
-void GadgetDrawStep(WinDirectionType direction) {
+void
+GadgetDrawStep(WinDirectionType direction)
+{
   MemHandle m;
   UInt16 index=gTimeIndex, wantCourse=0, courseIndex=0;
   Boolean found=false, endLoop=false;
@@ -1057,7 +1107,9 @@ void GadgetDrawStep(WinDirectionType direction) {
 *
 * Description: Handles penDown events (taps) on the gadget
 *****************************************************************************/
-void GadgetTap(FormGadgetType *pGadget, EventType *event) {
+void
+GadgetTap(FormGadgetType *pGadget, EventType *event)
+{
   //you may find it useful to track if they
   //lift the pen still within the boundaries of the gadget
   Boolean isPenDown = true;
@@ -1175,7 +1227,9 @@ void GadgetTap(FormGadgetType *pGadget, EventType *event) {
 *
 * Description: Handles penDown events (taps) on the hint gadget
 *****************************************************************************/
-void GadgetHintTap(FormGadgetType *pGadget, EventType *event) {
+void
+GadgetHintTap(FormGadgetType *pGadget, EventType *event)
+{
   //you may find it useful to track if they
   //lift the pen still within the boundaries of the gadget
   Boolean isPenDown = true;
@@ -1249,7 +1303,9 @@ void GadgetHintTap(FormGadgetType *pGadget, EventType *event) {
 * Description: Must be called before draw to set the form the gadget is in
 *              and the IDs of the Gadget and the hint gadget
 *****************************************************************************/
-void GadgetSet(FormPtr frm, UInt16 gadgetID, UInt16 hintGadgetID) {
+void
+GadgetSet(FormPtr frm, UInt16 gadgetID, UInt16 hintGadgetID)
+{
   gForm=frm;
   gGadgetID=gadgetID;
   gHintGadgetID=hintGadgetID;
@@ -1268,7 +1324,9 @@ void GadgetSet(FormPtr frm, UInt16 gadgetID, UInt16 hintGadgetID) {
 *
 * Description: Sets number of days
 *****************************************************************************/
-void GadgetSetNumDays(UInt8 numDays) {
+void
+GadgetSetNumDays(UInt8 numDays)
+{
   gGadgetDaysNum=numDays;
   gGadgetDaysWidth=GADGET_TOTAL_DRAWWIDTH / numDays;
   gGadgetCompleteRedraw=true;
@@ -1280,7 +1338,9 @@ void GadgetSetNumDays(UInt8 numDays) {
 *
 * Description: Get DB Index of current "hinted" entry's course
 *****************************************************************************/
-UInt16 GadgetGetHintCourseIndex(void) {
+UInt16
+GadgetGetHintCourseIndex(void)
+{
   return gCourseIndex;
 }
 
@@ -1290,7 +1350,9 @@ UInt16 GadgetGetHintCourseIndex(void) {
 *
 * Description: Set DB Index of current "hinted" entry's course
 *****************************************************************************/
-void GadgetSetHintCourseIndex(UInt16 newCourseInd) {
+void
+GadgetSetHintCourseIndex(UInt16 newCourseInd)
+{
   gCourseIndex = newCourseInd;
 }
 
@@ -1300,7 +1362,9 @@ void GadgetSetHintCourseIndex(UInt16 newCourseInd) {
 *
 * Description: Set DB Index of current "hinted" entry's time
 *****************************************************************************/
-void GadgetSetHintTimeIndex(UInt16 newTimeInd) {
+void
+GadgetSetHintTimeIndex(UInt16 newTimeInd)
+{
   gTimeIndex = newTimeInd;
 }
 
@@ -1310,7 +1374,9 @@ void GadgetSetHintTimeIndex(UInt16 newTimeInd) {
 *
 * Description: Get DB Index of current "hinted" entry's time
 *****************************************************************************/
-UInt16 GadgetGetHintTimeIndex(void) {
+UInt16
+GadgetGetHintTimeIndex(void)
+{
   return gTimeIndex;
 }
 
@@ -1320,7 +1386,9 @@ UInt16 GadgetGetHintTimeIndex(void) {
 *
 * Description: Returns current TimeFormat
 *****************************************************************************/
-TimeFormatType GadgetGetTimeFormat(void) {
+TimeFormatType
+GadgetGetTimeFormat(void)
+{
   return (TimeFormatType) PrefGetPreference(prefTimeFormat);
 }
 
@@ -1330,7 +1398,9 @@ TimeFormatType GadgetGetTimeFormat(void) {
 *
 * Description: On next GadgetRedraw we erase first
 *****************************************************************************/
-void GadgetSetNeedsCompleteRedraw(Boolean need) {
+void
+GadgetSetNeedsCompleteRedraw(Boolean need)
+{
   gGadgetCompleteRedraw=need;
   CacheReset();
 }
@@ -1340,7 +1410,9 @@ void GadgetSetNeedsCompleteRedraw(Boolean need) {
 *
 * Description: Switch Screens
 *****************************************************************************/
-void GadgetSwitchScreen(void) {
+void
+GadgetSwitchScreen(void)
+{
   gGadgetCurScreen=3-gGadgetCurScreen;
   gHintDrawn=false;
   gGadgetCompleteRedraw=true;

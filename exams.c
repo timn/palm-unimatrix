@@ -1,8 +1,30 @@
-/* $Id: exams.c,v 1.5 2003/06/18 11:10:11 tim Exp $
+
+/***************************************************************************
+ *  exam.h - Handling of exams goes here
  *
- * Exams functions
- * Created: 2002-09-21
+ *  Generated: 2002-07-11
+ *  Copyright  2002-2005  Tim Niemueller [www.niemueller.de]
+ *
+ *  $Id: exams.c,v 1.6 2005/05/28 12:59:14 tim Exp $
+ *
+ ****************************************************************************/
+
+/*
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Library General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+
 
 #include "UniMatrix.h"
 #include "exams.h"
@@ -17,17 +39,26 @@
 #include "alarm.h"
 
 // "Shared global" globals
-extern Char gCategoryName[dmCategoryLength];
+extern Char   gCategoryName[dmCategoryLength];
 extern UInt16 gMenuCurrentForm;
 
-Char **gExamDetailsItemList, gExamDetailsTimeTrigger[2*timeStringLength+3], gExamDetailsDateTrigger[longDateStrLength];
-UInt16 *gExamDetailsItemIDs=NULL, *gExamDetailsItemInd=NULL, gExamDetailsNumCourses, gExamsSelRow=0, gExamsOffset=0;
-DateType gExamDetailsDate;
-TimeType gExamDetailsBegin, gExamDetailsEnd;
-UInt32 gExamsLastSelRowUID=0; // Unique ID of selected record
+Char     **gExamDetailsItemList,
+           gExamDetailsTimeTrigger[2*timeStringLength+3],
+           gExamDetailsDateTrigger[longDateStrLength];
+UInt16    *gExamDetailsItemIDs=NULL,
+          *gExamDetailsItemInd=NULL,
+           gExamDetailsNumCourses,
+           gExamsSelRow=0,
+           gExamsOffset=0;
+DateType   gExamDetailsDate;
+TimeType   gExamDetailsBegin,
+           gExamDetailsEnd;
+UInt32     gExamsLastSelRowUID=0; // Unique ID of selected record
 
 
-static void TableDrawSelection(void *table, Int16 row, Int16 column, RectangleType *bounds) {
+static void
+TableDrawSelection(void *table, Int16 row, Int16 column, RectangleType *bounds)
+{
   RGBColorType red={0x00, 0xFF, 0x00, 0x00};
   RectangleType r;
 
@@ -46,7 +77,9 @@ static void TableDrawSelection(void *table, Int16 row, Int16 column, RectangleTy
 
 }
 
-static void TableDrawData(void *table, Int16 row, Int16 column, RectangleType *bounds) {
+static void
+TableDrawData(void *table, Int16 row, Int16 column, RectangleType *bounds)
+{
   UInt16 index=TblGetRowID(table, row);
   ExamDBRecord *ex;
   MemHandle mex;
@@ -103,7 +136,9 @@ static void TableDrawData(void *table, Int16 row, Int16 column, RectangleType *b
 }
 
 
-static void ExamsTableInit(void) {
+static void
+ExamsTableInit(void)
+{
   TableType *table=GetObjectPtr(TABLE_exams);
   UInt16 i, j;
   MemHandle m;
@@ -216,7 +251,10 @@ static void ExamsTableInit(void) {
   }
 }
 
-static void ExamDelete(void) {
+
+static void
+ExamDelete(void)
+{
   MemHandle mex, m;
   ExamDBRecord *ex;
   UInt16 index=0, pressedButton=0;
@@ -249,7 +287,9 @@ static void ExamDelete(void) {
 }
 
 
-static void ExamBeam(void) {
+static void
+ExamBeam(void)
+{
   MemHandle mex;
   ExamDBRecord *ex;
   UInt16 index=0;
@@ -263,11 +303,17 @@ static void ExamBeam(void) {
   BeamCourseByCID(ex->course);
 }
 
-void ExamSetGoto(UInt32 uniqueID) {
+
+void
+ExamSetGoto(UInt32 uniqueID)
+{
   gExamsLastSelRowUID = uniqueID;
 }
 
-Boolean ExamsFormHandleEvent(EventPtr event) {
+
+Boolean
+ExamsFormHandleEvent(EventPtr event)
+{
   FormPtr frm=FrmGetActiveForm();
   Boolean handled = false;
   Boolean categoryEdited, reDraw=false;
@@ -515,14 +561,18 @@ Boolean ExamsFormHandleEvent(EventPtr event) {
  *  #################################################################################
  */
 
-static void ExamDetailsSetTriggers(ControlType *dtr, ControlType *ttr) {
+static void
+ExamDetailsSetTriggers(ControlType *dtr, ControlType *ttr)
+{
   DateToAscii(gExamDetailsDate.month, gExamDetailsDate.day, gExamDetailsDate.year+MAC_SHIT_YEAR_CONSTANT, PrefGetPreference(prefLongDateFormat), gExamDetailsDateTrigger);
   CtlSetLabel(dtr, gExamDetailsDateTrigger);
   // Time Trigger not longer set, done during EditTimeGetTime call
 }
 
 
-static void ExamDetailsFormInit(FormType *frm) {
+static void
+ExamDetailsFormInit(FormType *frm)
+{
   UInt16 selectedCourse=0;
   ListType *course;
   ControlType *course_tr, *date_tr, *time_tr;
@@ -609,7 +659,9 @@ static void ExamDetailsFormInit(FormType *frm) {
 
 }
 
-static void ExamDetailsFormFree(void) {
+static void
+ExamDetailsFormFree(void)
+{
   UInt16 i;
   for(i=0; i < gExamDetailsNumCourses; ++i)
     MemPtrFree((MemPtr) gExamDetailsItemList[i]);
@@ -618,7 +670,9 @@ static void ExamDetailsFormFree(void) {
   MemPtrFree((MemPtr) gExamDetailsItemInd);
 }
 
-static void ExamDetailsGetDate(void) {
+static void
+ExamDetailsGetDate(void)
+{
   Char *title;
   Boolean clickedOK=false;
   Int16 year=gExamDetailsDate.year+MAC_SHIT_YEAR_CONSTANT, month=gExamDetailsDate.month, day=gExamDetailsDate.day;
@@ -636,7 +690,9 @@ static void ExamDetailsGetDate(void) {
 
 }
 
-static Boolean ExamDetailsFormSave(void) {
+static Boolean
+ExamDetailsFormSave(void)
+{
   MemHandle newExam=NULL;
   UInt16 index = dmMaxRecordIndex;
   ListType *course;
@@ -702,7 +758,9 @@ static Boolean ExamDetailsFormSave(void) {
 
 
 
-Boolean ExamDetailsFormHandleEvent(EventPtr event) {
+Boolean
+ExamDetailsFormHandleEvent(EventPtr event)
+{
   FormPtr frm=FrmGetActiveForm();
   Boolean handled = false;
 

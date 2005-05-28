@@ -1,7 +1,28 @@
-/* $Id: beam.c,v 1.3 2003/04/18 23:34:59 tim Exp $
+
+/***************************************************************************
+ *  beam.c - Functions for beaming
  *
- * Beam functions
- * Created: 2002-05-02
+ *  Generated: 2002-05-02
+ *  Copyright  2002-2005  Tim Niemueller [www.niemueller.de]
+ *
+ *  $Id: beam.c,v 1.4 2005/05/28 12:59:14 tim Exp $
+ *
+ ****************************************************************************/
+
+/*
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Library General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
 #include "UniMatrix.h"
@@ -20,7 +41,9 @@ extern UniMatrixPrefs gPrefs;
  ***********************************************************************/
 
 
-static Err BeamBytes(ExgSocketPtr s, void *buffer, UInt32 bytesToSend) {
+static Err
+BeamBytes(ExgSocketPtr s, void *buffer, UInt32 bytesToSend)
+{
   Err err=0;
 
   while (!err && (bytesToSend >0)) {
@@ -29,11 +52,13 @@ static Err BeamBytes(ExgSocketPtr s, void *buffer, UInt32 bytesToSend) {
     buffer = ((Char *)buffer) + bytesSent;
   }
 
-return err;
+  return err;
 }
 
 
-static void BeamCourseByIndex(ExgSocketType *s, UInt16 courseIndex) {
+static void
+BeamCourseByIndex(ExgSocketType *s, UInt16 courseIndex)
+{
   MemHandle mc, m;
   MemPtr pc;
   UInt16 numBytes=0, courseID=0, index=0;
@@ -96,7 +121,9 @@ static void BeamCourseByIndex(ExgSocketType *s, UInt16 courseIndex) {
   }
 }
 
-static Err BeamInit(ExgSocketType *s, Char *description) {
+static Err
+BeamInit(ExgSocketType *s, Char *description)
+{
   MemSet(s, sizeof(ExgSocketType), 0);
   s->description=description;
   s->target=APP_CREATOR;
@@ -106,13 +133,17 @@ static Err BeamInit(ExgSocketType *s, Char *description) {
 }
 
 
-static Err BeamFinish(ExgSocketType *s) {
+static Err
+BeamFinish(ExgSocketType *s)
+{
   Err err=errNone;
   return ExgDisconnect(s, err);
 }
 
 
-void BeamCourse(UInt16 courseIndex) {
+void
+BeamCourse(UInt16 courseIndex)
+{
   // We do not care about secret records, there shouldn't be any...
   Char *courseName;
   CourseDBRecord c;
@@ -140,7 +171,9 @@ void BeamCourse(UInt16 courseIndex) {
 
 
 
-void BeamSemester(UInt16 category) {
+void
+BeamSemester(UInt16 category)
+{
   ExgSocketType s;
   Err err;
   UInt8 beamType=BEAM_SEMESTER;
@@ -172,8 +205,10 @@ void BeamSemester(UInt16 category) {
 /***********************************************************************
  * Receive Functions
  ***********************************************************************/
-static Err BeamReadRecordIntoDB(DmOpenRef cats, DmOpenRef dogs, ExgSocketPtr socketPtr, UInt32 numBytes,
-                                UInt16 category, UInt16 *courseID, UInt8 *courseType, UInt16 *noteID) {
+static Err
+BeamReadRecordIntoDB(DmOpenRef cats, DmOpenRef dogs, ExgSocketPtr socketPtr, UInt32 numBytes,
+		     UInt16 category, UInt16 *courseID, UInt8 *courseType, UInt16 *noteID)
+{
   char *buffer=NULL;
   Err  err=0;
   UInt32 bytesReceived=0, numBytesToRead=numBytes;
@@ -335,7 +370,10 @@ static Err BeamReadRecordIntoDB(DmOpenRef cats, DmOpenRef dogs, ExgSocketPtr soc
   return err;
 }
 
-void BeamCourseByCID(UInt16 cid) {
+
+void
+BeamCourseByCID(UInt16 cid)
+{
   MemHandle m;
   Boolean found=false;
   UInt16 index=0, foundIndex=0;
@@ -356,7 +394,9 @@ void BeamCourseByCID(UInt16 cid) {
 }
 
 
-Err BeamReceive(DmOpenRef cats, DmOpenRef dogs, ExgSocketPtr socketPtr) {
+Err
+BeamReceive(DmOpenRef cats, DmOpenRef dogs, ExgSocketPtr socketPtr)
+{
   Err err=0;
   UInt8 beamType=0, courseType=0;
   UInt16 numBytes=0, courseID=0, noteID=0;
@@ -471,5 +511,5 @@ Err BeamReceive(DmOpenRef cats, DmOpenRef dogs, ExgSocketPtr socketPtr) {
     }
   }
 
-return err;
+  return err;
 }

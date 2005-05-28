@@ -1,16 +1,40 @@
-/* $Id: prefs.c,v 1.3 2003/04/25 23:24:38 tim Exp $
+
+/***************************************************************************
+ *  prefs.h - Handling of preferences
  *
- * Preferences
+ *  Generated: 2002-09-21
+ *  Copyright  2002-2005  Tim Niemueller [www.niemueller.de]
+ *
+ *  $Id: prefs.c,v 1.4 2005/05/28 12:59:14 tim Exp $
+ *
+ ****************************************************************************/
+
+/*
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Library General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
 #include "UniMatrix.h"
 #include "prefs.h"
 #include "gadget.h"
 
-extern UInt16 gMenuCurrentForm;
+extern UInt16         gMenuCurrentForm;
 extern UniMatrixPrefs gPrefs;
 
-void PrefLoadPrefs(UniMatrixPrefs *prefs) {
+void
+PrefLoadPrefs(UniMatrixPrefs *prefs)
+{
   UInt16 prefsSize=0;
   Int16 version;
 
@@ -68,7 +92,9 @@ void PrefLoadPrefs(UniMatrixPrefs *prefs) {
 
 }
 
-void PrefSavePrefs(UniMatrixPrefs *prefs) {
+void
+PrefSavePrefs(UniMatrixPrefs *prefs)
+{
   PrefSetAppPreferences(APP_CREATOR, PREFS_ID, PREFS_VERSION, prefs, sizeof(UniMatrixPrefs), false);
 }
 
@@ -77,7 +103,9 @@ void PrefSavePrefs(UniMatrixPrefs *prefs) {
 * Functions for editing SETTINGS
 *****************************************************************************/
 
-static void SettingsFormInit(FormType *frm) {
+static void
+SettingsFormInit(FormType *frm)
+{
   ControlType *ctl;
   
   ctl = GetObjectPtr(CHECKBOX_sets_saturday);
@@ -94,7 +122,9 @@ static void SettingsFormInit(FormType *frm) {
 
 }
 
-static Boolean SettingsSave(FormType *frm) {
+static Boolean
+SettingsSave(FormType *frm)
+{
   ControlType *ctl;
   
   ctl=GetObjectPtr(CHECKBOX_sets_saturday);
@@ -115,7 +145,9 @@ static Boolean SettingsSave(FormType *frm) {
 }
 
 
-Boolean SettingsFormHandleEvent(EventPtr event) {
+Boolean
+SettingsFormHandleEvent(EventPtr event)
+{
   Boolean handled = false;
   FormType *frm=FrmGetActiveForm();
 

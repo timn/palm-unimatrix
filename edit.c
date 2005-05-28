@@ -1,6 +1,28 @@
-/* $Id: edit.c,v 1.8 2005/05/28 09:49:54 tim Exp $
+
+/***************************************************************************
+ *  edit.c - Functions for editing courses, events, times, ...
  *
- * Code for editing times, events, courses
+ *  Generated: 2002
+ *  Copyright  2002-2005  Tim Niemueller [www.niemueller.de]
+ *
+ *  $Id: edit.c,v 1.9 2005/05/28 12:59:14 tim Exp $
+ *
+ ****************************************************************************/
+
+/*
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Library General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
 #include "UniMatrix.h"
@@ -19,19 +41,27 @@
 #define TimeToInt(time) (*(Int16 *) &time)
 
 
-UInt16 gEditTimeNumCourses=0, gEditCourseID=0, gEditCourseInd=0;
-Char **gEditTimeItemList, gEditTimeTrigger[2*timeStringLength+4], gEditCourseTypeTrigger[CTYPE_MAXLENGTH+4+CTYPE_SHORT_MAXLENGTH];
-UInt16 *gEditTimeItemIDs=NULL, *gEditTimeItemInd=NULL;
-TimeType gEditTimeBegin, gEditTimeEnd;
-UInt8 gEditCourseType=0;
-Boolean gEditTimeIsAdd=0;
+UInt16     gEditTimeNumCourses=0,
+           gEditCourseID=0,
+           gEditCourseInd=0;
+Char     **gEditTimeItemList,
+           gEditTimeTrigger[2*timeStringLength+4],
+           gEditCourseTypeTrigger[CTYPE_MAXLENGTH+4+CTYPE_SHORT_MAXLENGTH];
+UInt16    *gEditTimeItemIDs=NULL,
+          *gEditTimeItemInd=NULL;
+TimeType   gEditTimeBegin,
+           gEditTimeEnd;
+UInt8      gEditCourseType=0;
+Boolean    gEditTimeIsAdd=0;
 
 extern UInt16 gMenuCurrentForm;
 
 /*****************************************************************************
 * Functions for editing COURSES
 *****************************************************************************/
-static void EditCourseFormInit(FormType *frm) {
+static void
+EditCourseFormInit(FormType *frm)
+{
   ControlType *ctl;
 
   ctl = FrmGetObjectPtr(frm, FrmGetObjectIndex(frm, LIST_cd_type_trigger));
@@ -198,13 +228,17 @@ EditCourseSave(FormType *frm)
 }
 
 
-void EditCourse(UInt16 courseInd) {
+void
+EditCourse(UInt16 courseInd)
+{
   gEditCourseInd=courseInd;
   gEditTimeIsAdd=false;
   FrmPopupForm(FORM_course_det);
 }
 
-void AddCourse(void) {
+void
+AddCourse(void)
+{
   gEditTimeIsAdd=true;
   FrmPopupForm(FORM_course_det);
 }
@@ -379,7 +413,9 @@ EditCourseFormHandleEvent(EventPtr event)
 * Functions for editing CATEGORIES
 *****************************************************************************/
 
-void CatPreEdit(UInt16 numRecords, UInt32 *recordList) {
+void
+CatPreEdit(UInt16 numRecords, UInt32 *recordList)
+{
   UInt16 index=0;
   UInt16 i=0;
 
@@ -390,7 +426,9 @@ void CatPreEdit(UInt16 numRecords, UInt32 *recordList) {
   }
 }
 
-void CatPostEdit(UInt16 numRecords, UInt32 *recordList) {
+void
+CatPostEdit(UInt16 numRecords, UInt32 *recordList)
+{
   UInt16 index=0;
   Char categoryName[dmCategoryLength];
 
@@ -428,17 +466,23 @@ void CatPostEdit(UInt16 numRecords, UInt32 *recordList) {
 * Functions for editing EVENTS (also referred to as times)
 *****************************************************************************/
 
-void EditTime(void) {
+void
+EditTime(void)
+{
   gEditTimeIsAdd=false;
   FrmPopupForm(FORM_evt_det);
 }
 
-void AddTime(void) {
+void
+AddTime(void)
+{
   gEditTimeIsAdd=true;
   FrmPopupForm(FORM_evt_det);
 }
 
-static void EditTimeSetColor(FormType *frm, RGBColorType *color) {
+static void
+EditTimeSetColor(FormType *frm, RGBColorType *color)
+{
   MemHandle mr, mg, mb, old;
   FieldType *r, *g, *b;
   Char *buffer;
@@ -485,7 +529,9 @@ static void EditTimeSetColor(FormType *frm, RGBColorType *color) {
   FldDrawField(b);
 }
 
-static void EditTimeFindColor(FormType *frm, UInt16 courseID) {
+static void
+EditTimeFindColor(FormType *frm, UInt16 courseID)
+{
   UInt16 index=0;
   MemHandle m;
   TimeDBRecord *t;
@@ -511,7 +557,9 @@ static void EditTimeFindColor(FormType *frm, UInt16 courseID) {
   }
 }
 
-static void EditTimeFormInit(FormType *frm) {
+static void
+EditTimeFormInit(FormType *frm)
+{
   UInt16 selectedCourse=0;
   MemHandle mt, mroom, old;
   ListType *lst, *day;
@@ -601,7 +649,9 @@ static void EditTimeFormInit(FormType *frm) {
 
 
 
-static Boolean EditTimeSave(FormType *frm) {
+static Boolean
+EditTimeSave(FormType *frm)
+{
   ListType *lst, *day;
   ControlType *ctl, *dayt;
   FieldType *r, *g, *b, *room;
@@ -694,7 +744,9 @@ static Boolean EditTimeSave(FormType *frm) {
 }
 
 
-static void EditTimeFormFree(void) {
+static void
+EditTimeFormFree(void)
+{
   UInt16 i;
   for(i=0; i < gEditTimeNumCourses; ++i)
     MemPtrFree((MemPtr) gEditTimeItemList[i]);
@@ -704,7 +756,9 @@ static void EditTimeFormFree(void) {
 }
 
 
-static void EditTimePickColor(FormType *frm) {
+static void
+EditTimePickColor(FormType *frm)
+{
   RGBColorType color;
   IndexedColorType paletteColor;
   FieldType *r, *g, *b;
@@ -770,7 +824,9 @@ static void EditTimePickColor(FormType *frm) {
 }
 
 
-void EditTimeSetSelectorText(ControlType *ctl, TimeType *begin, TimeType *end, Char *label) {
+void
+EditTimeSetSelectorText(ControlType *ctl, TimeType *begin, TimeType *end, Char *label)
+{
   Char *str;
   TimeFormatType timeFormat=GadgetGetTimeFormat();
 
@@ -784,7 +840,9 @@ void EditTimeSetSelectorText(ControlType *ctl, TimeType *begin, TimeType *end, C
   CtlSetLabel(ctl, label);
 }
 
-void EditTimeGetTime(ControlType *ctl, TimeType *begin, TimeType *end, Char *label) {
+void
+EditTimeGetTime(ControlType *ctl, TimeType *begin, TimeType *end, Char *label)
+{
   Char *title;
   Boolean clickedOK=false;
   TimeType tmpBegin, tmpEnd;
@@ -816,7 +874,9 @@ void EditTimeGetTime(ControlType *ctl, TimeType *begin, TimeType *end, Char *lab
 *              This should already word on arbitrary GADGET_MAX_AT_A_TIME
 *              values >= 2
 *****************************************************************************/
-Boolean EditTimeCheckCollision(TimeType begin, TimeType end, UInt8 day, UInt16 notIndex, Boolean checkIndex) {
+Boolean
+EditTimeCheckCollision(TimeType begin, TimeType end, UInt8 day, UInt16 notIndex, Boolean checkIndex)
+{
   UInt16 begin_val=TimeToInt(begin), end_val=TimeToInt(end);
   UInt16 index=0;
   MemHandle m;

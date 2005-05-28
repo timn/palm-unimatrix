@@ -1,7 +1,34 @@
-/* $Id: tnglue.c,v 1.5 2003/04/29 23:03:48 tim Exp $
+
+/***************************************************************************
+ *  tnglue.h - Glue code to add some functions missing in 3.5 but present
+ *             in 4.0+
  *
- * tnglue. See tnglue.h for more info
- * Created: 2002-07-11
+ *           - Color functions, glue to get 3.5 working...
+ *             Or: Why the hell didn't they get WinSetForecolorRGB into 3.5!?
+ *            - Pointer Retrieval
+ *
+ *
+ *  Generated: 2002-07-11
+ *  Copyright  2002-2005  Tim Niemueller [www.niemueller.de]
+ *
+ *  $Id: tnglue.c,v 1.6 2005/05/28 12:59:14 tim Exp $
+ *
+ ****************************************************************************/
+
+/*
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Library General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
 #include <PalmOS.h>
@@ -9,7 +36,9 @@
 
 UInt8 gColorMode=COLORMODE_35;
 
-Err TNGlueColorInit(void) {
+Err
+TNGlueColorInit(void)
+{
   Err err;
   UInt32 romVersion;
   UInt32 requiredDepth = TN_GRAY_COLORDEPTH;
@@ -33,7 +62,9 @@ Err TNGlueColorInit(void) {
 }
 
 
-Boolean TNisColored(void) {
+Boolean
+TNisColored(void)
+{
   UInt32 currentDepth = 0;
   Boolean hasColor=false;
   WinScreenMode(winScreenModeGet, NULL, NULL, &currentDepth, &hasColor);
@@ -41,12 +72,16 @@ Boolean TNisColored(void) {
 }
 
 
-void TNSetColorMode(UInt8 newmode) {
+void
+TNSetColorMode(UInt8 newmode)
+{
   gColorMode=newmode;
 }
 
 
-static void TNSetColorRGB(RGBColorType *new, RGBColorType *old, UInt8 type) {
+static void
+TNSetColorRGB(RGBColorType *new, RGBColorType *old, UInt8 type)
+{
   if (gColorMode == COLORMODE_35) {
     IndexedColorType oldCI=0;
     IndexedColorType newCI=0;
@@ -67,16 +102,22 @@ static void TNSetColorRGB(RGBColorType *new, RGBColorType *old, UInt8 type) {
   }
 }
 
-void TNSetForeColorRGB(RGBColorType *new, RGBColorType *old) {
+void
+TNSetForeColorRGB(RGBColorType *new, RGBColorType *old)
+{
   TNSetColorRGB(new, old, TN_CT_FORE);
 }
 
 
-void TNSetBackColorRGB(RGBColorType *new, RGBColorType *old) {
+void
+TNSetBackColorRGB(RGBColorType *new, RGBColorType *old)
+{
   TNSetColorRGB(new, old, TN_CT_BACK);
 }
 
-void TNSetTextColorRGB(RGBColorType *new, RGBColorType *old) {
+void
+TNSetTextColorRGB(RGBColorType *new, RGBColorType *old)
+{
   TNSetColorRGB(new, old, TN_CT_TEXT);
 }
 
@@ -86,7 +127,9 @@ void TNSetTextColorRGB(RGBColorType *new, RGBColorType *old) {
 *
 * Description:  Helper function to draw string in global find
 *****************************************************************************/
-void TNDrawCharsToFitWidth(const char *s, RectanglePtr r) {
+void
+TNDrawCharsToFitWidth(const char *s, RectanglePtr r)
+{
   Int16   stringLength = StrLen(s);
   Int16   pixelWidth = r->extent.x;
   Boolean truncate;
@@ -100,7 +143,9 @@ void TNDrawCharsToFitWidth(const char *s, RectanglePtr r) {
 
 
 
-UInt16 TNGetObjectIndexFromPtr(FormType *form, void *formObj) {
+UInt16
+TNGetObjectIndexFromPtr(FormType *form, void *formObj)
+{
   UInt16 index;
   UInt16 objIndex = frmInvalidObjectId;
   UInt16 numObjects = FrmGetNumberOfObjects(form);
@@ -116,16 +161,20 @@ UInt16 TNGetObjectIndexFromPtr(FormType *form, void *formObj) {
 }
 
 
-UInt32 TNPalmOSVersion(void) {
+UInt32
+TNPalmOSVersion(void)
+ {
   UInt32 romVersion=0;
 
-	FtrGet(sysFtrCreator, sysFtrNumROMVersion, &romVersion);
+  FtrGet(sysFtrCreator, sysFtrNumROMVersion, &romVersion);
 
   return romVersion;
 }
 
 
-MemHandle TNDmQueryPrevInCategory(DmOpenRef db, UInt16 *index, UInt16 category) {
+MemHandle
+TNDmQueryPrevInCategory(DmOpenRef db, UInt16 *index, UInt16 category)
+{
   UInt8 attrMask, attrCmp;
   UInt16 tmpIndex = 0;
   UInt16 count=0;

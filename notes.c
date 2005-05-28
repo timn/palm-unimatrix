@@ -1,8 +1,28 @@
-/* $Id: notes.c,v 1.3 2003/06/18 11:10:11 tim Exp $
+
+/***************************************************************************
+ *  notes.h - Note support functions
  *
- * Note support functions
- * Created: 2003/04/17
- * Portions copyright (c) 2000 Palm, Inc. or its subsidiaries.  All rights reserved.
+ *  Generated: 2003/04/17
+ *  Copyright  2002-2005  Tim Niemueller [www.niemueller.de]
+ *
+ *  $Id: notes.c,v 1.4 2005/05/28 12:59:14 tim Exp $
+ *
+ ****************************************************************************/
+
+/*
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Library General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
 #include "notes.h"
@@ -13,7 +33,9 @@ Char   gNoteTitle[32];
 UInt16 gNoteItemIndex=0;
 UInt16 gNoteReturnForm=FORM_main;
 
-void NoteSet(UInt16 noteItemIndex, UInt16 returnForm) {
+void
+NoteSet(UInt16 noteItemIndex, UInt16 returnForm)
+{
   MemHandle m;
   Char *s;
   UInt16 courseID=0;
@@ -58,7 +80,9 @@ void NoteSet(UInt16 noteItemIndex, UInt16 returnForm) {
 }
 
 
-Boolean NoteGetIndex(UInt16 noteID, UInt16 *noteIndex) {
+Boolean
+NoteGetIndex(UInt16 noteID, UInt16 *noteIndex)
+{
   MemHandle m;
   Boolean found=false;
   UInt16 index=0;
@@ -79,7 +103,9 @@ Boolean NoteGetIndex(UInt16 noteID, UInt16 *noteIndex) {
 }
 
 
-static void NoteViewLoad(void) {
+static void
+NoteViewLoad(void)
+{
   FieldType *fld = GetObjectPtr(NoteField);
   //Char temp[50];
   //StrPrintF(temp, "gNoteID: %u", gNoteID);
@@ -110,7 +136,9 @@ static void NoteViewLoad(void) {
 }
 
 
-UInt16 NoteGetNewID(DmOpenRef cats, UInt16 category) {
+UInt16
+NoteGetNewID(DmOpenRef cats, UInt16 category)
+{
   MemHandle m;
   UInt16 index=0;
   UInt16 highest=0;
@@ -127,7 +155,10 @@ UInt16 NoteGetNewID(DmOpenRef cats, UInt16 category) {
   return (highest+1);
 }
 
-static void NoteDeleteLocal(void) {
+
+static void
+NoteDeleteLocal(void)
+{
   if (gNoteID) {
     // Was loaded and will be freed by Field => set FldHandle to NULL
     FieldType *fld=GetObjectPtr(NoteField);
@@ -138,7 +169,9 @@ static void NoteDeleteLocal(void) {
 
 
 // Will return true if an entry has been deleted
-void NoteDelete(UInt16 *noteItemIndex) {
+void
+NoteDelete(UInt16 *noteItemIndex)
+{
   MemHandle m;
   Char *p;
   UInt8 itemType=0;
@@ -178,13 +211,13 @@ void NoteDelete(UInt16 *noteItemIndex) {
     GadgetSetHintTimeIndex(GadgetGetHintTimeIndex()-1);
     GadgetSetHintCourseIndex(GadgetGetHintCourseIndex()-1);
 
-  }
-
-  
+  }  
 }
 
 
-static void NoteViewSave(void) {
+static void
+NoteViewSave(void)
+{
   FieldType *fld = GetObjectPtr(NoteField);
   MemHandle nn, m;
 	Boolean empty;
@@ -228,10 +261,10 @@ static void NoteViewSave(void) {
     }
   } else {
     // Save
-	  // Clear the handle value in the field, otherwise the handle
-	  // will be free when the form is disposed of,  this call also unlocks
-	  // the handle that contains the note string.
-	  FldSetTextHandle (fld, NULL);
+    // Clear the handle value in the field, otherwise the handle
+    // will be free when the form is disposed of,  this call also unlocks
+    // the handle that contains the note string.
+    FldSetTextHandle (fld, NULL);
 
     // Remove the note from the record, if it is empty.
     if (empty) {
@@ -261,7 +294,9 @@ static void NoteViewSave(void) {
 }
 
 
-static void NoteViewInit(FormPtr frm) {
+static void
+NoteViewInit(FormPtr frm)
+{
   FieldPtr 		fld;
   FieldAttrType	attr;
   
@@ -275,7 +310,9 @@ static void NoteViewInit(FormPtr frm) {
 }
 
 
-static void NoteViewDrawTitleAndForm (FormPtr frm) {
+static void
+NoteViewDrawTitleAndForm(FormPtr frm)
+{
   Coord x;
   Coord maxWidth;
   Coord formWidth;
@@ -360,7 +397,9 @@ static void NoteViewDrawTitleAndForm (FormPtr frm) {
 }
 
 
-static void NoteViewUpdateScrollBar (void) {
+static void
+NoteViewUpdateScrollBar(void)
+{
   UInt16 scrollPos;
   UInt16 textHeight;
   UInt16 fieldHeight;
@@ -390,7 +429,10 @@ static void NoteViewUpdateScrollBar (void) {
   SclSetScrollBar (bar, scrollPos, 0, maxValue, fieldHeight-1);
 }
 
-static void NoteViewScroll (Int16 linesToScroll, Boolean updateScrollbar) {
+
+static void
+NoteViewScroll(Int16 linesToScroll, Boolean updateScrollbar)
+{
   UInt16			blankLines;
   FieldPtr			fld;
   
@@ -410,7 +452,9 @@ static void NoteViewScroll (Int16 linesToScroll, Boolean updateScrollbar) {
 }
 
 
-static void NoteViewPageScroll (WinDirectionType direction) {
+static void
+NoteViewPageScroll(WinDirectionType direction)
+{
   UInt16 linesToScroll;
   FieldPtr fld;
   
@@ -427,9 +471,11 @@ static void NoteViewPageScroll (WinDirectionType direction) {
 }
 
 
-Boolean NoteViewHandleEvent (EventType *event) {
-	FormPtr frm;
-	Boolean handled = false;
+Boolean
+NoteViewHandleEvent (EventType *event)
+{
+  FormPtr frm;
+  Boolean handled = false;
 
   if (event->eType == keyDownEvent) {
 		if (TxtCharIsHardKey(event->data.keyDown.modifiers, event->data.keyDown.chr)) {

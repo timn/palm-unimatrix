@@ -1,9 +1,32 @@
-/* $Id: alarm.c,v 1.9 2003/11/20 22:55:20 tim Exp $
+
+/***************************************************************************
+ *  alarm.c - Support for exam alarms
  *
- * Support for exam alarms
- * Created: 2003/04/19
- * Portions copyright (c) 2000 Palm, Inc. or its subsidiaries.  All rights reserved.
+ *  Generated: 2003/04/19
+ *  Copyright  2002-2005  Tim Niemueller [www.niemueller.de]
+ *  Portions copyright (c) 2000 Palm, Inc. or its subsidiaries.
+ *  All rights reserved.
+ *
+ *  $Id: alarm.c,v 1.10 2005/05/28 12:59:14 tim Exp $
+ *
+ ****************************************************************************/
+
+/*
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Library General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
+
 
 #include "alarm.h"
 #include "database.h"
@@ -24,13 +47,13 @@ extern UniMatrixPrefs gPrefs;
 
 
 // Placeholder for sound trigger label
-static Char * gAlarmSoundTriggerLabel;
+static Char      *gAlarmSoundTriggerLabel;
 
 // handle to the list containing names and DB info of MIDI tracks.
 // Each entry is of type SndMidiListItemType.
-static MemHandle	gMidiListH;
+static MemHandle  gMidiListH;
 // number of entries in the MIDI list
-static UInt16	gMidiCount;
+static UInt16	  gMidiCount;
 
 
 /*****************************************************************************
@@ -42,7 +65,9 @@ static UInt16	gMidiCount;
 * PARAMETERS:   prefs - Pointer to UniMatrixPrefs struct
 * RETURNS:      number of seconds the alarm should ring early
 *****************************************************************************/
-static UInt32 AlarmAdvanceSeconds(UniMatrixPrefs *prefs) {
+static UInt32
+AlarmAdvanceSeconds(UniMatrixPrefs *prefs)
+{
   UInt32 factor = 60;
 
   switch (prefs->alarmInfo.advanceUnit) {
@@ -67,7 +92,9 @@ static UInt32 AlarmAdvanceSeconds(UniMatrixPrefs *prefs) {
 *               an exam while another exam is running...)
 * RETURNS:      time of next alarm in number of seconds since the epoch
 *****************************************************************************/
-static UInt32 AlarmFindNext(DmOpenRef cats, UniMatrixPrefs *prefs, UInt32 startAt, UInt32 *alarmOffset) {
+static UInt32
+AlarmFindNext(DmOpenRef cats, UniMatrixPrefs *prefs, UInt32 startAt, UInt32 *alarmOffset)
+{
   MemHandle m;
   UInt16 index=0;
   UInt32 foundTimeBegin=0xFFFFFFFF, foundTimeEnd=0;
@@ -231,6 +258,7 @@ static UInt32 AlarmFindNext(DmOpenRef cats, UniMatrixPrefs *prefs, UInt32 startA
   return (foundTimeBegin + *alarmOffset);
 }
 
+
 /*****************************************************************************
 * FUNCTION:     AlarmPostTriggered
 *
@@ -239,16 +267,18 @@ static UInt32 AlarmFindNext(DmOpenRef cats, UniMatrixPrefs *prefs, UInt32 startA
 * PARAMETERS:   open cats db, prefs, time for which we should show events
 * RETURNS:      nothing
 *****************************************************************************/
-static void AlarmPostTriggered(DmOpenRef cats, UniMatrixPrefs *prefs, UInt32 alarmTime) {
+static void
+AlarmPostTriggered(DmOpenRef cats, UniMatrixPrefs *prefs, UInt32 alarmTime)
+{
   UInt16 index=0, cardNo=0;
   UInt32 examAlarm=0;
   DateTimeType dateTime;
   MemHandle m;
-	DmSearchStateType searchInfo;
+  DmSearchStateType searchInfo;
   LocalID dbID;
   UInt32 searchTime = alarmTime + AlarmAdvanceSeconds(prefs);
-
-	DmGetNextDatabaseByTypeCreator (true, &searchInfo, sysFileTApplication, APP_CREATOR, true, &cardNo, &dbID);
+  
+  DmGetNextDatabaseByTypeCreator (true, &searchInfo, sysFileTApplication, APP_CREATOR, true, &cardNo, &dbID);
 
   while ((m = DmQueryNextInCategory(cats, &index, prefs->curCat))) {
     ExamDBRecord *ex;
@@ -285,13 +315,15 @@ static void AlarmPostTriggered(DmOpenRef cats, UniMatrixPrefs *prefs, UInt32 ala
 * PARAMETERS:   time the alarm should ring, ref value, offset in UniMatrix
 * RETURNS:      nothing
 *****************************************************************************/
-static void AlarmSetTrigger(UInt32 alarmTime, UInt32 ref) {
+static void
+AlarmSetTrigger(UInt32 alarmTime, UInt32 ref)
+{
   if (alarmTime != ALARM_NOTFOUND) {
     DmSearchStateType searchInfo;
     UInt16 cardNo;
     LocalID dbID;
 
-  	DmGetNextDatabaseByTypeCreator (true, &searchInfo, sysFileTApplication, APP_CREATOR, true, &cardNo, &dbID);
+    DmGetNextDatabaseByTypeCreator (true, &searchInfo, sysFileTApplication, APP_CREATOR, true, &cardNo, &dbID);
 
     AlmSetAlarm(cardNo, dbID, ref, alarmTime, false);
   }
@@ -306,7 +338,9 @@ static void AlarmSetTrigger(UInt32 alarmTime, UInt32 ref) {
 * PARAMETERS:   open cats db
 * RETURNS:      nothing
 *****************************************************************************/
-void AlarmReset(DmOpenRef cats) {
+void
+AlarmReset(DmOpenRef cats)
+{
   UInt16 cardNo;
   LocalID dbID;
   UniMatrixPrefs prefs;
@@ -315,7 +349,7 @@ void AlarmReset(DmOpenRef cats) {
 
   PrefLoadPrefs(&prefs);
 
-	SysCurAppDatabase(&cardNo, &dbID);
+  SysCurAppDatabase(&cardNo, &dbID);
   AlmSetAlarm(cardNo, dbID, 0, 0, false);
 
   if (prefs.alarmInfo.useAlarm) {
@@ -335,8 +369,12 @@ void AlarmReset(DmOpenRef cats) {
 * PARAMETERS:   open cats db, pointer to cmd struct
 * RETURNS:      nothing
 *****************************************************************************/
-void AlarmTriggered(DmOpenRef cats, SysAlarmTriggeredParamType *cmdPBP) {
-  UInt32						alarmTime, nextAlarm, nextOffset=0;
+void
+AlarmTriggered(DmOpenRef cats, SysAlarmTriggeredParamType *cmdPBP)
+{
+  UInt32            alarmTime,
+                    nextAlarm,
+                    nextOffset = 0;
   UniMatrixPrefs    prefs;
 
   // all triggered alarms are sent to attention manager for display so there is
@@ -368,7 +406,9 @@ void AlarmTriggered(DmOpenRef cats, SysAlarmTriggeredParamType *cmdPBP) {
 *               detailed description (true) or the list view (false)
 * RETURNS:      nothing
 *****************************************************************************/
-static void AlarmDraw(DmOpenRef cats, UniMatrixPrefs *prefs, UInt32 uniqueID, AttnCommandArgsType *paramsP, Boolean drawDetail) {
+static void
+AlarmDraw(DmOpenRef cats, UniMatrixPrefs *prefs, UInt32 uniqueID, AttnCommandArgsType *paramsP, Boolean drawDetail)
+{
   MemHandle resH;
   MemPtr resP;
   FontID curFont;
@@ -378,15 +418,15 @@ static void AlarmDraw(DmOpenRef cats, UniMatrixPrefs *prefs, UInt32 uniqueID, At
   MemHandle examH, courseH, examStrH;
   CourseDBRecord course;
   ExamDBRecord *exam;
-  Char *examStr, *template;
-	Char				dowNameStr[dowDateStringLength];
-	Char 				dateStr[longDateStrLength];
-	Char				timeStr [timeStringLength];
-	DateFormatType	dateFormat;
-	TimeFormatType	timeFormat;
-  DateTimeType dateTime;
-  Char chr;
-
+  Char *examStr,
+       *template,
+        dowNameStr[dowDateStringLength],
+        dateStr[longDateStrLength],
+        timeStr [timeStringLength],
+        chr;
+  DateFormatType  dateFormat;
+  TimeFormatType  timeFormat;
+  DateTimeType    dateTime;
 
   // Get needed data
   err = DmFindRecordByID(cats, uniqueID, &index);
@@ -410,9 +450,9 @@ static void AlarmDraw(DmOpenRef cats, UniMatrixPrefs *prefs, UInt32 uniqueID, At
   examStrH = DmGetResource(strRsc, ALARM_exam);
   examStr = MemHandleLock(examStrH);
 
-	// Get the date and time formats.
-	dateFormat = (DateFormatType)PrefGetPreference(prefDateFormat);
-	timeFormat = (TimeFormatType)PrefGetPreference(prefTimeFormat);
+  // Get the date and time formats.
+  dateFormat = (DateFormatType)PrefGetPreference(prefDateFormat);
+  timeFormat = (TimeFormatType)PrefGetPreference(prefTimeFormat);
 
   if (drawDetail) {
 
@@ -565,7 +605,9 @@ static void AlarmDraw(DmOpenRef cats, UniMatrixPrefs *prefs, UInt32 uniqueID, At
 * PARAMETERS:   unique ID of the MIDI
 * RETURNS:      nothing
 *****************************************************************************/
-static void AlarmPlaySound(UInt32 uniqueRecID) {
+static void
+AlarmPlaySound(UInt32 uniqueRecID)
+{
   Err                 err;
   MemHandle	          midiH;          // handle of MIDI record
   SndMidiRecHdrType  *midiHdrP;       // pointer to MIDI record header
@@ -625,21 +667,23 @@ static void AlarmPlaySound(UInt32 uniqueRecID) {
 * PARAMETERS:   unique ID of the exam we rang for
 * RETURNS:      nothing
 *****************************************************************************/
-static void AlarmGoto(UInt32 uniqueID) {
-	DmSearchStateType searchInfo;
+static void
+AlarmGoto(UInt32 uniqueID)
+{
+  DmSearchStateType searchInfo;
   UInt16 cardNo;
   LocalID dbID;
   UInt32 *gotoInfoP;
 
-	gotoInfoP = (UInt32*)MemPtrNew (sizeof(UInt32));
-	ErrFatalDisplayIf ((!gotoInfoP), "Out of memory");
-	MemPtrSetOwner(gotoInfoP, 0);
+  gotoInfoP = (UInt32*)MemPtrNew (sizeof(UInt32));
+  ErrFatalDisplayIf ((!gotoInfoP), "Out of memory");
+  MemPtrSetOwner(gotoInfoP, 0);
 
-	// initialize the goto params structure so that datebook will open day view 
-	// with the specified item selected
-	*gotoInfoP = uniqueID;
-
-	DmGetNextDatabaseByTypeCreator (true, &searchInfo, sysFileTApplication, APP_CREATOR, true, &cardNo, &dbID);
+  // initialize the goto params structure so that datebook will open day view 
+  // with the specified item selected
+  *gotoInfoP = uniqueID;
+  
+  DmGetNextDatabaseByTypeCreator (true, &searchInfo, sysFileTApplication, APP_CREATOR, true, &cardNo, &dbID);
   SysUIAppSwitch(cardNo, dbID, appLaunchCmdAlarmEventGoto, gotoInfoP);
 }
 
@@ -652,37 +696,39 @@ static void AlarmGoto(UInt32 uniqueID) {
 * PARAMETERS:   open cats db, attention manager args struct ptr
 * RETURNS:      true on success (always :-)
 *****************************************************************************/
-Boolean AttentionBottleNeckProc(DmOpenRef cats, AttnLaunchCodeArgsType *paramP) {
-//	AttnCommandArgsType * argsP = paramP->commandArgsP;
+Boolean
+AttentionBottleNeckProc(DmOpenRef cats, AttnLaunchCodeArgsType *paramP)
+{
+  //	AttnCommandArgsType * argsP = paramP->commandArgsP;
   UniMatrixPrefs prefs;
 
   PrefLoadPrefs(&prefs);
 
   switch (paramP->command) {
-    case kAttnCommandDrawDetail:
-      AlarmDraw(cats, &prefs, paramP->userData, paramP->commandArgsP, true);
-      break;			
+  case kAttnCommandDrawDetail:
+    AlarmDraw(cats, &prefs, paramP->userData, paramP->commandArgsP, true);
+    break;			
   
-    case kAttnCommandDrawList:
-      AlarmDraw(cats, &prefs, paramP->userData, paramP->commandArgsP, false);
-      break;
+  case kAttnCommandDrawList:
+    AlarmDraw(cats, &prefs, paramP->userData, paramP->commandArgsP, false);
+    break;
 
-    case kAttnCommandPlaySound:
-      AlarmPlaySound(prefs.alarmInfo.soundUniqueRecID);
-      break;
+  case kAttnCommandPlaySound:
+    AlarmPlaySound(prefs.alarmInfo.soundUniqueRecID);
+    break;
             
-/*
+    /*
     case kAttnCommandGotIt:
       {
       if (argsP->gotIt.dismissedByUser)
         DeleteAlarm(paramP->userData);
       }
       break;			
-*/
-    case kAttnCommandGoThere:
-      AlarmGoto(paramP->userData);		
-      break;	
-  /*
+    */
+  case kAttnCommandGoThere:
+    AlarmGoto(paramP->userData);		
+    break;	
+    /*
     case kAttnCommandIterate:
       // if the argument is nil, this is a "tickle from the attention manager
       // asking the application to validate the specified entry
@@ -715,9 +761,9 @@ Boolean AttentionBottleNeckProc(DmOpenRef cats, AttnLaunchCodeArgsType *paramP) 
           }
       break;	
       
-  //		case AttnCommand_nag:		// ignored by DateBook
-  //			break;
-*/
+      //		case AttnCommand_nag:		// ignored by DateBook
+      //			break;
+  */
   }
   
   return true;
@@ -740,7 +786,9 @@ Boolean AttentionBottleNeckProc(DmOpenRef cats, AttnLaunchCodeArgsType *paramP) 
 *               drawing the list
 * RETURNS:      nothing
 *****************************************************************************/
-static void MidiPickListCreate(FormType *frm, ListPtr listP, ListDrawDataFuncPtr funcP) {
+static void
+MidiPickListCreate(FormType *frm, ListPtr listP, ListDrawDataFuncPtr funcP)
+{
   SndMidiListItemType*	midiListP;
   UInt16		i;
   UInt16		listWidth;
@@ -801,7 +849,7 @@ static void MidiPickListCreate(FormType *frm, ListPtr listP, ListDrawDataFuncPtr
   }
   // Move list left if it doesnt fit in window
   if (listX + listW > r.extent.x) {
-      listX = r.extent.x - listX;
+    listX = r.extent.x - listX;
   }
 
   RctSetRectangle(&listBounds, listX, listBounds.topLeft.y,
@@ -819,22 +867,24 @@ static void MidiPickListCreate(FormType *frm, ListPtr listP, ListDrawDataFuncPtr
 * PARAMETERS:   Pointer to the alarm prefs form, label to set the trigger to
 * RETURNS:      nothing
 *****************************************************************************/
-static void SetSoundLabel(FormPtr formP, const char* labelP) {
-	ControlPtr	triggerP;
-	UInt16			triggerIdx;
+static void
+SetSoundLabel(FormPtr formP, const char* labelP)
+{
+  ControlPtr	triggerP;
+  UInt16			triggerIdx;
 
-	// Copy the label, winUp to the max into the ptr
-	StrNCopy(gAlarmSoundTriggerLabel, labelP, soundTriggerLabelLen);
-	// Terminate string at max len
-	gAlarmSoundTriggerLabel[soundTriggerLabelLen - 1] = '\0';
-	// Get trigger idx
-	triggerIdx = FrmGetObjectIndex(formP, ALARM_sound_trigger);
-	// Get trigger control ptr
-	triggerP = FrmGetObjectPtr(formP, triggerIdx);
-	// Use category routines to truncate it
-	CategoryTruncateName(gAlarmSoundTriggerLabel, ResLoadConstant(ALARM_sound_trigger_width));
-	// Set the label
-	CtlSetLabel(triggerP, gAlarmSoundTriggerLabel);
+  // Copy the label, winUp to the max into the ptr
+  StrNCopy(gAlarmSoundTriggerLabel, labelP, soundTriggerLabelLen);
+  // Terminate string at max len
+  gAlarmSoundTriggerLabel[soundTriggerLabelLen - 1] = '\0';
+  // Get trigger idx
+  triggerIdx = FrmGetObjectIndex(formP, ALARM_sound_trigger);
+  // Get trigger control ptr
+  triggerP = FrmGetObjectPtr(formP, triggerIdx);
+  // Use category routines to truncate it
+  CategoryTruncateName(gAlarmSoundTriggerLabel, ResLoadConstant(ALARM_sound_trigger_width));
+  // Set the label
+  CtlSetLabel(triggerP, gAlarmSoundTriggerLabel);
 }
 
 
@@ -846,7 +896,9 @@ static void SetSoundLabel(FormPtr formP, const char* labelP) {
 * PARAMETERS:   number of item to draw, rectangle to draw in, unused param
 * RETURNS:      nothing
 *****************************************************************************/
-static void MidiPickListDrawItem (Int16 itemNum, RectanglePtr bounds, Char **unusedP) {
+static void
+MidiPickListDrawItem (Int16 itemNum, RectanglePtr bounds, Char **unusedP)
+{
   Char *	itemTextP;
   Int16		itemTextLen;
   Int16		itemWidth;
@@ -897,7 +949,9 @@ static void MidiPickListDrawItem (Int16 itemNum, RectanglePtr bounds, Char **unu
 * PARAMETERS:   nothing
 * RETURNS:      nothing
 *****************************************************************************/
-static void MidiPickListFree(void) {
+static void
+MidiPickListFree(void)
+{
   if ( gMidiListH )	{
     MemHandleFree(gMidiListH);
     gMidiListH = 0;
@@ -914,7 +968,9 @@ static void MidiPickListFree(void) {
 * PARAMETERS:   form ptr to the alarm prefs form
 * RETURNS:      nothing
 *****************************************************************************/
-static void AlarmFormInit(FormType *frm) {
+static void
+AlarmFormInit(FormType *frm)
+{
   ControlType *ctl;
   ListType *lst;
   UInt16 listPos=0, item=0;
@@ -986,7 +1042,7 @@ static void AlarmFormInit(FormType *frm) {
 
   // Lock MIDI sound list
   if ( gMidiListH ) {
-  	SndMidiListItemType*	midiListP;
+    SndMidiListItemType*	midiListP;
     UInt16 i;
 
     midiListP = MemHandleLock(gMidiListH);
@@ -1026,7 +1082,9 @@ static void AlarmFormInit(FormType *frm) {
 * RETURNS:      true if saving was successful (nothing that can prevent that
 *               right now checked)
 *****************************************************************************/
-static Boolean AlarmFormSave(FormType *frm) {
+static Boolean
+AlarmFormSave(FormType *frm)
+{
   ControlType *ctl;
   ListType *lst;
   FieldType *fld;
@@ -1096,7 +1154,9 @@ static Boolean AlarmFormSave(FormType *frm) {
 * PARAMETERS:   nothing
 * RETURNS:      nothing
 *****************************************************************************/
-static void AlarmFormFree(void) {
+static void
+AlarmFormFree(void)
+{
   // Free the MIDI pick list
   MidiPickListFree();
 
@@ -1116,7 +1176,9 @@ static void AlarmFormFree(void) {
 * PARAMETERS:   ptr to the event info struct
 * RETURNS:      true if event handled completely and successfully
 *****************************************************************************/
-Boolean AlarmFormHandleEvent(EventPtr event) {
+Boolean
+AlarmFormHandleEvent(EventPtr event)
+{
   Boolean handled = false;
   FormType *frm=FrmGetActiveForm();
 

@@ -1,6 +1,28 @@
-/* $Id: database.c,v 1.6 2005/05/27 14:57:31 tim Exp $
+
+/***************************************************************************
+ *  database.c - database handling
  *
- * Database handling, another central piece in UniMatrix
+ *  Generated: 2002
+ *  Copyright  2002-2005  Tim Niemueller [www.niemueller.de]
+ *
+ *  $Id: database.c,v 1.7 2005/05/28 12:59:14 tim Exp $
+ *
+ ****************************************************************************/
+
+/*
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Library General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
 #include "database.h"
@@ -18,8 +40,10 @@ extern    UniMatrixPrefs gPrefs;
 *
 * Description:  Opens/creates the application's database.
 *****************************************************************************/
-Err OpenDatabase(void) {
-	Err err = errNone;
+Err
+OpenDatabase(void)
+{
+  Err err = errNone;
   UInt16 version;
 
   if (! gDatabase[DB_MAIN]) {
@@ -94,10 +118,14 @@ Err OpenDatabase(void) {
 *
 * Description:  Closes the application's database.
 *****************************************************************************/
-void CloseDatabase(void) {
-	if (gDatabase[DB_MAIN])  DmCloseDatabase(gDatabase[DB_MAIN]);
+void
+CloseDatabase(void)
+{
+  if (gDatabase[DB_MAIN])
+    DmCloseDatabase(gDatabase[DB_MAIN]);
   gDatabase[DB_MAIN] = NULL;
-  if (gDatabase[DB_DATA])  DmCloseDatabase(gDatabase[DB_DATA]);
+  if (gDatabase[DB_DATA])
+    DmCloseDatabase(gDatabase[DB_DATA]);
   gDatabase[DB_DATA] = NULL;
 }
 
@@ -106,7 +134,9 @@ void CloseDatabase(void) {
 *
 * Description: Returns the database pointer
 *****************************************************************************/
-DmOpenRef DatabaseGetRef(void) {
+DmOpenRef
+DatabaseGetRef(void)
+{
   return gDatabase[DB_MAIN];
 }
 
@@ -115,7 +145,9 @@ DmOpenRef DatabaseGetRef(void) {
 *
 * Description: Returns the database pointer from array
 *****************************************************************************/
-DmOpenRef DatabaseGetRefN(UInt8 num) {
+DmOpenRef
+DatabaseGetRefN(UInt8 num)
+{
   // We do not check to improbe performance, since this is NEVER a user give
   // value this just means that the programmer has to be careful, that should
   // not be a problem with nicely used constants
@@ -129,7 +161,9 @@ DmOpenRef DatabaseGetRefN(UInt8 num) {
 *
 * Description: Deletes the database
 *****************************************************************************/
-void DeleteDatabase(void) {
+void
+DeleteDatabase(void)
+{
   LocalID dbID;
 
   dbID = DmFindDatabase(DATABASE_CARD, DATABASE_NAME);
@@ -146,7 +180,9 @@ void DeleteDatabase(void) {
 *
 * Description: Converts databases from older version to current version
 *****************************************************************************/
-Err DatabaseConvert(UInt16 oldVersion) {
+Err
+DatabaseConvert(UInt16 oldVersion)
+{
   DmOpenRef old, new;
   LocalID newID, oldID;
   UInt16 numRecords, i, atP, DBversion=DATABASE_VERSION, attr, cat;
@@ -371,7 +407,9 @@ Err DatabaseConvert(UInt16 oldVersion) {
 *
 * Description: Create a clean database. Used when receiving a beam
 *****************************************************************************/
-Err CreateDatabase(const Char *dbname, LocalID *dbID) {
+Err
+CreateDatabase(const Char *dbname, LocalID *dbID)
+{
   Err err;
 
   err = DmCreateDatabase(DATABASE_CARD, dbname, APP_CREATOR, DATABASE_TYPE, false);
@@ -418,7 +456,9 @@ Err CreateDatabase(const Char *dbname, LocalID *dbID) {
 *
 * Description: Returns the current Category
 *****************************************************************************/
-UInt16 DatabaseGetCat(void) {
+UInt16
+DatabaseGetCat(void)
+{
   return gCategory;
 }
 
@@ -427,7 +467,9 @@ UInt16 DatabaseGetCat(void) {
 *
 * Description: Sets the current Category
 *****************************************************************************/
-void DatabaseSetCat(UInt16 newcat) {
+void
+DatabaseSetCat(UInt16 newcat)
+{
   gCategory=newcat;
   gPrefs.curCat = newcat;
   PrefSavePrefs(&gPrefs);
@@ -436,7 +478,9 @@ void DatabaseSetCat(UInt16 newcat) {
 }
 
 
-void UnpackCourse(CourseDBRecord *course, const MemPtr mp) {
+void
+UnpackCourse(CourseDBRecord *course, const MemPtr mp)
+{
 
   const PackedCourseDBRecord *packedCourse = (PackedCourseDBRecord *)mp;
   const Char *s = packedCourse->name;
@@ -459,7 +503,10 @@ void UnpackCourse(CourseDBRecord *course, const MemPtr mp) {
   course->website = (Char *)s;
 }
 
-void PackCourse(CourseDBRecord *course, MemHandle courseDBEntry) {
+
+void
+PackCourse(CourseDBRecord *course, MemHandle courseDBEntry)
+{
   UInt16 length=0, offset=0;
   Char *s;
 
@@ -506,7 +553,9 @@ void PackCourse(CourseDBRecord *course, MemHandle courseDBEntry) {
 * Description: Sorts the database, does a InsertionSort, since we excpect
 *              only a very few records to be changed, probably only one
 *****************************************************************************/
-void DatabaseSort(void) {
+void
+DatabaseSort(void)
+{
   DmInsertionSort(gDatabase[DB_MAIN], DatabaseCompare, 0);
 }
 
@@ -520,7 +569,9 @@ void DatabaseSort(void) {
 *              opened database reference. This is needed for example when
 *              receiving a beam and program was not active.
 *****************************************************************************/
-void DatabaseSortByDBRef(DmOpenRef db) {
+void
+DatabaseSortByDBRef(DmOpenRef db)
+{
   DmInsertionSort(db, DatabaseCompare, 0);
 }
 
@@ -530,8 +581,10 @@ void DatabaseSortByDBRef(DmOpenRef db) {
 *
 * Description: Compares two records
 *****************************************************************************/
-Int16 DatabaseCompare(void *rec1, void *rec2, Int16 other,
-                      SortRecordInfoPtr rec1SortInfo, SortRecordInfoPtr rec2SortInfo, MemHandle appInfoH) {
+Int16
+DatabaseCompare(void *rec1, void *rec2, Int16 other,
+		SortRecordInfoPtr rec1SortInfo, SortRecordInfoPtr rec2SortInfo, MemHandle appInfoH)
+{
   Char *s1, *s2;
 
   s1 = (Char *)rec1;
