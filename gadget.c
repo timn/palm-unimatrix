@@ -5,7 +5,7 @@
  *  Generated: 2002
  *  Copyright  2002-2005  Tim Niemueller [www.niemueller.de]
  *
- *  $Id: gadget.c,v 1.8 2005/05/28 12:59:14 tim Exp $
+ *  $Id: gadget.c,v 1.9 2005/06/01 17:38:35 tim Exp $
  *
  ****************************************************************************/
 
@@ -1183,9 +1183,9 @@ GadgetTap(FormGadgetType *pGadget, EventType *event)
           t = (TimeDBRecord *)MemHandleLock(m);
 
 	  // we got a match
-	  wantCourse=t->course;
-	  gTimeIndex=gtl->index;
-	  foundTime=true;
+	  wantCourse = t->course;
+	  gTimeIndex = gtl->index;
+	  foundTime  = true;
 
 	  MemHandleUnlock(m);
 	}
@@ -1194,21 +1194,22 @@ GadgetTap(FormGadgetType *pGadget, EventType *event)
     }
 
     // Search for the clicked time
-    while(! found && ((m = DmQueryNextInCategory(DatabaseGetRef(), &index, DatabaseGetCat())) != NULL)) {
-      Char *s = (Char *)MemHandleLock(m);
-      if (s[0] == TYPE_COURSE) {
-	if (foundTime) {
+    if (foundTime) {
+      index = 0;
+      while(! found && ((m = DmQueryNextInCategory(DatabaseGetRef(), &index, DatabaseGetCat())) != NULL)) {
+	Char *s = (Char *)MemHandleLock(m);
+	if (s[0] == TYPE_COURSE) {
 	  CourseDBRecord c;
 	  UnpackCourse(&c, s);
 	  if (c.id == wantCourse) {
 	    SndPlaySystemSound(sndClick);
 	    gCourseIndex = index;
+	    found=true;
 	  }
 	}
-	found=true;
+	MemHandleUnlock(m);
+	index += 1;
       }
-      MemHandleUnlock(m);
-      index += 1;
     }
 
     if (found && foundTime) {
