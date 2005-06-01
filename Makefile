@@ -31,6 +31,7 @@ PFLAGS = -q -I $(R) -L $(LANGUAGE)
 
 PILOTRATE=115200
 PILOTXFER=/usr/bin/pilot-xfer
+PILOT_PORT=/dev/ttyUSB1
 
 SILENT=@
 ECHO=$(SILENT)echo
@@ -90,7 +91,7 @@ install: clean all
 	$(ECHO) -e "If you have a USB device press NOW the HotSync Button"
 	$(ECHO) -e "and THEN press enter to continue.\n"
 	$(SILENT)read foo </dev/tty
-	$(SILENT)PILOTRATE=$(PILOTRATE) $(PILOTXFER) -i $(PROGNAME).prc
+	$(SILENT)PILOTRATE=$(PILOTRATE) $(PILOTXFER) -p $(PILOT_PORT) -i $(PROGNAME).prc
 
 setup:
 	$(SILENT)if [ ! -d .obj ]; then \
