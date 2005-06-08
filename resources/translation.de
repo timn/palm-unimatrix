@@ -1,4 +1,4 @@
-/* $Id: translation.de,v 1.5 2003/05/21 18:24:00 tim Exp $ */
+/* $Id: translation.de,v 1.6 2005/06/08 18:54:55 tim Exp $ */
 
 translation "german"
 begin
@@ -58,6 +58,8 @@ begin
   "al_ect2" = "Sie müssen einen Referenten für den Kurs angeben!"
   "al_unt1" = "Keine Uhrzeit"
   "al_unt2" = "Ereignisse müssen Zeiten haben."
+  "al_teq1" = "Zeiten gleich"
+  "al_teq2" = "Anfangs und Endzeit müssen unterschiedlich sein!"
   "al_old1" = "Alte Datenbank"
   "al_old2" = "Die Datenbank wurde mit einer alten Version von UniMatrix erstellt. Soll die Datenbank nun konvertiert werden?"
   "al_old3" = "Ja"
@@ -69,7 +71,7 @@ begin
   "al_ex_del1" = "Wirklich löschen?"
   "al_ex_del2" = "Soll die Klausur für ^1 am ^2 um ^3 wirklich gelöscht werden?"
   "al_timecol1" = "Zeitkollision"
-  "al_timecol2" = "Die angegebenen Zeiten überschneiden sich mit einem bereits eingetragenem Ereignis."
+  "al_timecol2" = "Es dürfen maximal ^1 Ereignisse zur selben Zeit eingetragen werden."
   "al_beamdbfail1" = "Datenbank Fehler"
   "al_beamdbfail2" = "Konnte Datenbank nicht öffnen. Starten Sie UniMatrix vor dem Empfang einmalig, um die Datenbanken zu initialisieren."
   "al_beamnocat1" = "Keine Platz"

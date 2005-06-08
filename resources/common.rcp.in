@@ -1,4 +1,4 @@
-/* $Id: common.rcp.in,v 1.5 2003/04/25 23:23:25 tim Exp $
+/* $Id: common.rcp.in,v 1.6 2005/06/08 18:54:55 tim Exp $
  *
  * common stuff like menus, bitmaps, alerts
  */
@@ -158,6 +158,14 @@ information
 begin
   title "al_unt1"
   message "al_unt2"
+  buttons "al_ok"
+end
+
+alert id ALERT_times_equal
+information
+begin
+  title "al_teq1"
+  message "al_teq2"
   buttons "al_ok"
 end
 

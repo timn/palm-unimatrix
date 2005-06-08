@@ -1,4 +1,4 @@
-/* $Id: resources.h,v 1.5 2003/04/27 12:16:14 tim Exp $
+/* $Id: resources.h,v 1.6 2005/06/08 18:54:55 tim Exp $
  *
  * ID's for use in ressource definitions
  *
@@ -202,6 +202,7 @@
 #define ALERT_timeCollision 4018
 #define ALERT_beamdbfail 4019
 #define ALERT_beamnocatleft 4020
+#define ALERT_times_equal 4021
 
 #define BITMAP_edit 5002
 #define BITMAP_del 5003

@@ -1,4 +1,4 @@
-/* $Id: translation.ca,v 1.1 2003/09/05 13:31:40 tim Exp $ */
+/* $Id: translation.ca,v 1.2 2005/06/08 18:54:55 tim Exp $ */
 
 translation "catalan"
 begin
@@ -58,6 +58,8 @@ begin
   "al_ect2" = "Has d'especificar un nom per al professor!"
   "al_unt1" = "Sense hora"
   "al_unt2" = "Els esdeveniments han de tindre hores."
+  "al_teq1" = "Hores igual"
+  "al_teq2" = "L'hora inicial i la final ha de ser diferent!"
   "al_old1" = "Base de dades antiga"
   "al_old2" = "La base de dades ha estat creada amb una versió antiga d'UniMarix, tot i que pot ser convertida. La puc convertir ara?"
   "al_old3" = "Sí"
@@ -69,7 +71,7 @@ begin
   "al_ex_del1" = "Esborrar realment?"
   "al_ex_del2" = "Esborrar realment l'exàmen del ^1 a ^2 a les ^3?"
   "al_timecol1" = "Les hores se solapen!"
-  "al_timecol2" = "Les hores entrades se solapen amb un esdeveniment ja entrat."
+  "al_timecol2" = "No pots tindre més de ^1 esdeveniments alhora."
   "al_beamdbfail1" = "Error en la base de dades"
   "al_beamdbfail2" = "No es pot obrir la base de dades. Obri l'UniMatrix després de rebre una transmissió per a inicialitzar-la."
   "al_beamnocat1" = "Memòria insuficient"

@@ -1,4 +1,4 @@
-/* $Id: translation.nl,v 1.2 2003/05/21 18:24:00 tim Exp $ */
+/* $Id: translation.nl,v 1.3 2005/06/08 18:54:55 tim Exp $ */
 
 translation "dutch"
 begin
@@ -58,6 +58,8 @@ begin
   "al_ect2" = "U moet de naam van de docent invullen!"
   "al_unt1" = "Geen tijd"
   "al_unt2" = "Gebeurtenissen moeten een tijd hebben."
+  "al_teq1" = "Tijden gelijk"
+  "al_teq2" = "Start en eind tijden moeten verschillend zijn!"
   "al_old1" = "Oude database"
   "al_old2" = "De database is gemaakt met een oudere versie van UniMatrix. Hij kan geconverteerd worden. Mag ik de database nu converteren?"
   "al_old3" = "Ja"
@@ -69,7 +71,7 @@ begin
   "al_ex_del1" = "Verwijderen?"
   "al_ex_del2" = "Examen verwijderen voor ^1 op ^2 om ^3?"
   "al_timecol1" = "Tijd conflict"
-  "al_timecol2" = "De ingevulde tijden confilicteren met een andere gebeurtenis."
+  "al_timecol2" = "Je kan niet meer dan ^1 gebeurtenissen teglijk hebben."
   "al_beamdbfail1" = "Database Fout"
   "al_beamdbfail2" = "Database kan niet geopend worden. Start UniMatrix 1 keer om de database te initialiseren.."
   "al_beamnocat1" = "Onvoldoende Geheugen"

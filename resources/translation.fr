@@ -1,4 +1,4 @@
-/* $Id: translation.fr,v 1.3 2003/06/05 17:07:10 tim Exp $ */
+/* $Id: translation.fr,v 1.4 2005/06/08 18:54:55 tim Exp $ */
 
 translation "french"
 begin
@@ -58,6 +58,8 @@ begin
   "al_ect2" = "Vous devez entrer un nom dans le champ 'Prof.' !"
   "al_unt1" = "Pas d'heure"
   "al_unt2" = "Chaque événement doit avoir une heure."
+  "al_teq1" = "Times equal"
+  "al_teq2" = "Start and end times must be different!"
   "al_old1" = "Ancienne base de données"
   "al_old2" = "Cette base de données a été créée avec une ancienne version d'UniMatrix. Voulez-vous la convertir maintenant ?"
   "al_old3" = "Oui"

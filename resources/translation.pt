@@ -1,4 +1,4 @@
-/* $Id: translation.pt,v 1.2 2003/05/21 18:24:00 tim Exp $ */
+/* $Id: translation.pt,v 1.3 2005/06/08 18:54:55 tim Exp $ */
 
 
 translation "portugues"
@@ -58,6 +58,8 @@ begin
   "al_ect2" = "Cadastre o nome do professor!"
   "al_unt1" = "Sem tempo"
   "al_unt2" = "Eventos precisam ter hora."
+  "al_teq1" = "Times equal"
+  "al_teq2" = "Start and end times must be different!"
   "al_old1" = "Base velha"
   "al_old2" = "A base foi criada em uma versão anterior, e não pode ser convertida. Deseja deletar a atual e criar uma nova vazia ?"
   "al_old3" = "Sim"

@@ -1,4 +1,4 @@
-/* $Id: translation.si_latin1,v 1.3 2003/06/05 17:07:10 tim Exp $ */
+/* $Id: translation.si_latin1,v 1.4 2005/06/08 18:54:55 tim Exp $ */
 
 translation "slovenian_latin1"
 begin
@@ -58,6 +58,8 @@ begin
   "al_ect2" = "Morate vnesti ime predavatelja!"
   "al_unt1" = "Brez casa"
   "al_unt2" = "Dogodki morajo imeti cas."
+  "al_teq1" = "Times equal"
+  "al_teq2" = "Start and end times must be different!"
   "al_old1" = "Stara baza podatkov"
   "al_old2" = "Baza je bila ustvarjena s staro verzijo UniMatrixa. Lahko jo pretvorim. Naj to storim sedaj?"
   "al_old3" = "Da"

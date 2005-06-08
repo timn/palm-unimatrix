@@ -1,4 +1,4 @@
-/* $Id: translation.cn_s,v 1.1 2005/05/27 15:02:24 tim Exp $ */
+/* $Id: translation.cn_s,v 1.2 2005/06/08 18:54:55 tim Exp $ */
 
 translation "chinese_simplified"
 begin
@@ -58,6 +58,8 @@ begin
   "al_ect2" = "请输入此课的老师!"
   "al_unt1" = "没输入时间"
   "al_unt2" = "您必须为所有课表中的课输入上课时间!"
+  "al_teq1" = "Times equal"
+  "al_teq2" = "Start and end times must be different!"
   "al_old1" = "旧的数据库"
   "al_old2" = "此数据库是用Unimatrix的一个旧版本建立的。您是否想转换它吗?"
   "al_old3" = "是"
@@ -79,13 +81,18 @@ begin
 /* about */
   "ab_title" = "关于UniMatrix"
   "ab_d1" = "学生生活规划软件"
+  "ab_d2" = ""
   "ab_get" = "此处可下载最新版本:"
 
 
 /* beam */
   "b_title" = "清选择学期"
   "b_d1" = "请为新收到的课程选择一个学期"
+  "b_d2" = ""
+  "b_d3" = ""
   "bs_d1" = "Unimatrix会为新收到的课程建立一个新的学期"
+  "bs_d2" = ""
+  "bs_d3" = ""
   "b_sem" = "学期："
 
 

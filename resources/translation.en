@@ -1,4 +1,4 @@
-/* $Id: translation.en,v 1.4 2003/05/21 18:24:00 tim Exp $ */
+/* $Id: translation.en,v 1.5 2005/06/08 18:54:55 tim Exp $ */
 
 translation "english"
 begin
@@ -58,6 +58,8 @@ begin
   "al_ect2" = "You must give the name of the teacher!"
   "al_unt1" = "No Time"
   "al_unt2" = "Events must have times."
+  "al_teq1" = "Times equal"
+  "al_teq2" = "Start and end times must be different!"
   "al_old1" = "Old Database"
   "al_old2" = "The database has been created with an old version of UniMatrix. It can be converted. May I convert the database now?"
   "al_old3" = "Yes"
@@ -69,7 +71,7 @@ begin
   "al_ex_del1" = "Really delete?"
   "al_ex_del2" = "Really delete exam for ^1 on ^2 at ^3?"
   "al_timecol1" = "Time Collision"
-  "al_timecol2" = "The given times collide with an already entered event."
+  "al_timecol2" = "You may not have more than ^1 events at a time."
   "al_beamdbfail1" = "Database Error"
   "al_beamdbfail2" = "Could not open database. Start UniMatrix once before receiving a beam to initialise database."
   "al_beamnocat1" = "Insufficient Memory"

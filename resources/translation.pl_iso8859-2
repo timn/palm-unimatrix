@@ -1,15 +1,15 @@
-/* $Id: translation.pl_iso8859-2,v 1.2 2003/05/22 20:31:59 tim Exp $ */
+/* $Id: translation.pl_iso8859-2,v 1.3 2005/06/08 18:54:55 tim Exp $ */
 
 translation "polish_iso8859-2"
 begin
 
 
 /* about translator only name is displayed */
-  "translator" = "Tomasz Zieliñski"
+  "translator" = "Tomasz ZieliÃ±ski"
   "trans_mail" = "tomash@fidonet.org.pl"
   "trans_hdev" = "Palm III"
   "trans_palm" = "4.1"
-  "trans_trby" = "Polskie t³umaczenie:"
+  "trans_trby" = "Polskie tÂ³umaczenie:"
 
 
 /* common */
@@ -20,12 +20,12 @@ begin
 /* menu */
   "men_addc" = "Dodaj przedmiot"
   "men_adde" = "Dodaj zdarzenie"
-  "men_cl" = "Lista przedmiotów"
+  "men_cl" = "Lista przedmiotÃ³w"
   "men_ab" = "O programie"
   "men_opt" = "Opcje"
   "men_sets" = "Ustawienia"
   "men_ex" = "Egzaminy"
-  "men_beam" = "Wy¶lij sem."
+  "men_beam" = "WyÂ¶lij sem."
   "men_alarm" = "Alarm..."
 
 
@@ -33,69 +33,71 @@ begin
   "al_ok" = "OK"
   "al_rominc1" = "System niekompatybilny"
   "al_rominc2" = "Aplikacja wymaga systemu PalmOS 3.5 lub nowszego."
-  "al_noc1" = "B³±d: Brak przedmiotu"
-  "al_noc2" = "Musisz najpierw zdefiniowaæ jaki¶ przedmiot."
+  "al_noc1" = "BÂ³Â±d: Brak przedmiotu"
+  "al_noc2" = "Musisz najpierw zdefiniowaÃ¦ jakiÂ¶ przedmiot."
   "al_noc3" = "OK"
-  "al_nr1" = "B³±d: brak sali"
-  "al_nr2" = "Musisz podaæ salê."
-  "al_nomem1" = "Za ma³o pamiêci"
-  "al_nomem2" = "Nie mogê zaalokowaæ wystarczaj±cej ilo¶ci pamiêci."
-  "al_del1" = "Naprawdê skasowaæ?"
-  "al_del2" = "Skasowaæ wpis (^1 [^2], ^3)?"
+  "al_nr1" = "BÂ³Â±d: brak sali"
+  "al_nr2" = "Musisz podaÃ¦ salÃª."
+  "al_nomem1" = "Za maÂ³o pamiÃªci"
+  "al_nomem2" = "Nie mogÃª zaalokowaÃ¦ wystarczajÂ±cej iloÂ¶ci pamiÃªci."
+  "al_del1" = "NaprawdÃª skasowaÃ¦?"
+  "al_del2" = "SkasowaÃ¦ wpis (^1 [^2], ^3)?"
   "al_dely" = "Tak"
   "al_deln" = "Nie"
-  "al_invend1" = "B³±d godzin"
-  "al_invend2" = "Czas musi zawieraæ siê miêdzy 08:00 a 20:00!"
-  "al_delc1" = "Naprawdê skasowaæ?"
-  "al_delc2" = "Naprawdê skasowaæ przedmiot (^1) i wszystkie powi±zane zdarzenia?^2^3"
+  "al_invend1" = "BÂ³Â±d godzin"
+  "al_invend2" = "Czas musi zawieraÃ¦ siÃª miÃªdzy 08:00 a 20:00!"
+  "al_delc1" = "NaprawdÃª skasowaÃ¦?"
+  "al_delc2" = "NaprawdÃª skasowaÃ¦ przedmiot (^1) i wszystkie powiÂ±zane zdarzenia?^2^3"
   "al_delcy" = "Tak"
   "al_delcn" = "Nie"
   "al_ni1" = "Nie podano wpisu."
-  "al_ni2" = "Wska¿ wpis, który chcesz usun±æ lub edytowaæ."
+  "al_ni2" = "WskaÂ¿ wpis, ktÃ³ry chcesz usunÂ±Ã¦ lub edytowaÃ¦."
   "al_ecn1" = "Brak nazwy"
-  "al_ecn2" = "Musisz podaæ nazwê przedmiotu!"
-  "al_ect1" = "Brak prowadz±cego"
-  "al_ect2" = "Musisz podaæ nazwisko prowadz±cego!"
+  "al_ecn2" = "Musisz podaÃ¦ nazwÃª przedmiotu!"
+  "al_ect1" = "Brak prowadzÂ±cego"
+  "al_ect2" = "Musisz podaÃ¦ nazwisko prowadzÂ±cego!"
   "al_unt1" = "Brak godzin"
-  "al_unt2" = "Zdarzenia musz± mieæ okre¶lone godziny."
+  "al_unt2" = "Zdarzenia muszÂ± mieÃ¦ okreÂ¶lone godziny."
+  "al_teq1" = "RÃ³wne czasy"
+  "al_teq2" = "Start i koniec muszÄ… siÄ™ rÃ³Å¼niÄ‡"
   "al_old1" = "Stara baza danych"
-  "al_old2" = "Baza danych utworzona zosta³a w starszej wersji programu UniMatrix. Skonwertowaæ bazê?"
+  "al_old2" = "Baza danych utworzona zostaÂ³a w starszej wersji programu UniMatrix. SkonwertowaÃ¦ bazÃª?"
   "al_old3" = "Tak"
   "al_old4" = "Nie"
-  "al_ctd1" = "B³êdne warto¶ci"
-  "al_ctd2" = "Musisz podaæ nazwê pe³n± i skrócon±!"
-  "al_ct_del1" = "Naprawdê skasowaæ?"
-  "al_ct_del2" = "Naprawdê skasowaæ typ ^1 [^2]?^3"
-  "al_ex_del1" = "Naprawdê skasowaæ?"
-  "al_ex_del2" = "Naprawdê skasowaæ egzamin z ^1 w ^2 o ^3?"
-  "al_timecol1" = "Niezgodno¶æ czasu"
-  "al_timecol2" = "Ta godzina koliduje z ju¿ istniej±cymi zajêciami."
-  "al_beamdbfail1" = "B³±d bazy danych"
-  "al_beamdbfail2" = "Nie mo¿na otworzyæ bazy. Uruchom UniMatrix by zainicjalizowaæ bazê danych."
-  "al_beamnocat1" = "Niewystarczaj±ca pamiêæ"
-  "al_beamnocat2" = "Osiagniêto limit kategorii. Skasuj stare kategorie i spróbuj ponownie."
+  "al_ctd1" = "BÂ³Ãªdne wartoÂ¶ci"
+  "al_ctd2" = "Musisz podaÃ¦ nazwÃª peÂ³nÂ± i skrÃ³conÂ±!"
+  "al_ct_del1" = "NaprawdÃª skasowaÃ¦?"
+  "al_ct_del2" = "NaprawdÃª skasowaÃ¦ typ ^1 [^2]?^3"
+  "al_ex_del1" = "NaprawdÃª skasowaÃ¦?"
+  "al_ex_del2" = "NaprawdÃª skasowaÃ¦ egzamin z ^1 w ^2 o ^3?"
+  "al_timecol1" = "NiezgodnoÂ¶Ã¦ czasu"
+  "al_timecol2" = "Nie moÅ¼esz mieÄ‡ wiÄ™cej niÅ¼ ^1 zajÄ™cia naraz"
+  "al_beamdbfail1" = "BÂ³Â±d bazy danych"
+  "al_beamdbfail2" = "Nie moÂ¿na otworzyÃ¦ bazy. Uruchom UniMatrix by zainicjalizowaÃ¦ bazÃª danych."
+  "al_beamnocat1" = "NiewystarczajÂ±ca pamiÃªÃ¦"
+  "al_beamnocat2" = "OsiagniÃªto limit kategorii. Skasuj stare kategorie i sprÃ³buj ponownie."
 
 
 /* about */
   "ab_title" = "O programie UniMatrix"
   "ab_d1" = "Program do planowania"
-  "ab_d2" = " zajêæ na uczelni"
+  "ab_d2" = " zajÃªÃ¦ na uczelni"
   "ab_get" = "Pobierz nowe wersje z"
 
 
 /* beam */
   "b_title" = "Wybierz semestr"
-  "b_d1" = "Wybierz semester, w którym"
+  "b_d1" = "Wybierz semester, w ktÃ³rym"
   "b_d2" = "otrzymany przedmiot zostanie"
   "b_d3" = "zapisany."
   "bs_d1" = "Utworzysz nowy semestr"
-  "bs_d2" = "w którym zostan± zapisane"
+  "bs_d2" = "w ktÃ³rym zostanÂ± zapisane"
   "bs_d3" = "otrzymane dane."
   "b_sem" = "Semestry:"
 
 
 /* course list */
-  "cl_title" = "Lista przedmiotów"
+  "cl_title" = "Lista przedmiotÃ³w"
   "cl_desc" = "Przedmioty w tym semestrze:"
 
 
@@ -112,16 +114,16 @@ begin
 /* event details (add and edit */
   "ed_title" = "Edytuj zdarzenie"
   "ed_course" = "Przedmiot"
-  "ed_day" = "Dzieñ"
+  "ed_day" = "DzieÃ±"
   "ed_time" = "Godziny"
   "ed_title" = "Wybierz godziny"
   "ed_color" = "Kolor"
   "ed_room" = "Sala"
-  "ed_mo" = "Poniedzia³ek"
+  "ed_mo" = "PoniedziaÂ³ek"
   "ed_tu" = "Wtorek"
-  "ed_we" = "¦roda"
+  "ed_we" = "Â¦roda"
   "ed_th" = "Czwartek"
-  "ed_fr" = "Pi±tek"
+  "ed_fr" = "PiÂ±tek"
   "ed_sa" = "Sobota"
   "ed_r" = "R"
   "ed_g" = "G"
@@ -131,8 +133,8 @@ begin
 /* settings */
   "sets_title" = "Ustawienia"
   "sets_day" = "Sobota dniem roboczym"
-  "sets_showtype" = "Poka¿ typy zajêæ"
-  "sets_showtime" = "Poka¿ liniê czasu"
+  "sets_showtype" = "PokaÂ¿ typy zajÃªÃ¦"
+  "sets_showtime" = "PokaÂ¿ liniÃª czasu"
   "sets_showshort" = "Pokaz krotkie nazwy zdarzen"
   "sets_muteevents" = "Milcz podczas zdarzen"
   "sets_muteexams" = "Milcz podczas egzaminu"
@@ -141,26 +143,26 @@ begin
 /* gadget */
   "gad_mo" = "Pon"
   "gad_tu" = "Wto"
-  "gad_we" = "¦ro"
+  "gad_we" = "Â¦ro"
   "gad_th" = "Czw"
-  "gad_fr" = "Pi±"
+  "gad_fr" = "PiÂ±"
   "gad_sa" = "Sob"
 
 
 /* Course types */
-  "ct_title" = "Typy zajêæ"
+  "ct_title" = "Typy zajÃªÃ¦"
   "ct_desc" = "Wybierz typ do edycji:"
   "ct_edct" = "Edytuj typy..."
   /* Course type defaults for database initialization */
-  "ct_lec" = "Wyk³ad"
-  "ct_ex" = "Æwiczenia"
+  "ct_lec" = "WykÂ³ad"
+  "ct_ex" = "Ã†wiczenia"
   "ct_bex" = "Laboratorium"
   "ct_sem" = "Seminarium"
   "ct_psem" = "Proseminarium"
   "ct_rep" = "Repetytorium"
   /* The short names may be only 3 chars in length! */
   "ct_sh_lec" = "W"
-  "ct_sh_ex" = "Æw"
+  "ct_sh_ex" = "Ã†w"
   "ct_sh_bex" = "L"
   "ct_sh_sem" = "Sem"
   "ct_sh_psem" = "PS"
@@ -170,18 +172,18 @@ begin
 
 
 /* Course type details */
-  "ctdet_title" = "Szczegó³y przedmiotu"
+  "ctdet_title" = "SzczegÃ³Â³y przedmiotu"
   "ctdet_name" = "Nazwa"
-  "ctdet_short" = "Skrót"
+  "ctdet_short" = "SkrÃ³t"
 
 
 /* Exam list and exam details */
   "ex_title" = "Egzaminy"
-  "exd_title" = "Szczegó³y egzaminów"
+  "exd_title" = "SzczegÃ³Â³y egzaminÃ³w"
   "exd_course" = "Przedmiot"
   "exd_date" = "Data"
   "exd_time" = "Godzina"
-  "exd_length" = "D³ugo¶æ"
+  "exd_length" = "DÂ³ugoÂ¶Ã¦"
 
 
 /* Alarm related entries */

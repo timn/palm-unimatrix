@@ -1,4 +1,4 @@
-/* $Id: translation.cz_iso8859-2,v 1.3 2003/06/16 20:22:45 tim Exp $ */
+/* $Id: translation.cz_iso8859-2,v 1.4 2005/06/08 18:54:55 tim Exp $ */
 
 translation "czech_iso8859-2"
 begin
@@ -58,6 +58,8 @@ begin
   "al_ect2" = "Je nutné zadat jméno vyuèujícího pøedmìtu !"
   "al_unt1" = "Èas nezadán"
   "al_unt2" = "Ka¾dý záznam musí obsahovat informaci o èase."
+  "al_teq1" = "Times equal"
+  "al_teq2" = "Start and end times must be different!"
   "al_old1" = "Stará databáze"
   "al_old2" = "Databáze byla vytvoøena star¹í verzí programu a mù¾e být pøevedena. Má se pøevést nyní ?"
   "al_old3" = "Ano"

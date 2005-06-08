@@ -1,4 +1,4 @@
-/* $Id: translation.gr,v 1.2 2003/06/05 17:07:10 tim Exp $ */
+/* $Id: translation.gr,v 1.3 2005/06/08 18:54:55 tim Exp $ */
 
 translation "greek"
 begin
@@ -25,7 +25,7 @@ begin
   "men_opt" = "Επιλογές"
   "men_sets" = "Ρυθμίσεις"
   "men_ex" = "Εξετάσεις"
-	"men_beam" = "Αποστολή Δεδομένων" 
+  "men_beam" = "Αποστολή Δεδομένων" 
   "men_alarm" = "Ειδοποίηση..." 
 
 
@@ -58,6 +58,8 @@ begin
   "al_ect2" = "Πρέπει να δώσετε το όνομα του καθηγητή!"
   "al_unt1" = "Δεν υπάρχει ώρα"
   "al_unt2" = "Τα γεγονότα πρέπει να έχουν ώρα έναρξης και λήξης."
+  "al_teq1" = "Times equal"
+  "al_teq2" = "Start and end times must be different!"
   "al_old1" = "Παλιά Βάση Δεδομένων"
   "al_old2" = "Η βάση δεδομένων έχει δημιουργηθεί με παλιότερη έκδοση του UniMatrix. Μπορεί να μετατραπεί. Να γίνει η μετατροπή τώρα;"
   "al_old3" = "Ναι"
@@ -131,8 +133,8 @@ begin
 /* settings */
   "sets_title" = "Ρυθμίσεις"
   "sets_day" = "Το Σάββατο είναι εργάσιμη ημέρα"
-	"sets_showtype" = "Εμφάνιση συντομεύσεων" 
-	"sets_showtime" = "Εμφάνιση τρέχουσας ώρας" 
+  "sets_showtype" = "Εμφάνιση συντομεύσεων" 
+  "sets_showtime" = "Εμφάνιση τρέχουσας ώρας" 
   "sets_showshort" = "Συντμήσεις για γεγονότα" 
   "sets_muteevents" = "Σιγή στα γεγονότα" 
   "sets_muteexams" = "Σιγή στις εξετάσεις" 
@@ -207,7 +209,6 @@ begin
   /* ^0 = day of week, ^1 = date string */ 
   "alarm_date_template" = "^0, ^1" 
   "alarm_sound" = "Ήχος Ειδοποίησης"
-
 
 
 end
