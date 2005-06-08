@@ -5,7 +5,7 @@
  *  Generated: 2002
  *  Copyright  2002-2005  Tim Niemueller [www.niemueller.de]
  *
- *  $Id: edit.c,v 1.9 2005/05/28 12:59:14 tim Exp $
+ *  $Id: edit.c,v 1.10 2005/06/08 18:54:15 tim Exp $
  *
  ****************************************************************************/
 
@@ -669,7 +669,9 @@ EditTimeSave(FormType *frm)
 
 
   if (EditTimeCheckCollision(gEditTimeBegin, gEditTimeEnd, LstGetSelection(day), ((gEditTimeIsAdd) ? 0 : GadgetGetHintTimeIndex()), !gEditTimeIsAdd)) {
-    FrmAlert(ALERT_timeCollision);
+    Char temp[5];
+    StrPrintF(temp, "%i", GADGET_MAX_AT_A_TIME);
+    FrmCustomAlert(ALERT_timeCollision, temp, "", "");
     return false;
   } else {
     Char *e = FldGetTextPtr(room);
@@ -858,6 +860,8 @@ EditTimeGetTime(ControlType *ctl, TimeType *begin, TimeType *end, Char *label)
       MemMove(begin, &tmpBegin, sizeof(TimeType));
       MemMove(end, &tmpEnd, sizeof(TimeType));
       EditTimeSetSelectorText(ctl, begin, end, label);
+    } else if (TimeToInt(tmpBegin) == TimeToInt(tmpEnd)) {
+      FrmAlert(ALERT_times_equal);
     } else {
       FrmAlert(ALERT_untimed_imp);
     }
