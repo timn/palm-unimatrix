@@ -4,6 +4,7 @@ Uni Matrix
 
 ** Introduction
 This PalmOS software helps you to manage your everyday business at university.
+UniMatrix is released under the GPL. See the file COPYING for details.
 
 
 ** Installation
@@ -16,4 +17,4 @@ Aachen, August 1st 2002
 
 
 
-$Id: README,v 1.1 2003/02/06 21:27:23 tim Exp $
+$Id: README,v 1.2 2005/06/23 17:42:03 tim Exp $

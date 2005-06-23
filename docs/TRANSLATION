@@ -1,0 +1,77 @@
+
+UniMatrix - Translations
+==============================================================================
+
+** Introduction
+This will briefly describe how to translate UniMatrix to another language.
+
+
+** What you need
+A text editor. If you want to test it before submitting you will also need
+a PalmOS build-environment (See the file docs/BUILD).
+
+
+** How to start
+In the resources directory you will find several files with names
+"translation.*". These are existing translations. Take one of these files
+(a language that you understand). I will describe here how to translate
+from the english file but you can use any of them.
+Copy the translation file now to a new file called translation.ISO, where
+ISO, where ISO is the ISO acronym for your country (see
+http://www.iso.ch/iso/en/prods-services/iso3166ma/02iso-3166-code-lists/list-en1.html
+for a list of those). So the German file is called translation.de.
+Open the file in your favorite text editor.
+
+
+** What _NOT_ to do
+- Do not change the format of the file in any way! Keep all newlines intact
+  and do not add new. Do not remove any comments or the Id line. The number of
+  lines is used as an indicator for a complete translation!
+- Do not change the left side of the equal sign (=). These tokens are used by
+  PilRC to insert the matching text!
+- Do not change the indentation of the translation file.
+
+
+** What to do
+Translate for all lines containing an equal sign (=) the right side. Keep
+the " intact. Try to match the length of the original string, as the space
+on the palm display is limited and a string is likely to be shortened if
+it is longer than the original string.
+PLEASE USE UNIX STYLE LINEBREAKS IF POSSIBLE.
+
+
+** How to test it
+You need a build environment on your system in order to test the new
+translation by yourself.
+
+Open the file languages and add a line like:
+ISO:language
+For German this line reads
+de:german
+The language may NOT contain white spaces. The ISO code must be the ending of
+the translation file. Keep the empty line at the very bottom of the file
+or the last language cannot be build, this is a parsing problem.
+
+Now go to the directory and issue the following command:
+LANGUAGE=language make clean all
+The lower-case language is what you entered in the languages file. This will
+produce an UniMatrix.prc file that you can install on your Palm to test.
+If errors occur please try
+make clean all
+If that works you have a format error in your language file. Check if the
+" are intact everywhere etc.
+
+
+** Where to send new languages
+If you have a new languge I'm happy to add it to the main distribution file!
+As you see on the About screen you will get credit ;-)
+You can also send me untested files and I will send you a build back to test
+the translation. If you do this please double check the format and syntax.
+
+
+Tim Niemueller <tim@niemueller.de>
+Rees, September 16th 2003
+
+
+
+$Id: TRANSLATION,v 1.1 2005/06/23 17:42:03 tim Exp $

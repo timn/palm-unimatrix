@@ -4,6 +4,11 @@
 
 === v1.1
 
+* Thu Jun 23 2005 Tim Niemueller <tim@niemueller.de
+- Added a couple of translations, unfortunately about half a dozen still
+  missing, need to call for new translators I guess.
+- Finally pushing out UniMatrix 1.1 release. Enjoy!
+
 * Wed Jun 01 2005 Tim Niemueller <tim@niemueller.de>
 - Fixed a bug in GadgetTap. The course was not searched for. Stupid bug,
   probably introduced when I added the list usage.
@@ -371,4 +376,4 @@
 
 
 
-$Id: CHANGES,v 1.19 2005/06/01 17:38:35 tim Exp $
+$Id: CHANGES,v 1.20 2005/06/23 17:42:03 tim Exp $
