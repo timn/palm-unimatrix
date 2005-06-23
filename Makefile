@@ -113,7 +113,7 @@ dist:
 	$(SILENT)-rm -rf $(PROGNAME)-$(VERSION)
 	$(SILENT)mkdir -p $(PROGNAME)-$(VERSION)
 	$(SILENT)cp -ar *.c *.h $(PROGNAME).def $(PROGNAME).mk Makefile docs resources images $(PROGNAME)-$(VERSION)
-	$(SILENT)find $(PROGNAME)-$(VERSION) -depth -name CVS -type d -exec echo {} \;
+	$(SILENT)find $(PROGNAME)-$(VERSION) -depth -name CVS -type d -exec rm -rf {} \;
 	$(SILENT)tar cvfz $(PROGNAME)-$(VERSION)_dist/$(PROGNAME)-$(VERSION)-src.tar.gz $(PROGNAME)-$(VERSION)
 	$(SILENT)zip -r $(PROGNAME)-$(VERSION)_dist/$(PROGNAME)-$(VERSION)-src.zip $(PROGNAME)-$(VERSION)
 	$(SILENT)rm -rf $(PROGNAME)-$(VERSION)
