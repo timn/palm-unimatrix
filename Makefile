@@ -106,6 +106,7 @@ clean:
 
 dist:
 	$(ECHO) "--- Creating dist directory '$(PROGNAME)-$(VERSION)_dist'"
+	$(SILENT)-rm -rf $(PROGNAME)-$(VERSION)_dist
 	$(SILENT)mkdir -p $(PROGNAME)-$(VERSION)_dist
 	$(SILENT)for L in $(LANGUAGES); do LANGUAGE=$$L $(MAKE) --no-print-directory package; done
 	$(SILENT)mv -f $(PROGNAME)-$(VERSION)-* $(PROGNAME)-$(VERSION)_dist
