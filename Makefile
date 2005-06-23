@@ -102,12 +102,20 @@ setup:
 clean:
 	$(ECHO) "--- Cleaning up"
 	$(SILENT)-rm -f $(PROGNAME) $(PROGNAME).prc .obj/*.o .obj/*.bin .obj/*.ld .obj/*.s
+	$(SILENT)find . -name '*~' -exec rm -f {} \;
 
 dist:
 	$(ECHO) "--- Creating dist directory '$(PROGNAME)-$(VERSION)_dist'"
 	$(SILENT)mkdir -p $(PROGNAME)-$(VERSION)_dist
 	$(SILENT)for L in $(LANGUAGES); do LANGUAGE=$$L $(MAKE) --no-print-directory package; done
 	$(SILENT)mv -f $(PROGNAME)-$(VERSION)-* $(PROGNAME)-$(VERSION)_dist
+	$(SILENT)-rm -rf $(PROGNAME)-$(VERSION)
+	$(SILENT)mkdir -p $(PROGNAME)-$(VERSION)
+	$(SILENT)cp -ar *.c *.h $(PROGNAME).def $(PROGNAME).mk Makefile docs resources images $(PROGNAME)-$(VERSION)
+	$(SILENT)find $(PROGNAME)-$(VERSION) -depth -name CVS -type d -exec echo {} \;
+	$(SILENT)tar cvfz $(PROGNAME)-$(VERSION)_dist/$(PROGNAME)-$(VERSION)-src.tar.gz $(PROGNAME)-$(VERSION)
+	$(SILENT)zip -r $(PROGNAME)-$(VERSION)_dist/$(PROGNAME)-$(VERSION)-src.zip $(PROGNAME)-$(VERSION)
+	$(SILENT)rm -rf $(PROGNAME)-$(VERSION)
 
 package: clean all
 	$(ECHO) -e "\n\n--> Packaging $(PROGNAME) for language $(LANGUAGE) ($(SHORTLANGUAGE))\n\n"
@@ -122,7 +130,7 @@ package: clean all
 
 upload: dist
 	$(ECHO) "--- Generating PHP version file"
-	$(SILENT)echo -e "<?php\n$$version=\"$(VERSION)\";\n?>" > webpage/version.inc.php
+	$(SILENT)echo -e "<?php\n\$$version=\"$(VERSION)\";\n?>" > webpage/version.inc.php
 	$(ECHO) "--> Uploading to $(SSH_HOST)"
 	$(SILENT)scp -r $(PROGNAME)-$(VERSION)_dist $(SSH_USER)@$(SSH_HOST):$(SSH_PATH)
 	$(SILENT)scp -r webpage/*.inc.php docs/CHANGES $(SSH_USER)@$(SSH_HOST):$(SSH_PATH)
