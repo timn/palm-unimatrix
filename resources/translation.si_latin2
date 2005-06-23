@@ -1,4 +1,4 @@
-/* $Id: translation.si_latin2,v 1.4 2005/06/08 18:54:55 tim Exp $ */
+/* $Id: translation.si_latin2,v 1.5 2005/06/23 17:23:05 tim Exp $ */
 
 translation "slovene"
 begin
@@ -58,8 +58,8 @@ begin
   "al_ect2" = "Morate podati ime predavatelja!"
   "al_unt1" = "Brez Casa"
   "al_unt2" = "Dogodki morajo imeti cas."
-  "al_teq1" = "Times equal"
-  "al_teq2" = "Start and end times must be different!"
+  "al_teq1" = "Enaki èasi"
+  "al_teq2" = "Zaèetni in konèni èas se morata razlikovati!"
   "al_old1" = "Stara Baza"
   "al_old2" = "Baza je bila ustvarjena z starejso verzijo UniMatrix-a. Lahko jo pretvorim. Naj jo pretvorim sedaj?"
   "al_old3" = "Da"
@@ -71,7 +71,7 @@ begin
   "al_ex_del1" = "Res izbrisem?"
   "al_ex_del2" = "Res izbrisem izpit za ^1 dne ^2 ob ^3?"
   "al_timecol1" = "Sovpadanje Casov"
-  "al_timecol2" = "Podani casi sovpadajo z ze obstojecim dogodkom."
+  "al_timecol2" = "Ne morete imeti veè kot ^1 dogodkov hkrati."
   "al_beamdbfail1" = "Napaka v Bazi"
   "al_beamdbfail2" = "Nisem mogel odpreti baze. UniMatrix pozenite vsaj enkrat preden prejmete inicializirano bazo preko IR."
   "al_beamnocat1" = "Ni dovolj spomina"
