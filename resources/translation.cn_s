@@ -1,4 +1,4 @@
-/* $Id: translation.cn_s,v 1.2 2005/06/08 18:54:55 tim Exp $ */
+/* $Id: translation.cn_s,v 1.3 2005/06/27 16:18:49 tim Exp $ */
 
 translation "chinese_simplified"
 begin
@@ -6,7 +6,7 @@ begin
 
 /* about translation */
   "translator" = "Johannes Fiederling"
-  "trans_mail" = "no.use@for.a.mail.de"
+  "trans_mail" = "littlebig.g@gmail.com"
   "trans_hdev" = "Sony Clie NX80V"
   "trans_palm" = "5.21"
   "trans_trby" = "中文版译者："
@@ -20,12 +20,12 @@ begin
 /* menu */
   "men_addc" = "输入课程..."
   "men_adde" = "时间分配..."
-  "men_cl" = "课单..."
+  "men_cl" = "课程列表..."
   "men_ex" = "考试日期..."
   "men_ab" = "关于UniMatrix"
   "men_opt" = "选项"
   "men_sets" = "设定..."
-  "men_beam" = "用红外转送学期"
+  "men_beam" = "用红外线转送学期"
   "men_alarm" = "响铃..."
 
 
@@ -34,7 +34,7 @@ begin
   "al_rominc1" = "系统不兼容"
   "al_rominc2" = "使用本软件至少需要Palm OS 3.5。"
   "al_noc1" = "错误：还没输入课程"
-  "al_noc2" = "分配时间前，清先输入课程!"
+  "al_noc2" = "分配时间前，请先输入课程!"
   "al_noc3" = "是"
   "al_nr1" = "没输入教室"
   "al_nr2" = "请输入教室。"
@@ -45,7 +45,7 @@ begin
   "al_dely" = "确定"
   "al_deln" = "取消"
   "al_invend1" = "无效的时间"
-  "al_invend2" = "请选择8：00点到20：00点之间的时间!"
+  "al_invend2" = "请选择8:00点到20:00点之间的时间!"
   "al_delc1" = "您确定要删除吗？"
   "al_delc2" = "您确定要删除 (^1) 和所有属于它的时间分配吗? ^2^3"
   "al_delcy" = "确定"
@@ -58,8 +58,8 @@ begin
   "al_ect2" = "请输入此课的老师!"
   "al_unt1" = "没输入时间"
   "al_unt2" = "您必须为所有课表中的课输入上课时间!"
-  "al_teq1" = "Times equal"
-  "al_teq2" = "Start and end times must be different!"
+  "al_teq1" = "开始和结束的时间相同"
+  "al_teq2" = "开始和结束的时间不可相同!"
   "al_old1" = "旧的数据库"
   "al_old2" = "此数据库是用Unimatrix的一个旧版本建立的。您是否想转换它吗?"
   "al_old3" = "是"
@@ -69,9 +69,9 @@ begin
   "al_ct_del1" = "您确定要删除吗!"
   "al_ct_del2" = "您确定要删除此课程类别: ^1 [^2] ^3 ?"
   "al_ex_del1" = "您确定要删除吗?"
-  "al_ex_del2" = "您确定要删除次考试: ^1 日期 ^2 时间 ^3 ?"
+  "al_ex_del2" = "您确定要删除此考试: ^1 日期 ^2 时间 ^3 ?"
   "al_timecol1" = "时间冲突"
-  "al_timecol2" = "课程冲堂。"
+  "al_timecol2" = "课程冲堂：只可以输入两个同时的课程。"
   "al_beamdbfail1" = "无法打开数据库"
   "al_beamdbfail2" = "在用红外线接收新的课程前，请先启动Unimatrix一次。"
   "al_beamnocat1" = "记忆体不足"
@@ -86,7 +86,7 @@ begin
 
 
 /* beam */
-  "b_title" = "清选择学期"
+  "b_title" = "请选择学期"
   "b_d1" = "请为新收到的课程选择一个学期"
   "b_d2" = ""
   "b_d3" = ""
@@ -111,12 +111,12 @@ begin
   "cd_phone" = "电话"
 
 
-/* event details (add and edit */
+/* event details (add and edit) */
   "ed_title" = "时间"
   "ed_course" = "课程"
   "ed_day" = "日期"
   "ed_time" = "时间"
-  "ed_title" = "实践设定"
+  "ed_title" = "时间设定"
   "ed_color" = "颜色"
   "ed_room" = "教室"
   "ed_mo" = "星期一"
@@ -151,7 +151,7 @@ begin
 
 /* Course types */
   "ct_title" = "课程类别表"
-  "ct_desc" = "情选要改的课程类别:"
+  "ct_desc" = "请选要改的课程类别:"
   "ct_edct" = "改类别..."
   /* Course type defaults for database initialization */
   "ct_lec" = "讲座"
