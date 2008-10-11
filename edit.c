@@ -5,7 +5,7 @@
  *  Generated: 2002
  *  Copyright  2002-2005  Tim Niemueller [www.niemueller.de]
  *
- *  $Id: edit.c,v 1.10 2005/06/08 18:54:15 tim Exp $
+ *  $Id: edit.c,v 1.11 2008/10/11 22:46:39 tim Exp $
  *
  ****************************************************************************/
 
@@ -820,9 +820,7 @@ EditTimePickColor(FormType *frm)
 
   }
 
-  FldDrawField(r);
-  FldDrawField(g);
-  FldDrawField(b);
+  FrmUpdateForm(frm, 0);
 }
 
 

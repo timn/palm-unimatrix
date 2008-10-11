@@ -2,9 +2,18 @@
  [Uni Matrix] CHANGES
 ==============================================================================
 
+=== v1.2
+* Sat Oct 11 2008 Tim Niemueller <tim@niemueller.de>
+- Fixed bug that only the color fields were redrawn in event editing form
+  after the color was set. Was reported by Olivier Auger, Jean-Charles
+  Beaumont, Ku Roi, R. Baier (http://misc.froob.de/pics/unimatrix.jpg) in
+  2005/2006, and now again by Silvia Ballarin. Finally...
+- Fixed a too narrow date column in the exams form (reported by Sönke
+  Landschoof in 2006)
+
 === v1.1
 
-* Thu Jun 23 2005 Tim Niemueller <tim@niemueller.de
+* Thu Jun 23 2005 Tim Niemueller <tim@niemueller.de>
 - Added a couple of translations, unfortunately about half a dozen still
   missing, need to call for new translators I guess.
 - Finally pushing out UniMatrix 1.1 release. Enjoy!
@@ -377,4 +386,4 @@
 
 
 
-$Id: CHANGES,v 1.21 2005/06/23 18:28:21 tim Exp $
+$Id: CHANGES,v 1.22 2008/10/11 22:46:39 tim Exp $
